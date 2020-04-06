@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:kommunicate_flutter_plugin/kommunicate_flutter_plugin.dart';
@@ -45,16 +46,22 @@ class _MyAppState extends State<MyApp> {
 
   Future<dynamic> openSupportChat() async {
     try {
-      dynamic convObject = {'appId': '22823b4a764f9944ad7913ddb3e43cae1'};
+      dynamic user = {
+        'userId': 'reytum',
+        'password': 'reytum'
+      };
+
+      dynamic convObject = {
+        'appId': '22823b4a764f9944ad7913ddb3e43cae1'
+      };
       dynamic result =
           await KommunicateFlutterPlugin.buildConversation(convObject);
 
         dynamic chatContext = {
-          'key1': 'value1',
-          'key2': 'value2',
-          'key3': {
-            'keyV1' : 'vValue1',
-            'keyV2' : 'vValue2'
+          'key': 'value',
+          'objKey': {
+            'objKey1' : 'objValue1',
+            'objKey2' : 'objValue2'
           }
         };
 
@@ -71,7 +78,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
-            title: const Text('Plugin example app'),
+            title: const Text('Kommunicate Flutter Plugin example app'),
             actions: <Widget>[
               PopupMenuButton<OptionMenu>(
                 onSelected: (OptionMenu result) {

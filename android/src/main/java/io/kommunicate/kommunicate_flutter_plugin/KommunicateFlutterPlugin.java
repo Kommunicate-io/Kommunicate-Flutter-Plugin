@@ -9,13 +9,12 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.kommunicate.KmConversationBuilder;
+import io.kommunicate.KmSettings;
 import io.kommunicate.Kommunicate;
 import io.kommunicate.callbacks.KMLogoutHandler;
 import io.kommunicate.callbacks.KmCallback;
 
 import com.applozic.mobicomkit.feed.ChannelFeedApiResponse;
-import com.applozic.mobicomkit.feed.ChannelFeedListResponse;
-import com.applozic.mobicommons.commons.core.utils.Utils;
 import com.applozic.mobicommons.json.GsonUtils;
 
 import java.util.HashMap;
@@ -81,7 +80,7 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
             try {
                 HashMap<String, Object> chatContext = (HashMap<String, Object>) GsonUtils.getObjectFromJson(call.arguments.toString(), HashMap.class);
                 if (Kommunicate.isLoggedIn(context)) {
-                    Kommunicate.updateChatContext(context, getStringMap(chatContext));
+                    KmSettings.updateChatContext(context, getStringMap(chatContext));
                     result.success("Success");
                 } else {
                     result.error("Error", "User not authorised. This usually happens when calling the function before conversationBuilder or loginUser. Make sure you call either of the two functions before updating the chatContext", null);
