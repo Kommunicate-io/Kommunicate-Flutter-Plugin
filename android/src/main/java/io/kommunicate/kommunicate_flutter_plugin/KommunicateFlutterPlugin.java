@@ -2,6 +2,7 @@ package io.kommunicate.kommunicate_flutter_plugin;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -13,8 +14,11 @@ import io.kommunicate.KmSettings;
 import io.kommunicate.Kommunicate;
 import io.kommunicate.callbacks.KMLogoutHandler;
 import io.kommunicate.callbacks.KmCallback;
+import io.kommunicate.users.KMUser;
 
+import com.applozic.mobicomkit.api.account.user.AlUserUpdateTask;
 import com.applozic.mobicomkit.feed.ChannelFeedApiResponse;
+import com.applozic.mobicomkit.listners.AlCallback;
 import com.applozic.mobicommons.json.GsonUtils;
 
 import java.util.HashMap;
@@ -27,6 +31,8 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
     /**
      * Plugin registration.
      */
+    private static final String SUCCESS = "Success";
+    private static final String ERROR = "Error";
     private Activity context;
     private MethodChannel methodChannel;
 
@@ -65,7 +71,7 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
 
                 @Override
                 public void onFailure(Object error) {
-                    result.error("Error", error != null ? (error instanceof ChannelFeedApiResponse ? GsonUtils.getJsonFromObject(error, ChannelFeedApiResponse.class) : error.toString()) : "Some internal error occurred", null);
+                    result.error(ERROR, error != null ? (error instanceof ChannelFeedApiResponse ? GsonUtils.getJsonFromObject(error, ChannelFeedApiResponse.class) : error.toString()) : "Some internal error occurred", null);
                 }
             };
 
@@ -81,23 +87,44 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
                 HashMap<String, Object> chatContext = (HashMap<String, Object>) GsonUtils.getObjectFromJson(call.arguments.toString(), HashMap.class);
                 if (Kommunicate.isLoggedIn(context)) {
                     KmSettings.updateChatContext(context, getStringMap(chatContext));
-                    result.success("Success");
+                    result.success(SUCCESS);
                 } else {
-                    result.error("Error", "User not authorised. This usually happens when calling the function before conversationBuilder or loginUser. Make sure you call either of the two functions before updating the chatContext", null);
+                    result.error(ERROR, "User not authorised. This usually happens when calling the function before conversationBuilder or loginUser. Make sure you call either of the two functions before updating the chatContext", null);
                 }
             } catch (Exception e) {
-                result.error("Error", e.toString(), null);
+                result.error(ERROR, e.toString(), null);
+            }
+        } else if (call.method.equals("updateUserDetail")) {
+            try {
+                if (KMUser.isLoggedIn(context)) {
+                    KMUser kmUser = (KMUser) GsonUtils.getObjectFromJson(GsonUtils.getJsonFromObject(call.arguments, Object.class), KMUser.class);
+                    new AlUserUpdateTask(context, kmUser, new AlCallback() {
+                        @Override
+                        public void onSuccess(Object message) {
+                            result.success(SUCCESS);
+                        }
+
+                        @Override
+                        public void onError(Object error) {
+                            result.error(ERROR, "Unable to update user details", null);
+                        }
+                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                } else {
+                    result.error(ERROR, "User not authorised. This usually happens when calling the function before conversationBuilder or loginUser. Make sure you call either of the two functions before updating the user details", null);
+                }
+            } catch (Exception e) {
+                result.error(ERROR, e.toString(), null);
             }
         } else if (call.method.equals("logout")) {
             Kommunicate.logout(context, new KMLogoutHandler() {
                 @Override
                 public void onSuccess(Context context) {
-                    result.success("Success");
+                    result.success(SUCCESS);
                 }
 
                 @Override
                 public void onFailure(Exception exception) {
-                    result.error("Error", GsonUtils.getJsonFromObject(exception, Exception.class), null);
+                    result.error(ERROR, GsonUtils.getJsonFromObject(exception, Exception.class), null);
                 }
             });
         } else {

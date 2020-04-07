@@ -46,27 +46,31 @@ class _MyAppState extends State<MyApp> {
 
   Future<dynamic> openSupportChat() async {
     try {
-      dynamic user = {
-        'userId': 'reytum',
-        'password': 'reytum'
-      };
+      dynamic user = {'userId': 'reytum', 'password': 'reytum'};
 
-      dynamic convObject = {
-        'appId': '22823b4a764f9944ad7913ddb3e43cae1'
-      };
+      dynamic convObject = {'appId': '22823b4a764f9944ad7913ddb3e43cae1'};
       dynamic result =
           await KommunicateFlutterPlugin.buildConversation(convObject);
 
-        dynamic chatContext = {
-          'key': 'value',
-          'objKey': {
-            'objKey1' : 'objValue1',
-            'objKey2' : 'objValue2'
+      dynamic chatContext = {
+        'key': 'value',
+        'objKey': {'objKey1': 'objValue1', 'objKey2': 'objValue2'}
+      };
+
+      try {
+        dynamic kmUser = {
+          'metadata': {
+            'Platform': 'Flutter 1',
+            'OS': 'Android',
+            'Version': '10.3'
           }
         };
+        KommunicateFlutterPlugin.updateUserDetail(kmUser);
+      } on Exception catch (e) {
+        print("Error while updating user details : " + e.toString());
+      }
 
-        KommunicateFlutterPlugin.updateChatContext(chatContext);
-
+      KommunicateFlutterPlugin.updateChatContext(chatContext);
       print("Conversation builder success : " + result.toString());
     } on Exception catch (e) {
       print("Conversation builder error occurred : " + e.toString());

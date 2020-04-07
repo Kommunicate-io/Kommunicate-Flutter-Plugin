@@ -22,4 +22,8 @@ class KommunicateFlutterPlugin {
   static Future<dynamic> updateChatContext(dynamic chatContext) async {
     return await _channel.invokeMethod('updateChatContext', chatContext);
   }
+
+  static Future<dynamic> updateUserDetail(dynamic kmUser) async {
+    return await _channel.invokeMethod('updateUserDetail', kmUser);
+  }
 }
