@@ -1,6 +1,7 @@
 import Flutter
 import UIKit
 import Kommunicate
+import Applozic
 
 public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFormViewControllerDelegate {
     var appId : String? = nil;
@@ -102,7 +103,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         } else if(call.method == "logout") {
             Kommunicate.logoutUser()
             result(String("Success"))
-        } else if(call.method == "updateChatContext"){
+        } else if(call.method == "updateChatContext") {
             guard let chatContext = call.arguments as? Dictionary<String, Any> else {
                 return
             }
@@ -116,6 +117,23 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             } catch  {
                 print(error)
                 sendErrorResultWithCallback(result: result, message: error.localizedDescription)
+            }
+        } else if(call.method == "updateUserDetail") {
+            guard let kmUser = call.arguments as? Dictionary<String, Any> else {
+                sendErrorResultWithCallback(result: result, message: "Invalid kmUser object")
+                return
+            }
+            if(Kommunicate.isLoggedIn) {
+                let userClientService = ALUserClientService()
+                userClientService.updateUserDisplayName(kmUser["displayName"] as? String, andUserImageLink: kmUser["imageLink"] as? String, userStatus: kmUser["status"] as? String, metadata: kmUser["metadata"] as? NSMutableDictionary) { (_, error) in
+                    guard error == nil else {
+                        self.sendErrorResultWithCallback(result: result, message: error?.localizedDescription)
+                        return
+                    }
+                    self.sendSuccessResultWithCallback(result: result, message: "Success")
+                }
+            } else {
+                sendErrorResultWithCallback(result: result, message: "User not authorised. This usually happens when calling the function before conversationBuilder or loginUser. Make sure you call either of the two functions before updating the user details")
             }
         } else {
             result(FlutterMethodNotImplemented)
