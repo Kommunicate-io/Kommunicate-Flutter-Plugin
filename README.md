@@ -124,6 +124,30 @@ You can set the data you want to send to the bot platform by calling the `update
   KommunicateFlutterPlugin.updateChatContext(chatContext);
 ```
 
+## Update logged in user's details
+You can update some details of the logged in user like displayName, imageUrl, metadata etc. Use the `updateUserDetail` method as below (Remove the fields from the userDetails object below, which you don't want to update):
+
+```dart
+try {
+  dynamic userDetails = {
+          'displayName': '<New Name>',
+          'imageLink': '<new-image-url>',
+          'email': '<New-Email>',
+          'contactNumber': '<New-Contact-Number>'
+          'metadata': {
+            'objKey1' : 'objValue1',
+            'objKey2' : 'objValue2'
+          }
+        };
+
+  KommunicateFlutterPlugin.updateUserDetail(userDetails);
+  } on Exception catch (e) {
+      print("Error occured while updating userDetails : " + e.toString());
+ }
+```
+
+Note: `userId`is a unique identifier of a kmUser object. It cannot be updated.
+
 ## Logout
 You can call the `logout` method to logout the user from kommunicate. Use the method as below:
 
