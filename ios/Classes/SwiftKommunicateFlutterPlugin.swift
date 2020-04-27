@@ -127,7 +127,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 let userClientService = ALUserClientService()
                 userClientService.updateUserDisplayName(kmUser["displayName"] as? String, andUserImageLink: kmUser["imageLink"] as? String, userStatus: kmUser["status"] as? String, metadata: kmUser["metadata"] as? NSMutableDictionary) { (_, error) in
                     guard error == nil else {
-                        self.sendErrorResultWithCallback(result: result, message: error?.localizedDescription)
+                        self.sendErrorResultWithCallback(result: result, message: error!.localizedDescription)
                         return
                     }
                     self.sendSuccessResultWithCallback(result: result, message: "Success")
