@@ -10,8 +10,8 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:icon="@mipmap/ic_launcher"
-        tools:replace="android:label"
-        android:label="kommunicate_flutter_plugin_example">
+        android:label="kommunicate_flutter_plugin_example"
+        tools:replace="android:label">
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
@@ -31,5 +31,10 @@
                 android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
                 android:value="true" />
         </activity>
+
+        <service
+            android:name="io.pushnotification.KmFirebaseMessagingService"
+            android:exported="true"
+            android:stopWithTask="false" />
     </application>
 </manifest>
