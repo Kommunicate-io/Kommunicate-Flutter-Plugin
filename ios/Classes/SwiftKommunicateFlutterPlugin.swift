@@ -124,14 +124,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 return
             }
             if(Kommunicate.isLoggedIn) {
-                let userClientService = ALUserClientService()
-                userClientService.updateUserDisplayName(kmUser["displayName"] as? String, andUserImageLink: kmUser["imageLink"] as? String, userStatus: kmUser["status"] as? String, metadata: kmUser["metadata"] as? NSMutableDictionary) { (_, error) in
-                    guard error == nil else {
-                        self.sendErrorResultWithCallback(result: result, message: error!.localizedDescription)
-                        return
-                    }
-                    self.sendSuccessResultWithCallback(result: result, message: "Success")
-                }
+                self.updateUser(displayName: kmUser["displayName"] as? String, imageLink: kmUser["imageLink"] as? String, status: kmUser["status"] as? String, metadata: kmUser["metadata"] as? NSMutableDictionary, phoneNumber: kmUser["contactNumber"] as? String, email: kmUser["email"] as? String, result: result)
             } else {
                 sendErrorResultWithCallback(result: result, message: "User not authorised. This usually happens when calling the function before conversationBuilder or loginUser. Make sure you call either of the two functions before updating the user details")
             }
@@ -227,6 +220,56 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             return
         }
         sendSuccessResultWithCallback(result: result, message: message)
+    }
+    
+    func updateUser (displayName: String?, imageLink : String?, status: String?, metadata: NSMutableDictionary?,phoneNumber: String?,email : String?, result: FlutterResult!) {
+        
+        let theUrlString = "\(ALUserDefaultsHandler.getBASEURL() as String)/rest/ws/user/update"
+        
+        let dictionary = NSMutableDictionary()
+        if (displayName != nil) {
+            dictionary["displayName"] = displayName
+        }
+        if imageLink != nil {
+            dictionary["imageLink"] = imageLink
+        }
+        if status != nil {
+            dictionary["statusMessage"] = status
+        }
+        if (metadata != nil) {
+            dictionary["metadata"] = metadata
+        }
+        if phoneNumber != nil {
+            dictionary["phoneNumber"] = phoneNumber
+        }
+        if email != nil {
+            dictionary["email"] = email
+        }
+        var postdata: Data? = nil
+        do {
+            postdata = try JSONSerialization.data(withJSONObject: dictionary, options: [])
+        } catch {
+            self.sendErrorResultWithCallback(result: result, message: error.localizedDescription)
+            return
+        }
+        var theParamString: String? = nil
+        if let postdata = postdata {
+            theParamString = String(data: postdata, encoding: .utf8)
+        }
+        let theRequest = ALRequestHandler.createPOSTRequest(withUrlString: theUrlString, paramString: theParamString)
+        ALResponseHandler.processRequest(theRequest, andTag: "UPDATE_DISPLAY_NAME_AND_PROFILE_IMAGE", withCompletionHandler: {
+            theJson, theError in
+            guard theError == nil else {
+                self.sendErrorResultWithCallback(result: result, message: theError!.localizedDescription)
+                return
+            }
+            guard let apiResponse = ALAPIResponse(jsonString: theJson as? String),apiResponse.status != "error"  else {
+                let reponseError = NSError(domain: "Kommunicate", code: 1, userInfo: [NSLocalizedDescriptionKey : "ERROR IN JSON STATUS WHILE UPDATING USER STATUS"])
+                self.sendErrorResultWithCallback(result: result, message: reponseError.localizedDescription)
+                return
+            }
+            self.sendSuccessResultWithCallback(result: result, message: "Success")
+        })
     }
 }
 
