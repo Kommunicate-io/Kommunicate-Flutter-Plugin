@@ -9,7 +9,8 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     var botIds: [String]? = [];
     var createOnly: Bool = false
     var isSingleConversation: Bool = true;
-    var callback: FlutterResult? 
+    var callback: FlutterResult?
+    var conversationAssignee: String? = nil;
     
     override init() {
     }
@@ -47,6 +48,10 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 
                 if(jsonObj["createOnly"] != nil){
                     self.createOnly = jsonObj["createOnly"] as! Bool
+                }
+                
+                if(jsonObj["conversationAssignee"] != nil) {
+                    self.conversationAssignee = jsonObj["conversationAssignee"] as? String
                 }
                 
                 if let messageMetadataStr = (jsonObj["messageMetadata"] as? String)?.data(using: .utf8) {
@@ -183,19 +188,37 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     }
     
     func handleCreateConversation(){
-        Kommunicate.createConversation(userId: KMUserDefaultHandler.getUserId(),
-                                       agentIds: self.agentIds ?? [],
-                                       botIds: self.botIds,
-                                       useLastConversation: self.isSingleConversation,
+        let builder = KMConversationBuilder();
+        
+        if let agentIds = self.agentIds, !agentIds.isEmpty {
+            builder.withAgentIds(agentIds)
+        }
+        
+        if let botIds = self.botIds, !botIds.isEmpty {
+            builder.withBotIds(botIds)
+        }
+        
+        if(self.isSingleConversation) {
+            builder.useLastConversation(self.isSingleConversation)
+        }
+        
+        if let assignee = self.conversationAssignee {
+            builder.withConversationAssignee(assignee)
+        }
+        
+        Kommunicate.createConversation(conversation: builder.build(),
                                        completion: { response in
-                                        guard !response.isEmpty else{
-                                            self.sendErrorResult(message: "Unable to create conversation")
-                                            return
-                                        }
-                                        if self.createOnly {
-                                            self.sendSuccessResult(message: String(response))
-                                        } else {
-                                            self.openParticularConversation(response, true, self.callback!)
+                                        switch response {
+                                        case .success(let conversationId):
+                                            if self.createOnly {
+                                                self.sendSuccessResult(message: conversationId)
+                                            } else {
+                                                self.openParticularConversation(conversationId, true, self.callback!)
+                                            }
+                                            self.sendSuccessResult(message: conversationId)
+                                            
+                                        case .failure(let error):
+                                            self.sendErrorResult(message: error.localizedDescription)
                                         }
         })
     }
