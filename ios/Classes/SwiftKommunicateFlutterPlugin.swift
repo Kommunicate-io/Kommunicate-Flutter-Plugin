@@ -11,6 +11,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     var isSingleConversation: Bool = true;
     var callback: FlutterResult?
     var conversationAssignee: String? = nil;
+    var clientConversationId: String? = nil;
     
     override init() {
     }
@@ -52,6 +53,10 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 
                 if(jsonObj["conversationAssignee"] != nil) {
                     self.conversationAssignee = jsonObj["conversationAssignee"] as? String
+                }
+                
+                if(jsonObj["clientConversationId"] != nil) {
+                    self.clientConversationId = jsonObj["clientConversationId"] as? String
                 }
                 
                 if let messageMetadataStr = (jsonObj["messageMetadata"] as? String)?.data(using: .utf8) {
@@ -198,12 +203,14 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             builder.withBotIds(botIds)
         }
         
-        if(self.isSingleConversation) {
-            builder.useLastConversation(self.isSingleConversation)
-        }
+        builder.useLastConversation(self.isSingleConversation)
         
         if let assignee = self.conversationAssignee {
             builder.withConversationAssignee(assignee)
+        }
+        
+        if let clientConversationId = self.clientConversationId {
+            builder.withClientConversationId(clientConversationId)
         }
         
         Kommunicate.createConversation(conversation: builder.build(),
