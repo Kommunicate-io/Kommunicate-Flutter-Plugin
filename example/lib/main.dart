@@ -48,7 +48,7 @@ class _MyAppState extends State<MyApp> {
     try {
       dynamic user = {'userId': 'reytum', 'password': 'reytum'};
 
-      dynamic convObject = {'appId': '22823b4a764f9944ad7913ddb3e43cae1'};
+      dynamic convObject = {'appId': '<Your-APP-ID>'};
       dynamic result =
           await KommunicateFlutterPlugin.buildConversation(convObject);
 
