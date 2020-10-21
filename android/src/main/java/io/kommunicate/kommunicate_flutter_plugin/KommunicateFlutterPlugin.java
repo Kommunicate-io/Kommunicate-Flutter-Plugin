@@ -3,6 +3,7 @@ package io.kommunicate.kommunicate_flutter_plugin;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -12,14 +13,20 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.kommunicate.KmConversationBuilder;
 import io.kommunicate.KmSettings;
 import io.kommunicate.Kommunicate;
+import io.kommunicate.callbacks.KMLoginHandler;
 import io.kommunicate.callbacks.KMLogoutHandler;
 import io.kommunicate.callbacks.KmCallback;
 import io.kommunicate.users.KMUser;
+import io.kommunicate.KmConversationHelper;
+import io.kommunicate.KmException;
 
 import com.applozic.mobicomkit.api.account.user.AlUserUpdateTask;
 import com.applozic.mobicomkit.feed.ChannelFeedApiResponse;
 import com.applozic.mobicomkit.listners.AlCallback;
+import com.applozic.mobicomkit.uiwidgets.async.AlGroupInformationAsyncTask;
 import com.applozic.mobicommons.json.GsonUtils;
+import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
+import com.applozic.mobicommons.people.channel.Channel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,6 +58,95 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
     public void onMethodCall(MethodCall call, final Result result) {
         if (call.method.equals("getPlatformVersion")) {
             result.success("Android " + android.os.Build.VERSION.RELEASE);
+        } else if (call.method.equals("isLoggedIn")) {
+            result.success(Kommunicate.isLoggedIn(context));
+        } else if (call.method.equals("login")) {
+            KMUser user = (KMUser) GsonUtils.getObjectFromJson(call.arguments.toString(), KMUser.class);
+
+            if (call.hasArgument("appId") && !TextUtils.isEmpty((String) call.argument("appId"))) {
+                Kommunicate.init(context, (String) call.argument("appId"));
+            } else {
+                result.error(ERROR, "appId is missing", null);
+                return;
+            }
+
+            Kommunicate.login(context, user, new KMLoginHandler() {
+                @Override
+                public void onSuccess(RegistrationResponse registrationResponse, Context context) {
+                    result.success(GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class));
+                }
+
+                @Override
+                public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
+                    result.error(ERROR, registrationResponse != null ? GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class) : exception != null ? exception.getMessage() : null, null);
+                }
+            });
+        } else if (call.method.equals("loginAsVisitor")) {
+            String appId = (String) call.arguments();
+            if (!TextUtils.isEmpty(appId)) {
+                Kommunicate.init(context, appId);
+            } else {
+                result.error(ERROR, "appId is missing", null);
+                return;
+            }
+
+            Kommunicate.loginAsVisitor(context, new KMLoginHandler() {
+                @Override
+                public void onSuccess(RegistrationResponse registrationResponse, Context context) {
+                    result.success(GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class));
+                }
+
+                @Override
+                public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
+                    result.error(ERROR, registrationResponse != null ? GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class) : exception != null ? exception.getMessage() : null, null);
+                }
+            });
+        } else if (call.method.equals("openConversations")) {
+            Kommunicate.openConversation(context, new KmCallback() {
+                @Override
+                public void onSuccess(Object message) {
+                    result.success(message.toString());
+                }
+
+                @Override
+                public void onFailure(Object error) {
+                    result.error(ERROR, error.toString(), null);
+                }
+            });
+        } else if (call.method.equals("openParticularConversation")) {
+            String clientConversationId = (String) call.arguments;
+            if (TextUtils.isEmpty(clientConversationId)) {
+                result.error(ERROR, "Invalid or empty clientConversationId", null);
+                return;
+            }
+
+            new AlGroupInformationAsyncTask(context, clientConversationId, new AlGroupInformationAsyncTask.GroupMemberListener() {
+                @Override
+                public void onSuccess(Channel channel, Context context) {
+                    if (channel != null) {
+                        try {
+                            KmConversationHelper.openConversation(context, true, channel.getKey(), new KmCallback() {
+                                @Override
+                                public void onSuccess(Object message) {
+                                    result.success(message.toString());
+                                }
+
+                                @Override
+                                public void onFailure(Object error) {
+                                    result.error(ERROR, error.toString(), null);
+                                }
+                            });
+                        } catch (KmException k) {
+                            result.error(ERROR, k.getMessage(), null);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Channel channel, Exception e, Context context) {
+                    result.error(ERROR, e != null ? e.getLocalizedMessage() : "Unable to open Conversation", null);
+                }
+            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else if (call.method.equals("buildConversation")) {
 
             KmConversationBuilder conversationBuilder = (KmConversationBuilder) GsonUtils.getObjectFromJson(call.arguments.toString(), KmConversationBuilder.class);
@@ -130,6 +226,7 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
         } else {
             result.notImplemented();
         }
+
     }
 
     private Map<String, String> getStringMap(HashMap<String, Object> objectMap) {

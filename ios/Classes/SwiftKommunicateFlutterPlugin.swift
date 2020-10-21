@@ -25,6 +25,74 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         if(call.method == "getPlatformVersion") {
             result("iOS " + UIDevice.current.systemVersion)
+        } else if(call.method == "isLoggedIn") {
+            result(Kommunicate.isLoggedIn)
+        } else if(call.method == "login") {
+            guard var userDict = call.arguments as? Dictionary<String, Any> else {
+                self.sendErrorResultWithCallback(result: result, message: "Unable to parse user JSON")
+                return
+            }
+            
+            if(userDict["appId"] != nil) {
+                Kommunicate.setup(applicationId: userDict["appId"] as! String)
+            } else {
+                self.sendErrorResultWithCallback(result: result, message: "appId is missing")
+                return
+            }
+            
+            userDict.removeValue(forKey: "appId")
+            
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: userDict, options: .prettyPrinted)
+                let jsonString = String(bytes: jsonData, encoding: .utf8)
+                let kmUser = KMUser(jsonString: jsonString)
+                kmUser?.applicationId = userDict["appId"] as? String
+                
+                Kommunicate.registerUser(kmUser!, completion: {
+                    response, error in
+                    guard error == nil else {
+                        self.sendErrorResultWithCallback(result: result, message: error!.localizedDescription)
+                        return
+                    }
+                    self.sendSuccessResultWithCallback(result: result, object: (response?.dictionary())!)
+                })
+            } catch {
+                self.sendErrorResultWithCallback(result: result, message: error.localizedDescription)
+            }
+        } else if(call.method == "loginAsVisitor") {
+            guard let appId = call.arguments as? String else {
+                self.sendErrorResultWithCallback(result: result, message: "appId is missing")
+                return
+            }
+            
+            Kommunicate.setup(applicationId: appId)
+            let kmUser = KMUser()
+            kmUser.userId = Kommunicate.randomId()
+            kmUser.applicationId = appId
+            
+            Kommunicate.registerUser(kmUser, completion: {
+                response, error in
+                guard error == nil else {
+                    self.sendErrorResultWithCallback(result: result, message: error!.localizedDescription)
+                    return
+                }
+                self.sendSuccessResultWithCallback(result: result, object: (response?.dictionary())!)
+            })
+        } else if(call.method == "openConversations") {
+            DispatchQueue.main.async{
+                if let top = UIApplication.topViewController(){
+                    Kommunicate.showConversations(from: top)
+                    self.sendSuccessResultWithCallback(result: result, message: "Successfully launched conversation list screen")
+                } else {
+                    self.sendErrorResultWithCallback(result: result, message: "Failed to launch conversation list screen")
+                }
+            }
+        } else if(call.method == "openParticularConversation") {
+            guard let clientConversationId = call.arguments as? String else {
+                self.sendErrorResultWithCallback(result: result, message: "Invalid or empty clientConversationId")
+                return
+            }
+            self.openParticularConversation(clientConversationId, true, result)
         } else if(call.method == "buildConversation") {
             do {
                 guard let jsonObj = call.arguments as? Dictionary<String, Any> else {
@@ -79,7 +147,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                     }
                     
                     if !withPrechat {
-                        if jsonObj["kmUser"] != nil{
+                        if jsonObj["kmUser"] != nil {
                             var jsonSt = jsonObj["kmUser"] as! String
                             jsonSt = jsonSt.replacingOccurrences(of: "\\\"", with: "\"")
                             jsonSt = "\(jsonSt)"
@@ -99,7 +167,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                             }
                             self.handleCreateConversation()
                         })
-                    }else{
+                    } else {
                         DispatchQueue.main.async {
                             let controller = KMPreChatFormViewController(configuration: Kommunicate.defaultConfiguration)
                             controller.delegate = self
@@ -107,12 +175,18 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                         }
                     }
                 }
-            }catch _ as NSError{
+            } catch _ as NSError {
                 
             }
         } else if(call.method == "logout") {
-            Kommunicate.logoutUser()
-            result(String("Success"))
+            Kommunicate.logoutUser { (logoutResult) in
+                switch logoutResult {
+                case .success(_):
+                    result(String("Logout success"))
+                case .failure( _):
+                    self.sendErrorResultWithCallback(result: result, message: "Error in logout")
+                }
+            }
         } else if(call.method == "updateChatContext") {
             guard let chatContext = call.arguments as? Dictionary<String, Any> else {
                 return
@@ -149,11 +223,11 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 Kommunicate.showConversationWith(groupId: conversationId, from: top, completionHandler: ({ (shown) in
                     if(shown){
                         callback(conversationId)
-                    }else{
+                    } else {
                         self.sendErrorResultWithCallback(result: callback, message: "Failed to launch conversation with conversationId : " + conversationId)
                     }
                 }))
-            }else{
+            } else {
                 self.sendErrorResultWithCallback(result: callback, message: "Failed to launch conversation with conversationId : " + conversationId)
             }}
     }
@@ -227,7 +301,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                                         case .failure(let error):
                                             self.sendErrorResult(message: error.localizedDescription)
                                         }
-        })
+                                       })
     }
     
     func sendErrorResultWithCallback(result: FlutterResult, message: String) {
@@ -250,6 +324,16 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             return
         }
         sendSuccessResultWithCallback(result: result, message: message)
+    }
+    
+    func sendSuccessResultWithCallback(result: FlutterResult, object: [AnyHashable : Any]) {
+        do{
+            let jsonData = try JSONSerialization.data(withJSONObject: object, options: .prettyPrinted)
+            let jsonString = String(bytes: jsonData, encoding: .utf8)
+            result(jsonString)
+        } catch {
+            sendSuccessResultWithCallback(result: result, message: "Success")
+        }
     }
     
     func updateUser (displayName: String?, imageLink : String?, status: String?, metadata: NSMutableDictionary?,phoneNumber: String?,email : String?, result: FlutterResult!) {
@@ -287,7 +371,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             theParamString = String(data: postdata, encoding: .utf8)
         }
         let theRequest = ALRequestHandler.createPOSTRequest(withUrlString: theUrlString, paramString: theParamString)
-        ALResponseHandler.processRequest(theRequest, andTag: "UPDATE_DISPLAY_NAME_AND_PROFILE_IMAGE", withCompletionHandler: {
+        ALResponseHandler.authenticateRequest(theRequest, withCompletion: {
             theJson, theError in
             guard theError == nil else {
                 self.sendErrorResultWithCallback(result: result, message: theError!.localizedDescription)

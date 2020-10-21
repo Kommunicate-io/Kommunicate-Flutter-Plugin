@@ -26,4 +26,26 @@ class KommunicateFlutterPlugin {
   static Future<dynamic> updateUserDetail(dynamic kmUser) async {
     return await _channel.invokeMethod('updateUserDetail', kmUser);
   }
+
+  static Future<dynamic> login(dynamic kmUser) async {
+    return await _channel.invokeMethod('login', kmUser);
+  }
+
+  static Future<dynamic> loginAsVisitor(String appId) async {
+    return await _channel.invokeMethod('loginAsVisitor', appId);
+  }
+
+  static Future<dynamic> openConversations() async {
+    return await _channel.invokeMethod('openConversations');
+  }
+
+  static Future<dynamic> openParticularConversation(
+      String clientConversationId) async {
+    return await _channel.invokeMethod(
+        'openParticularConversation', clientConversationId);
+  }
+
+  static Future<dynamic> isLoggedIn() async {
+    return await _channel.invokeMethod('isLoggedIn');
+  }
 }
