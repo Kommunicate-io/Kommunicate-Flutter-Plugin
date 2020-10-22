@@ -33,12 +33,12 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 return
             }
             
-            if(userDict["appId"] != nil) {
-                Kommunicate.setup(applicationId: userDict["appId"] as! String)
-            } else {
-                self.sendErrorResultWithCallback(result: result, message: "appId is missing")
+            guard let appId = userDict["appId"] as? String, !appId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                self.sendErrorResultWithCallback(result: result, message: "Invalid or missing appId")
                 return
             }
+            
+            Kommunicate.setup(applicationId: appId)
             
             userDict.removeValue(forKey: "appId")
             
@@ -60,8 +60,8 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 self.sendErrorResultWithCallback(result: result, message: error.localizedDescription)
             }
         } else if(call.method == "loginAsVisitor") {
-            guard let appId = call.arguments as? String else {
-                self.sendErrorResultWithCallback(result: result, message: "appId is missing")
+            guard let appId = call.arguments as? String, !appId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                self.sendErrorResultWithCallback(result: result, message: "Invalid or missing appId")
                 return
             }
             
@@ -371,7 +371,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             theParamString = String(data: postdata, encoding: .utf8)
         }
         let theRequest = ALRequestHandler.createPOSTRequest(withUrlString: theUrlString, paramString: theParamString)
-        ALResponseHandler.authenticateRequest(theRequest, withCompletion: {
+        ALResponseHandler.authenticateAndProcessRequest(theRequest,andTag: "UPDATE_DISPLAY_NAME_AND_PROFILE_IMAGE", withCompletionHandler: {
             theJson, theError in
             guard theError == nil else {
                 self.sendErrorResultWithCallback(result: result, message: theError!.localizedDescription)
