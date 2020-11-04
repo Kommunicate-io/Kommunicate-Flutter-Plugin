@@ -7,7 +7,7 @@
 ```
 dependencies:
   //other dependencies
-  kommunicate_flutter_plugin: ^1.0.9
+  kommunicate_flutter_plugin: ^1.1.0
 ```
 
 2) Install the package as below:
