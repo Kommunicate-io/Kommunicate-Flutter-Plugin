@@ -35,6 +35,6 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    api 'io.kommunicate.sdk:kommunicateui:2.0.5'
+    api 'io.kommunicate.sdk:kommunicateui:2.1.1'
 
 }
