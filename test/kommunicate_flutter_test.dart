@@ -1,9 +1,9 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kommunicate_flutter_plugin/kommunicate_flutter_plugin.dart';
+import 'package:kommunicate_flutter/kommunicate_flutter.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('kommunicate_flutter_plugin');
+  const MethodChannel channel = MethodChannel('kommunicate_flutter');
 
   setUp(() {
     channel.setMockMethodCallHandler((MethodCall methodCall) async {

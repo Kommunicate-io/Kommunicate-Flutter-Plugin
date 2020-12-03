@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 class KommunicateFlutterPlugin {
   static const MethodChannel _channel =
-      const MethodChannel('kommunicate_flutter_plugin');
+      const MethodChannel('kommunicate_flutter');
 
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');

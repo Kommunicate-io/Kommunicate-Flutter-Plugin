@@ -7,17 +7,17 @@
 ```
 dependencies:
   //other dependencies
-  kommunicate_flutter_plugin: ^1.1.0
+  kommunicate_flutter: ^1.1.1
 ```
 
 2) Install the package as below:
 ```
 flutter pub get
 ```
-3) Import the kommunicate_flutter_plugin in your .dart file to use the methods from Kommunicate:
+3) Import the kommunicate_flutter in your .dart file to use the methods from Kommunicate:
 
 ```
-import 'package:kommunicate_flutter_plugin/kommunicate_flutter_plugin.dart';
+import 'package:kommunicate_flutter/kommunicate_flutter.dart';
 ```
 
 4) For iOS, navigate to YourApp/ios directory from terminal and run the below command:

@@ -1,3 +1,14 @@
+## 1.1.1
+  Changed the package name from "kommunicate_flutter_plugin" to "kommunicate_flutter"
+
+  Migration to version 1.1.1 from 1.1.0
+
+  * Change the plugin name in pubspec.yaml from "kommunicate_flutter_plugin" to "kommunicate_flutter"
+  * Change the imports from:
+      import 'package:kommunicate_flutter_plugin/kommunicate_flutter_plugin.dart';
+       to:
+      import 'package:kommunicate_flutter/kommunicate_flutter.dart';
+      
 ## 1.1.0
 * Added new functions for Authentication:
   - isLoggedIn(): To check weather the user is logged in or not
