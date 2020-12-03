@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:kommunicate_flutter_plugin/kommunicate_flutter_plugin.dart';
+import 'package:kommunicate_flutter/kommunicate_flutter.dart';
 
 import 'home.dart';
 

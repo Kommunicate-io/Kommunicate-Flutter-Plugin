@@ -2,7 +2,7 @@ import 'package:kommunicate_flutter_plugin_example/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:kommunicate_flutter_plugin/kommunicate_flutter_plugin.dart';
+import 'package:kommunicate_flutter/kommunicate_flutter.dart';
 import 'dart:io' show Platform;
 import 'package:intl/intl.dart';
 

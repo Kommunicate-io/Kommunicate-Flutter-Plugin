@@ -19,7 +19,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  kommunicate_flutter_plugin:
+  kommunicate_flutter:
     path: ../
   intl: ^0.16.1
 
