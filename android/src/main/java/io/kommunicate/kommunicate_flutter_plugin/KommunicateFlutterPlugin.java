@@ -151,7 +151,7 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
 
             KmConversationBuilder conversationBuilder = (KmConversationBuilder) GsonUtils.getObjectFromJson(call.arguments.toString(), KmConversationBuilder.class);
             conversationBuilder.setContext(context);
-            //Log.d();
+            
             if (!call.hasArgument("isSingleConversation")) {
                 conversationBuilder.setSingleConversation(true);
             }
