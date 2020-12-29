@@ -17,7 +17,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     }
     
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "kommunicate_flutter_plugin", binaryMessenger: registrar.messenger())
+        let channel = FlutterMethodChannel(name: "kommunicate_flutter", binaryMessenger: registrar.messenger())
         let instance = SwiftKommunicateFlutterPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
