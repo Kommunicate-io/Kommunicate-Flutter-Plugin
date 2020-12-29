@@ -1,3 +1,8 @@
+## 1.1.2
+  * Fixed issue where kommunicate plugin podspec file was not being found by the plugin
+  * Fixed issue where plugin methods were not accessible on channel kommunicate_flutter
+  * Updated iOS SDK version to 5.9.0
+
 ## 1.1.1
   Changed the package name from "kommunicate_flutter_plugin" to "kommunicate_flutter"
 

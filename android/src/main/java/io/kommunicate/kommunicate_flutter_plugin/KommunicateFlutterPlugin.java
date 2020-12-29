@@ -44,7 +44,7 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
     private MethodChannel methodChannel;
 
     public static void registerWith(Registrar registrar) {
-        final MethodChannel channel = new MethodChannel(registrar.messenger(), "kommunicate_flutter_plugin");
+        final MethodChannel channel = new MethodChannel(registrar.messenger(), "kommunicate_flutter");
         channel.setMethodCallHandler(new KommunicateFlutterPlugin(registrar.activity(), channel));
     }
 
@@ -151,7 +151,7 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
 
             KmConversationBuilder conversationBuilder = (KmConversationBuilder) GsonUtils.getObjectFromJson(call.arguments.toString(), KmConversationBuilder.class);
             conversationBuilder.setContext(context);
-
+            
             if (!call.hasArgument("isSingleConversation")) {
                 conversationBuilder.setSingleConversation(true);
             }
