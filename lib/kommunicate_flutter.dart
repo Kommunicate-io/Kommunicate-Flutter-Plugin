@@ -45,6 +45,10 @@ class KommunicateFlutterPlugin {
         'openParticularConversation', clientConversationId);
   }
 
+  static Future<dynamic> unreadCount() async {
+    return await _channel.invokeMethod('unreadCount');
+  }
+
   static Future<dynamic> isLoggedIn() async {
     return await _channel.invokeMethod('isLoggedIn');
   }

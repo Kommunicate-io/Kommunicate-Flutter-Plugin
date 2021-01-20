@@ -23,6 +23,8 @@ import io.kommunicate.KmConversationHelper;
 import io.kommunicate.KmException;
 
 import com.applozic.mobicomkit.api.account.user.AlUserUpdateTask;
+import com.applozic.mobicomkit.api.conversation.database.MessageDatabaseService;
+import com.applozic.mobicomkit.ApplozicClient;
 import com.applozic.mobicomkit.feed.ChannelFeedApiResponse;
 import com.applozic.mobicomkit.listners.AlCallback;
 import com.applozic.mobicommons.json.GsonUtils;
@@ -75,6 +77,7 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
                 @Override
                 public void onSuccess(RegistrationResponse registrationResponse, Context context) {
                     result.success(GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class));
+                    ApplozicClient.getInstance(context).setNotificationStacking(true);
                 }
 
                 @Override
@@ -95,6 +98,7 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
                 @Override
                 public void onSuccess(RegistrationResponse registrationResponse, Context context) {
                     result.success(GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class));
+                    ApplozicClient.getInstance(context).setNotificationStacking(true);
                 }
 
                 @Override
@@ -224,6 +228,8 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
                     result.error(ERROR, GsonUtils.getJsonFromObject(exception, Exception.class), null);
                 }
             });
+        } else if (call.method.equals("unreadCount")) {
+            result.success(String.valueOf(new MessageDatabaseService(context).getTotalUnreadCount()));
         } else {
             result.notImplemented();
         }
