@@ -13,9 +13,11 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.kommunicate.KmConversationBuilder;
 import io.kommunicate.KmSettings;
 import io.kommunicate.Kommunicate;
+import io.kommunicate.async.KmConversationInfoTask;
 import io.kommunicate.callbacks.KMLoginHandler;
 import io.kommunicate.callbacks.KMLogoutHandler;
 import io.kommunicate.callbacks.KmCallback;
+import io.kommunicate.callbacks.KmGetConversationInfoCallback;
 import io.kommunicate.users.KMUser;
 import io.kommunicate.KmConversationHelper;
 import io.kommunicate.KmException;
@@ -23,7 +25,6 @@ import io.kommunicate.KmException;
 import com.applozic.mobicomkit.api.account.user.AlUserUpdateTask;
 import com.applozic.mobicomkit.feed.ChannelFeedApiResponse;
 import com.applozic.mobicomkit.listners.AlCallback;
-import com.applozic.mobicomkit.uiwidgets.async.AlGroupInformationAsyncTask;
 import com.applozic.mobicommons.json.GsonUtils;
 import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
 import com.applozic.mobicommons.people.channel.Channel;
@@ -120,7 +121,7 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
                 return;
             }
 
-            new AlGroupInformationAsyncTask(context, clientConversationId, new AlGroupInformationAsyncTask.GroupMemberListener() {
+            new KmConversationInfoTask(context, clientConversationId, new KmGetConversationInfoCallback() {
                 @Override
                 public void onSuccess(Channel channel, Context context) {
                     if (channel != null) {
@@ -143,7 +144,7 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
                 }
 
                 @Override
-                public void onFailure(Channel channel, Exception e, Context context) {
+                public void onFailure(Exception e, Context context) {
                     result.error(ERROR, e != null ? e.getLocalizedMessage() : "Unable to open Conversation", null);
                 }
             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -151,7 +152,7 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
 
             KmConversationBuilder conversationBuilder = (KmConversationBuilder) GsonUtils.getObjectFromJson(call.arguments.toString(), KmConversationBuilder.class);
             conversationBuilder.setContext(context);
-            
+
             if (!call.hasArgument("isSingleConversation")) {
                 conversationBuilder.setSingleConversation(true);
             }
@@ -204,7 +205,7 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
                         public void onError(Object error) {
                             result.error(ERROR, "Unable to update user details", null);
                         }
-                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    }).execute();
                 } else {
                     result.error(ERROR, "User not authorised. This usually happens when calling the function before conversationBuilder or loginUser. Make sure you call either of the two functions before updating the user details", null);
                 }

@@ -1,3 +1,11 @@
+## 1.1.3
+  * Added settings to change toolbar, statusbar and rich message theme color in android
+  * Added option to set teamId in android 
+  * Added an option to show/hide different message menu options in iOS.
+  * Now, chat bar's attachment color config will be applied to the bottom part of the chat bar as well in iOS
+  * Fixed issue with localization crash in android
+  * Added a check for whitespace and newline characters in the user ID in iOS
+  
 ## 1.1.2
   * Fixed issue where kommunicate plugin podspec file was not being found by the plugin
   * Fixed issue where plugin methods were not accessible on channel kommunicate_flutter
