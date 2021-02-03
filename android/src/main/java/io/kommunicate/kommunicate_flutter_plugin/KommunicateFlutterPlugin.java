@@ -24,7 +24,6 @@ import io.kommunicate.KmException;
 
 import com.applozic.mobicomkit.api.account.user.AlUserUpdateTask;
 import com.applozic.mobicomkit.api.conversation.database.MessageDatabaseService;
-import com.applozic.mobicomkit.ApplozicClient;
 import com.applozic.mobicomkit.feed.ChannelFeedApiResponse;
 import com.applozic.mobicomkit.listners.AlCallback;
 import com.applozic.mobicommons.json.GsonUtils;
@@ -77,7 +76,6 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
                 @Override
                 public void onSuccess(RegistrationResponse registrationResponse, Context context) {
                     result.success(GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class));
-                    ApplozicClient.getInstance(context).setNotificationStacking(true);
                 }
 
                 @Override
@@ -98,7 +96,6 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
                 @Override
                 public void onSuccess(RegistrationResponse registrationResponse, Context context) {
                     result.success(GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class));
-                    ApplozicClient.getInstance(context).setNotificationStacking(true);
                 }
 
                 @Override
