@@ -1,3 +1,6 @@
+## 1.1.4
+  * Added method to get total unread messages count
+  
 ## 1.1.3
   * Added settings to change toolbar, statusbar and rich message theme color in android
   * Added option to set teamId in android 
