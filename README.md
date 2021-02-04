@@ -1,5 +1,6 @@
 # Kommunicate Flutter plugin 
  Flutter wrapper using the native modules of Kommunicate Android and iOS SDKs. 
+ Refer to the official docs here: https://docs.kommunicate.io/docs/flutter-installation.html
 
 ## Installation
 
