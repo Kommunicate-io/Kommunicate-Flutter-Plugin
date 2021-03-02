@@ -1,3 +1,7 @@
+## 1.1.5
+  * Team Id support
+  * Customization options for prechat form in iOS
+
 ## 1.1.4
   * Added method to get total unread messages count
   
