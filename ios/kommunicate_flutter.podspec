@@ -17,7 +17,7 @@ Flutter plugin for Kommunicate live chat.
 
   s.dependency 'Flutter'
   s.swift_version = '5.1'
-  s.dependency 'Kommunicate', '~> 5.10.0'
+  s.dependency 'Kommunicate', '~> 5.13.0'
 
   s.ios.deployment_target = '10.0'
 end
