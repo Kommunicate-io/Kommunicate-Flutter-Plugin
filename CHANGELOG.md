@@ -1,3 +1,11 @@
+## 1.1.6
+### Android
+  * Support for dropdown list in form rich message
+  * Change in format for date and time type rich messages
+  * Setting to restrict message typing with bots
+  * Move proguard rules to SDK
+  * Fix away message update in realtime
+
 ## 1.1.5
   * Team Id support
   * Customization options for prechat form in iOS
