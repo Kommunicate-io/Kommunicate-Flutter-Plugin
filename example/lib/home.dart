@@ -39,6 +39,7 @@ class HomePageState extends State<HomePage> {
   }
 }
 
+// ignore: must_be_immutable
 class HomePageWidget extends StatelessWidget {
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
   bool isGroupInProgress = false;

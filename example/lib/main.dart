@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'dart:convert';
 
 import 'package:kommunicate_flutter/kommunicate_flutter.dart';
+import 'package:kommunicate_flutter_plugin_example/AppConfig.dart';
+import 'package:kommunicate_flutter_plugin_example/prechat.dart';
 
 import 'home.dart';
 
@@ -41,8 +41,6 @@ class _MyAppState extends State<MyApp> {
 
 // ignore: must_be_immutable
 class LoginPage extends StatelessWidget {
-  // ignore: non_constant_identifier_names
-  final String APP_ID = '<Your-App-ID>';
   TextEditingController userId = new TextEditingController();
   TextEditingController password = new TextEditingController();
 
@@ -50,7 +48,7 @@ class LoginPage extends StatelessWidget {
     dynamic user = {
       'userId': userId.text,
       'password': password.text,
-      'appId': APP_ID
+      'appId': AppConfig.APP_ID
     };
 
     KommunicateFlutterPlugin.login(user).then((result) {
@@ -64,7 +62,7 @@ class LoginPage extends StatelessWidget {
   }
 
   void loginAsVisitor(context) {
-    KommunicateFlutterPlugin.loginAsVisitor(APP_ID).then((result) {
+    KommunicateFlutterPlugin.loginAsVisitor(AppConfig.APP_ID).then((result) {
       Navigator.pop(context);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => HomePage()));
@@ -75,7 +73,7 @@ class LoginPage extends StatelessWidget {
   }
 
   void buildConversation() {
-    dynamic conversationObject = {'appId': APP_ID};
+    dynamic conversationObject = {'appId': AppConfig.APP_ID};
 
     KommunicateFlutterPlugin.buildConversation(conversationObject)
         .then((result) {
@@ -85,13 +83,34 @@ class LoginPage extends StatelessWidget {
     });
   }
 
+  void buildConversationWithPreChat(context) {
+    try {
+      KommunicateFlutterPlugin.isLoggedIn().then((value) {
+        print("Logged in : " + value.toString());
+        if (value) {
+          KommunicateFlutterPlugin.buildConversation(
+                  {'isSingleConversation': true, 'appId': AppConfig.APP_ID})
+              .then((result) {
+            print("Conversation builder success : " + result.toString());
+          }).catchError((error) {
+            print("Conversation builder error occurred : " + error.toString());
+          });
+        } else {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => PreChatPage()));
+        }
+      });
+    } on Exception catch (e) {
+      print("isLogged in error : " + e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     try {
       KommunicateFlutterPlugin.isLoggedIn().then((value) {
         print("Logged in : " + value.toString());
         if (value) {
-          print("Logged in after check");
           Navigator.pop(context);
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => HomePage()));
@@ -186,7 +205,25 @@ class LoginPage extends StatelessWidget {
                           .copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold)),
-                ))
+                )),
+            SizedBox(height: 10),
+            new Material(
+                elevation: 5.0,
+                borderRadius: BorderRadius.circular(30.0),
+                color: Color(0xff5c5aa7),
+                child: new MaterialButton(
+                    onPressed: () {
+                      buildConversationWithPreChat(context);
+                    },
+                    minWidth: 400,
+                    padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                    child: Text("Builder with Pre chat form",
+                        textAlign: TextAlign.center,
+                        style:
+                            TextStyle(fontFamily: 'Montserrat', fontSize: 20.0)
+                                .copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold))))
           ],
         ),
       ),
