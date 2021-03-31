@@ -24,6 +24,7 @@ import io.kommunicate.KmException;
 
 import com.applozic.mobicomkit.api.account.user.AlUserUpdateTask;
 import com.applozic.mobicomkit.api.conversation.database.MessageDatabaseService;
+import com.applozic.mobicomkit.channel.service.ChannelService;
 import com.applozic.mobicomkit.feed.ChannelFeedApiResponse;
 import com.applozic.mobicomkit.listners.AlCallback;
 import com.applozic.mobicommons.json.GsonUtils;
@@ -164,7 +165,8 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
             KmCallback callback = new KmCallback() {
                 @Override
                 public void onSuccess(Object message) {
-                    result.success(message);
+                    Integer conversationId = (Integer) message;
+                    result.success(ChannelService.getInstance(context).getChannel(conversationId).getClientGroupId());
                 }
 
                 @Override
