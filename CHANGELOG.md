@@ -1,3 +1,8 @@
+## 1.1.8
+
+- Update Android SDK version to 2.1.8
+- Update iOS SDK version to 6.1.0
+
 ## 1.1.7
 
 ### Android
