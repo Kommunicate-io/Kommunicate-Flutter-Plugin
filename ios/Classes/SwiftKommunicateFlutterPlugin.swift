@@ -284,7 +284,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         
         kmUser.contactNumber = phoneNumber
         kmUser.displayName = name
-        
+        Kommunicate.setup(applicationId: appId)
         Kommunicate.registerUser(kmUser, completion:{
             response, error in
             guard error == nil else{
