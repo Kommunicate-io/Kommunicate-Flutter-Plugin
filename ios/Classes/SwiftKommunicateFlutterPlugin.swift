@@ -1,7 +1,7 @@
 import Flutter
 import UIKit
 import Kommunicate
-import Applozic
+import ApplozicCore
 
 public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFormViewControllerDelegate {
     var appId : String? = nil;
@@ -12,7 +12,10 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     var callback: FlutterResult?
     var conversationAssignee: String? = nil;
     var clientConversationId: String? = nil;
+    var conversationTitle: String? = nil;
+    var conversationInfo: [AnyHashable: Any]? = nil;
     var teamId: String? = nil;
+    static let KM_CONVERSATION_METADATA: String = "conversationMetadata";
     
     override init() {
     }
@@ -104,6 +107,9 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             self.conversationAssignee = nil
             self.clientConversationId = nil
             self.teamId = nil
+            self.conversationInfo = nil
+            self.conversationTitle = nil
+            
             do {
                 guard let jsonObj = call.arguments as? Dictionary<String, Any> else {
                     return
@@ -138,6 +144,14 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 
                 if jsonObj["teamId"] != nil {
                     self.teamId = jsonObj["teamId"] as? String
+                }
+                
+                if jsonObj["conversationTitle"] != nil {
+                    self.conversationTitle = jsonObj["conversationTitle"] as? String
+                }
+                
+                if jsonObj["conversationInfo"] != nil {
+                    conversationInfo = [SwiftKommunicateFlutterPlugin.KM_CONVERSATION_METADATA: jsonObj["conversationInfo"] as Any]
                 }
                 
                 if let messageMetadataStr = (jsonObj["messageMetadata"] as? String)?.data(using: .utf8) {
@@ -304,6 +318,14 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         
         if let teamId = self.teamId {
             builder.withTeamId(teamId)
+        }
+        
+        if let conversationTitle = self.conversationTitle {
+            builder.withConversationTitle(conversationTitle)
+        }
+        
+        if let conversationInfo = self.conversationInfo {
+            builder.withMetaData(conversationInfo)
         }
         
         Kommunicate.createConversation(conversation: builder.build(),

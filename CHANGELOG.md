@@ -1,3 +1,8 @@
+## 1.1.9
+
+- Added support for setting conversationTitle in iOS
+- Added support for setting conversationInfo in iOS
+
 ## 1.1.8
 
 - Update Android SDK version to 2.1.8
