@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Update iOS SDK version to 6.1.1
+
 ## 1.1.9
 
 - Added support for setting conversationTitle in iOS
