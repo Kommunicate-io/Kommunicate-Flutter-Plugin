@@ -1,5 +1,11 @@
 # Kommunicate Flutter plugin
 
+## Overview
+
+Kommunicate Flutter SDK allows you to add customizable live chat to your applications. We support many hybrid platforms that are currently in the market; hence we have added the support for Flutter that provides a fast and expressive way for developers to build native apps on both IOS and Android.
+
+![Alt Text](https://kommunicate-cdn.s3.amazonaws.com/kommunicate/gif.mov)
+
 Flutter wrapper using the native modules of Kommunicate Android and iOS SDKs.
 Refer to the official docs here: https://docs.kommunicate.io/docs/flutter-installation.html
 
