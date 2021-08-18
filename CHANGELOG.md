@@ -1,3 +1,7 @@
+## 1.2.1
+
+- Update iOS SDK version to 6.2.0
+
 ## 1.2.0
 
 - Update iOS SDK version to 6.1.1
