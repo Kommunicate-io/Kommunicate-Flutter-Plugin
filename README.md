@@ -175,3 +175,33 @@ You can call the `logout` method to logout the user from kommunicate. Use the me
 
 Here is the sample app which implements this SDK: https://github.com/Kommunicate-io/Kommunicate-Flutter-Plugin/tree/master/example
   
+  
+## Dialogflow chatbot integration in your Flutter app
+
+Dialogflow is a Google-owned NLP platform to facilitate human-computer interactions such as chatbots, voice bots, etc. 
+
+Kommunicate's Dialogflow integration provides a more versatile, customizable and better chatting experience. Kommunicate Flutter Live Chat SDK supports all of Dialogflow's features such as Google Assistant, Rich Messaging, etc. On top of that, it is equipped with advanced features such as bot-human handoff, conversation managing dashboard, reporting, and others. 
+
+You can connect your Dialogflow chatbot with Kommunicate in the following 3 simple steps. [Here](https://www.kommunicate.io/blog/integrate-dialogflow-flutter-app/) is a step by step blog to add Kommunicate SDK in your Flutter app. 
+
+### Step 1: Get your API credentials from Dialogflow
+- Login to Dialogflow console and select your agent from the dropdown in the left panel.
+- Click on the settings button. It will open a setting page for the agent.
+- Inside the general tab search for GOOGLE PROJECTS and click on your service account.
+- After getting redirected to your SERVICE ACCOUNT, create a key in JSON format for your project from the actions section and it will get automatically downloaded.
+
+### Step 2: Create a free Kommunicate account
+Create a free account on [Kommunicate](https://dashboard.kommunicate.io/signup) and navigate to the [Bots section](https://dashboard.kommunicate.io/bots/bot-integrations).
+
+### Step 3: Integrate your Dialogflow chatbot with Kommunicate
+- In the Bot integrations section, choose Dialogflow. A popup window will open.
+- Upload your Key file here and proceed.
+- Give a name and image to your chatbot. It will be visible to the users chatting with your chatbot.
+- Enable/Disable chatbot to human handoff. If enabled, it will automatically assign conversations to humans in case the chatbot is not able to answer.
+
+### Step 4: Install the Kommunicate Flutter SDK to your app
+You can add the Kommunicate SDK in your Flutter app easily. More information on how to integrate with your Flutter app [here](https://docs.kommunicate.io/docs/flutter-installation). 
+
+> Note: Here's a [sample chatbot](https://docs.kommunicate.io/docs/bot-samples) for you to get started with Dialogflow. 
+
+ 
