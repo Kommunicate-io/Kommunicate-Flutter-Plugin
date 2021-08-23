@@ -3,6 +3,9 @@
 Flutter wrapper using the native modules of Kommunicate Android and iOS SDKs.
 Refer to the official docs here: https://docs.kommunicate.io/docs/flutter-installation.html
 
+![Kommunicate Flutter App.png](example/assets/Kommunicate-Flutter-App.png "Kommunicate_Flutter_App")
+
+
 ## Installation
 
 1. Add the below dependency in your pubspec.yaml file:
@@ -171,3 +174,4 @@ You can call the `logout` method to logout the user from kommunicate. Use the me
 ```
 
 Here is the sample app which implements this SDK: https://github.com/Kommunicate-io/Kommunicate-Flutter-Plugin/tree/master/example
+  
