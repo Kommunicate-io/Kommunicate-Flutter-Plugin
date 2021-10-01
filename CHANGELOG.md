@@ -1,3 +1,8 @@
+## 1.3.0
+
+- Update iOS SDK version to 6.3.0
+- Added support for Xcode 13
+
 ## 1.2.2
 
 - Update iOS SDK version to 6.2.1
