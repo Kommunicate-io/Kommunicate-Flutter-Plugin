@@ -80,12 +80,9 @@ class HomePageWidget extends StatelessWidget {
             title: Text('Enter User ID'),
             content: TextField(
               onChanged: (value) {
-                // setState(() {
                 valueText = value;
                 print(value);
-                // });
               },
-              //controller: _textFieldController,
               decoration: InputDecoration(hintText: "Text Field in Dialog"),
             ),
             actions: <Widget>[
@@ -94,9 +91,7 @@ class HomePageWidget extends StatelessWidget {
                 textColor: Colors.white,
                 child: Text('CANCEL'),
                 onPressed: () {
-                  // setState(() {
                   Navigator.pop(context);
-                  // });
                 },
               ),
               FlatButton(
@@ -104,11 +99,8 @@ class HomePageWidget extends StatelessWidget {
                 textColor: Colors.white,
                 child: Text('OK'),
                 onPressed: () {
-                  // setState(() {
-                  //   //codeDialog = valueText;
                   fetchUserDetails(valueText);
                   Navigator.pop(context);
-                  // });
                 },
               ),
             ],

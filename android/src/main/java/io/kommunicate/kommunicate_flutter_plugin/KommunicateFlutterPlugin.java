@@ -237,7 +237,6 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
                     @Override
                     public void hasFinished(Contact contact) {
                         result.success(GsonUtils.getJsonFromObject(contact, Contact.class));
-                        //result.success(contact.toString());
                     }
                 }).execute();
             } catch (Exception e) {
