@@ -52,4 +52,8 @@ class KommunicateFlutterPlugin {
   static Future<dynamic> isLoggedIn() async {
     return await _channel.invokeMethod('isLoggedIn');
   }
+
+  static Future<dynamic> fetchUserDetails(String userid) async {
+    return await _channel.invokeMethod('fetchUserDetails', userid);
+  }
 }

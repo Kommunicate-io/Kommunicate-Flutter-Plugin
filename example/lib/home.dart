@@ -62,6 +62,52 @@ class HomePageWidget extends StatelessWidget {
     return new DateTime.now().millisecondsSinceEpoch;
   }
 
+  void fetchUserDetails(String userid) {
+    try {
+      KommunicateFlutterPlugin.fetchUserDetails(userid).then((value) =>
+          print("User details fetched: " + value));
+    } on Exception catch (e) {
+      print("Fetching user details error : " + e.toString());
+    }
+  }
+
+  String valueText;
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Enter User ID'),
+            content: TextField(
+              onChanged: (value) {
+                valueText = value;
+                print(value);
+              },
+              decoration: InputDecoration(hintText: "Text Field in Dialog"),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                color: Colors.red,
+                textColor: Colors.white,
+                child: Text('CANCEL'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              FlatButton(
+                color: Colors.green,
+                textColor: Colors.white,
+                child: Text('OK'),
+                onPressed: () {
+                  fetchUserDetails(valueText);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -156,6 +202,24 @@ class HomePageWidget extends StatelessWidget {
                       style: style.copyWith(
                           color: Colors.white, fontWeight: FontWeight.bold)),
                 )),
+            SizedBox(height:10),
+            new Material(
+                elevation: 5.0,
+                borderRadius: BorderRadius.circular(30.0),
+                color: Color(0xff5c5aa7),
+                child: new MaterialButton(
+                    onPressed: () {
+                      _displayTextInputDialog(context);
+                    },
+                    minWidth: 400,
+                    padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                    child: Text("Fetch User Details",
+                        textAlign: TextAlign.center,
+                        style:
+                        TextStyle(fontFamily: 'Montserrat', fontSize: 20.0)
+                            .copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)))),
             SizedBox(height: 10),
             new Material(
                 elevation: 5.0,

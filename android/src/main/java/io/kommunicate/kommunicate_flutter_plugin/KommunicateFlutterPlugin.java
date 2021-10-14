@@ -30,6 +30,8 @@ import com.applozic.mobicomkit.listners.AlCallback;
 import com.applozic.mobicommons.json.GsonUtils;
 import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
 import com.applozic.mobicommons.people.channel.Channel;
+import com.applozic.mobicommons.people.contact.Contact;
+import com.applozic.mobicomkit.uiwidgets.conversation.fragment.MobiComConversationFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -229,7 +231,19 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
             });
         } else if (call.method.equals("unreadCount")) {
             result.success(String.valueOf(new MessageDatabaseService(context).getTotalUnreadCount()));
-        } else {
+        } else if(call.method.equals("fetchUserDetails")) {
+            try {
+                new MobiComConversationFragment.KMUserDetailTask(context, call.arguments.toString(), new MobiComConversationFragment.KmUserDetailsCallback() {
+                    @Override
+                    public void hasFinished(Contact contact) {
+                        result.success(GsonUtils.getJsonFromObject(contact, Contact.class));
+                    }
+                }).execute();
+            } catch (Exception e) {
+                result.error(ERROR, e.toString(), null);
+            }
+        }
+        else {
             result.notImplemented();
         }
 
