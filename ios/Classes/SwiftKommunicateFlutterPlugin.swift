@@ -265,7 +265,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         UIApplication.topViewController()?.dismiss(animated: false, completion: nil)
     }
     
-    public func userSubmittedResponse(name: String, email: String, phoneNumber: String) {
+    public func userSubmittedResponse(name: String, email: String, phoneNumber: String, password: String) {
         UIApplication.topViewController()?.dismiss(animated: false, completion: nil)
         
         let kmUser = KMUser.init()
@@ -284,7 +284,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         
         kmUser.contactNumber = phoneNumber
         kmUser.displayName = name
-        Kommunicate.setup(applicationId: appId)
+        Kommunicate.setup(applicationId: applicationKey)
         Kommunicate.registerUser(kmUser, completion:{
             response, error in
             guard error == nil else{
@@ -412,7 +412,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             theParamString = String(data: postdata, encoding: .utf8)
         }
         let theRequest = ALRequestHandler.createPOSTRequest(withUrlString: theUrlString, paramString: theParamString)
-        ALResponseHandler.authenticateAndProcessRequest(theRequest,andTag: "UPDATE_DISPLAY_NAME_AND_PROFILE_IMAGE", withCompletionHandler: {
+        ALResponseHandler().authenticateAndProcessRequest(theRequest,andTag: "UPDATE_DISPLAY_NAME_AND_PROFILE_IMAGE", withCompletionHandler: {
             theJson, theError in
             guard theError == nil else {
                 self.sendErrorResultWithCallback(result: result, message: theError!.localizedDescription)
@@ -444,7 +444,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             if metadata != nil {
                 alContact?.metadata = metadata
             }
-            ALContactDBService().update(alContact)
+            ALContactDBService().updateContact(inDatabase: alContact)
             self.sendSuccessResultWithCallback(result: result, message: "Success")
         })
     }
