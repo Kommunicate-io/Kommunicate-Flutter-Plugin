@@ -152,6 +152,35 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
                     result.error(ERROR, e != null ? e.getLocalizedMessage() : "Unable to open Conversation", null);
                 }
             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else if(call.method.equals("launchConversation")) {
+            Integer channelId = (Integer) call.arguments();
+            new KmConversationInfoTask(context, channelId, new KmGetConversationInfoCallback() {
+                @Override
+                public void onSuccess(Channel channel, Context context) {
+                    if (channel != null) {
+                        try {
+                            KmConversationHelper.openConversation(context, true, channel.getKey(), new KmCallback() {
+                                @Override
+                                public void onSuccess(Object message) {
+                                    result.success(message.toString());
+                                }
+
+                                @Override
+                                public void onFailure(Object error) {
+                                    result.error(ERROR, error.toString(), null);
+                                }
+                            });
+                        } catch (KmException k) {
+                            result.error(ERROR, k.getMessage(), null);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Exception e, Context context) {
+                    result.error(ERROR, e != null ? e.getLocalizedMessage() : "Unable to open Conversation", null);
+                }
+            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else if (call.method.equals("buildConversation")) {
 
             KmConversationBuilder conversationBuilder = (KmConversationBuilder) GsonUtils.getObjectFromJson(call.arguments.toString(), KmConversationBuilder.class);
