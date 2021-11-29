@@ -99,7 +99,14 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 return
             }
             self.openParticularConversation(clientConversationId, true, result)
-        } else if(call.method == "buildConversation") {
+        } else if(call.method == "launchConversation") {
+            guard let channelId = call.arguments as? Int else {
+                self.sendErrorResultWithCallback(result: result, message: "Invalid or empty Channel Id")
+                return
+            }
+            self.launchConversation(channelId, false, result)
+        }
+         else if(call.method == "buildConversation") {
             self.isSingleConversation = true
             self.createOnly = false;
             self.agentIds = [];
@@ -261,18 +268,24 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             }}
     }
      func launchConversation(_ conversationId: Int,_ skipConversationList: Bool, _ callback: @escaping FlutterResult) -> Void {
-            DispatchQueue.main.async{
-                if let top = UIApplication.topViewController(){
-                    Kommunicate.showConversationWith(groupId: conversationId, from: top, completionHandler: ({ (shown) in
-                        if(shown){
-                            callback(conversationId)
+             DispatchQueue.main.async{
+                    let alChannelService = ALChannelService()
+                 alChannelService.getChannelInformation(NSNumber(value: Int32(exactly: conversationId)!) , orClientChannelKey: nil) { (channel) in
+                        print(channel)
+                        guard let channel = channel, let key = channel.clientChannelKey else { return }
+                        if let top = UIApplication.topViewController(){
+                            Kommunicate.showConversationWith(groupId: channel.clientChannelKey, from: top, completionHandler: ({ (shown) in
+                                if(shown){
+                                    callback(conversationId)
+                                } else {
+                                    self.sendErrorResultWithCallback(result: callback, message: "Failed to launch conversation with conversationId : " + String(conversationId))
+                                }
+                            }))
                         } else {
-                            self.sendErrorResultWithCallback(result: callback, message: "Failed to launch conversation with conversationId : " + conversationId)
+                            self.sendErrorResultWithCallback(result: callback, message: "Failed to launch conversation with conversationId : " + String(conversationId))
                         }
-                    }))
-                } else {
-                    self.sendErrorResultWithCallback(result: callback, message: "Failed to launch conversation with conversationId : " + conversationId)
-                }}
+                    }
+                }
         }
 
     
