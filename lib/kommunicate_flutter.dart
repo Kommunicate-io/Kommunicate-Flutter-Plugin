@@ -47,7 +47,7 @@ class KommunicateFlutterPlugin {
   static Future<dynamic> launchConversation(
       int channelId) async {
     return await _channel.invokeMethod(
-        'openParticularConversation', channelId);
+        'launchConversation', channelId);
   }
 
   static Future<dynamic> unreadCount() async {
