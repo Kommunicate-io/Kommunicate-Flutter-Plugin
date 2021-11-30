@@ -150,7 +150,7 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
                 @Override
                 public void onFailure(Exception e, Context context) {
                     try {
-                        Kommunicate.openConversation(context, Integer.valueOf(clientConversationId), new KmCallback() {
+                        KmConversationHelper.openConversation(context, true, Integer.valueOf(clientConversationId), new KmCallback() {
                             @Override
                             public void onSuccess(Object message) {
                                 result.success(message.toString());
