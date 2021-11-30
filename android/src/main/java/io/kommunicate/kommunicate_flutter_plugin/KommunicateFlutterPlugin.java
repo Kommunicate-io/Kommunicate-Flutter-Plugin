@@ -149,21 +149,31 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
 
                 @Override
                 public void onFailure(Exception e, Context context) {
-                    try {
-                        KmConversationHelper.openConversation(context, true, Integer.valueOf(clientConversationId), new KmCallback() {
-                            @Override
-                            public void onSuccess(Object message) {
-                                result.success(message.toString());
-                            }
+                    new KmConversationInfoTask(context, Integer.valueOf(clientConversationId), new KmGetConversationInfoCallback() {
+                        @Override
+                        public void onSuccess(Channel channel, Context context) {
+                            if (channel != null) {
 
-                            @Override
-                            public void onFailure(Object error) {
-                                result.error(ERROR, error.toString(), null);
+                                    Kommunicate.openConversation(context, channel.getKey(), new KmCallback() {
+                                        @Override
+                                        public void onSuccess(Object message) {
+                                            result.success(message.toString());
+                                        }
+
+                                        @Override
+                                        public void onFailure(Object error) {
+                                            result.error(ERROR, error.toString(), null);
+                                        }
+                                    });
+
                             }
-                        });
-                    } catch (NumberFormatException ex) {
-                        result.error(ERROR, "Invalid Conversation ID / Channel Key", null);
-                    }
+                        }
+
+                        @Override
+                        public void onFailure(Exception e, Context context) {
+                            result.error(ERROR, e.getMessage(), null);
+                        }
+                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else if (call.method.equals("buildConversation")) {
