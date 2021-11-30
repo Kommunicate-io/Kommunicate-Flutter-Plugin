@@ -119,7 +119,7 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
                 }
             });
         } else if (call.method.equals("openParticularConversation")) {
-            String clientConversationId = (String) call.arguments;
+            final String clientConversationId = (String) call.arguments;
             if (TextUtils.isEmpty(clientConversationId)) {
                 result.error(ERROR, "Invalid or empty clientConversationId", null);
                 return;
@@ -149,7 +149,21 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
 
                 @Override
                 public void onFailure(Exception e, Context context) {
-                    result.error(ERROR, e != null ? e.getLocalizedMessage() : "Unable to open Conversation", null);
+                    try {
+                        Kommunicate.openConversation(context, Integer.valueOf(clientConversationId), new KmCallback() {
+                            @Override
+                            public void onSuccess(Object message) {
+                                result.success(message.toString());
+                            }
+
+                            @Override
+                            public void onFailure(Object error) {
+                                result.error(ERROR, error.toString(), null);
+                            }
+                        });
+                    } catch (NumberFormatException ex) {
+                        result.error(ERROR, "Invalid Conversation ID / Channel Key", null);
+                    }
                 }
             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else if (call.method.equals("buildConversation")) {
