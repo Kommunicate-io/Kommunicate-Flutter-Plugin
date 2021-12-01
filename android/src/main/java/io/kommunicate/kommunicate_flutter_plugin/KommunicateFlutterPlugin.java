@@ -119,7 +119,7 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
                 }
             });
         } else if (call.method.equals("openParticularConversation")) {
-            String clientConversationId = (String) call.arguments;
+            final String clientConversationId = (String) call.arguments;
             if (TextUtils.isEmpty(clientConversationId)) {
                 result.error(ERROR, "Invalid or empty clientConversationId", null);
                 return;
@@ -149,7 +149,31 @@ public class KommunicateFlutterPlugin implements MethodCallHandler {
 
                 @Override
                 public void onFailure(Exception e, Context context) {
-                    result.error(ERROR, e != null ? e.getLocalizedMessage() : "Unable to open Conversation", null);
+                    new KmConversationInfoTask(context, Integer.valueOf(clientConversationId), new KmGetConversationInfoCallback() {
+                        @Override
+                        public void onSuccess(Channel channel, Context context) {
+                            if (channel != null) {
+
+                                    Kommunicate.openConversation(context, channel.getKey(), new KmCallback() {
+                                        @Override
+                                        public void onSuccess(Object message) {
+                                            result.success(message.toString());
+                                        }
+
+                                        @Override
+                                        public void onFailure(Object error) {
+                                            result.error(ERROR, error.toString(), null);
+                                        }
+                                    });
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Exception e, Context context) {
+                            result.error(ERROR, e.getMessage(), null);
+                        }
+                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else if (call.method.equals("buildConversation")) {

@@ -248,8 +248,19 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     
     func openParticularConversation(_ conversationId: String,_ skipConversationList: Bool, _ callback: @escaping FlutterResult) -> Void {
         DispatchQueue.main.async{
+            let alChannelService = ALChannelService()
+            var conversationID = String()
+            if Int(conversationId) != nil {
+                alChannelService.getChannelInformation(NSNumber(value: Int(conversationId)!), orClientChannelKey: nil) { (channel) in
+                    if channel != nil && channel?.clientChannelKey != nil {
+                        conversationID = channel!.clientChannelKey
+                    }
+                }
+            } else {
+                conversationID = conversationId
+            }
             if let top = UIApplication.topViewController(){
-                Kommunicate.showConversationWith(groupId: conversationId, from: top, completionHandler: ({ (shown) in
+                Kommunicate.showConversationWith(groupId: conversationID, from: top, completionHandler: ({ (shown) in
                     if(shown){
                         callback(conversationId)
                     } else {
@@ -258,7 +269,8 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 }))
             } else {
                 self.sendErrorResultWithCallback(result: callback, message: "Failed to launch conversation with conversationId : " + conversationId)
-            }}
+            }
+        }
     }
     
     public func closeButtonTapped() {
