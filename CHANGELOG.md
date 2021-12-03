@@ -1,3 +1,7 @@
+## 1.3.2
+
+- Update iOS SDK version to 6.3.1
+
 ## 1.3.1
 
 - Fix for PreChatViewController delegate methods
