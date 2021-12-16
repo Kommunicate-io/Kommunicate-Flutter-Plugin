@@ -1,3 +1,8 @@
+## 1.4.0
+
+- Added support for Android 12
+- Update Android SDK version to 2.3.0
+
 ## 1.3.2
 
 - Update iOS SDK version to 6.3.1
