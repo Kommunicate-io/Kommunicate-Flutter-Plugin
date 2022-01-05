@@ -14,9 +14,8 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
             private MethodChannel methodChannel;
             private BinaryMessenger binaryMessenger;
             public static void registerWith(Registrar registrar) {
-                KommunicateFlutterPlugin kommunicateFlutterPlugin = new KommunicateFlutterPlugin();
-                binaryMessenger = registrar.messenger();
-                setupChannel(registrar.activity());
+                final MethodChannel channel = new MethodChannel(registrar.messenger(), "kommunicate_flutter");
+                channel.setMethodCallHandler(new KmMethodHandler(registrar.activity()));
             }
 
             public void setupChannel(Activity context) {
