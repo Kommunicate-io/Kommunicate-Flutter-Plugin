@@ -16,7 +16,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
             public static void registerWith(Registrar registrar) {
                 KommunicateFlutterPlugin kommunicateFlutterPlugin = new KommunicateFlutterPlugin();
                 binaryMessenger = registrar.messenger();
-                kommunicateFlutterPlugin.setupChannel(registrar.activity());
+                setupChannel(registrar.activity());
             }
 
             public void setupChannel(Activity context) {
