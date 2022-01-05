@@ -48,11 +48,6 @@ public class KmMethodHandler implements MethodCallHandler {
     private Activity context;
     private MethodChannel methodChannel;
 
-//    public static void registerWith(Registrar registrar) {
-//        final MethodChannel channel = new MethodChannel(registrar.messenger(), "kommunicate_flutter");
-//        channel.setMethodCallHandler(new KommunicateFlutterPlugin(registrar.activity(), channel));
-//    }
-
     public KmMethodHandler(Activity context) {
         this.context = context;
     }
