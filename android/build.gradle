@@ -4,10 +4,7 @@ version '1.0-SNAPSHOT'
 buildscript {
     repositories {
         google()
-        jcenter()
-        maven {
-            url 'https://kommunicate.jfrog.io/artifactory/kommunicate-android-sdk'
-        }
+        mavenCentral()
     }
 
     dependencies {
@@ -18,7 +15,7 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         maven {
             url 'https://kommunicate.jfrog.io/artifactory/kommunicate-android-sdk'
         }
