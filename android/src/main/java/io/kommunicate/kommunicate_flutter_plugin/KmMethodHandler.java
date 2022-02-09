@@ -59,27 +59,32 @@ public class KmMethodHandler implements MethodCallHandler {
         } else if (call.method.equals("isLoggedIn")) {
             result.success(Kommunicate.isLoggedIn(context));
         } else if (call.method.equals("login")) {
-            KMUser user = (KMUser) GsonUtils.getObjectFromJson(call.arguments.toString(), KMUser.class);
+            try {
+                KMUser user = (KMUser) GsonUtils.getObjectFromJson(call.arguments.toString(), KMUser.class);
 
-            if (call.hasArgument("appId") && !TextUtils.isEmpty((String) call.argument("appId"))) {
-                Kommunicate.init(context, (String) call.argument("appId"));
-            } else {
-                result.error(ERROR, "appId is missing", null);
-                return;
-            }
-
-            Kommunicate.login(context, user, new KMLoginHandler() {
-                @Override
-                public void onSuccess(RegistrationResponse registrationResponse, Context context) {
-                    result.success(GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class));
+                if (call.hasArgument("appId") && !TextUtils.isEmpty((String) call.argument("appId"))) {
+                    Kommunicate.init(context, (String) call.argument("appId"));
+                } else {
+                    result.error(ERROR, "appId is missing", null);
+                    return;
                 }
 
-                @Override
-                public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
-                    result.error(ERROR, registrationResponse != null ? GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class) : exception != null ? exception.getMessage() : null, null);
+                Kommunicate.login(context, user, new KMLoginHandler() {
+                    @Override
+                    public void onSuccess(RegistrationResponse registrationResponse, Context context) {
+                        result.success(GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class));
+                    }
+
+                    @Override
+                    public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
+                        result.error(ERROR, registrationResponse != null ? GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class) : exception != null ? exception.getMessage() : null, null);
+                    }
+                });
+            } catch (Exception e) {
+                    result.error(ERROR, e.toString(), null);
                 }
-            });
         } else if (call.method.equals("loginAsVisitor")) {
+            try {
             String appId = (String) call.arguments();
             if (!TextUtils.isEmpty(appId)) {
                 Kommunicate.init(context, appId);
@@ -99,6 +104,9 @@ public class KmMethodHandler implements MethodCallHandler {
                     result.error(ERROR, registrationResponse != null ? GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class) : exception != null ? exception.getMessage() : null, null);
                 }
             });
+        } catch (Exception e) {
+            result.error(ERROR, e.toString(), null);
+        }
         } else if (call.method.equals("openConversations")) {
             Kommunicate.openConversation(context, new KmCallback() {
                 @Override
@@ -112,6 +120,7 @@ public class KmMethodHandler implements MethodCallHandler {
                 }
             });
         } else if (call.method.equals("openParticularConversation")) {
+            try {
             final String clientConversationId = (String) call.arguments;
             if (TextUtils.isEmpty(clientConversationId)) {
                 result.error(ERROR, "Invalid or empty clientConversationId", null);
@@ -169,8 +178,11 @@ public class KmMethodHandler implements MethodCallHandler {
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } catch (Exception e) {
+            result.error(ERROR, e.toString(), null);
+        }
         } else if (call.method.equals("buildConversation")) {
-
+            try {
             KmConversationBuilder conversationBuilder = (KmConversationBuilder) GsonUtils.getObjectFromJson(call.arguments.toString(), KmConversationBuilder.class);
             conversationBuilder.setContext(context);
 
@@ -201,6 +213,9 @@ public class KmMethodHandler implements MethodCallHandler {
             } else {
                 conversationBuilder.launchConversation(callback);
             }
+        } catch (Exception e) {
+            result.error(ERROR, e.toString(), null);
+        }
         } else if (call.method.equals("updateChatContext")) {
             try {
                 HashMap<String, Object> chatContext = (HashMap<String, Object>) GsonUtils.getObjectFromJson(call.arguments.toString(), HashMap.class);
