@@ -1,3 +1,8 @@
+## 1.4.2
+
+- Android 12 notification issue fixe
+- Design upgrade in Android
+
 ## 1.4.0
 
 - Added support for Android 12
