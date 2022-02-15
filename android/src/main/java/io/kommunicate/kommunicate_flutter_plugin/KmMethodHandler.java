@@ -32,6 +32,8 @@ import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
 import com.applozic.mobicommons.people.channel.Channel;
 import com.applozic.mobicommons.people.contact.Contact;
 import com.applozic.mobicomkit.uiwidgets.conversation.fragment.MobiComConversationFragment;
+import com.applozic.mobicomkit.api.conversation.AlTotalUnreadCountTask;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -247,7 +249,21 @@ public class KmMethodHandler implements MethodCallHandler {
                 }
             });
         } else if (call.method.equals("unreadCount")) {
-            result.success(String.valueOf(new MessageDatabaseService(context).getTotalUnreadCount()));
+            try {
+                new AlTotalUnreadCountTask(context, new AlTotalUnreadCountTask.TaskListener() {
+                    @Override
+                    public void onSuccess(Integer unreadCount) {
+                        result.success(String.valueOf(unreadCount));
+                    }
+
+                    @Override
+                    public void onFailure(String error) {
+                        result.error(ERROR, error, null);
+                    }
+                }).execute();
+            } catch (Exception e) {
+                result.error(ERROR, e.toString(), null);
+            }
         } else if(call.method.equals("fetchUserDetails")) {
             try {
                 new MobiComConversationFragment.KMUserDetailTask(context, call.arguments.toString(), new MobiComConversationFragment.KmUserDetailsCallback() {
