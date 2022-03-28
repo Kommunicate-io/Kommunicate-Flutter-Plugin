@@ -180,6 +180,31 @@ class HomePageWidget extends StatelessWidget {
                 color: Color(0xff5c5aa7),
                 child: new MaterialButton(
                   onPressed: () {
+                    KommunicateFlutterPlugin.updateTeamId({
+                      //'conversationId': 70780495,
+                      'clientConversationId': '69360869',
+                      'teamId': '63641656'
+                    }).then((value) {
+                      print('team context updated' + value.toString());
+                    }).catchError((error) {
+                      print(
+                          'Error in updating team context' + error.toString());
+                    });
+                  },
+                  minWidth: 400,
+                  padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                  child: Text("Update team",
+                      textAlign: TextAlign.center,
+                      style: style.copyWith(
+                          color: Colors.white, fontWeight: FontWeight.bold)),
+                )),
+            SizedBox(height: 10),
+            new Material(
+                elevation: 5.0,
+                borderRadius: BorderRadius.circular(30.0),
+                color: Color(0xff5c5aa7),
+                child: new MaterialButton(
+                  onPressed: () {
                     KommunicateFlutterPlugin.updateUserDetail({
                       'displayName':
                           "FUser-" + getCurrentTime() + "-" + getPlatformName(),

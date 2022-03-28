@@ -275,6 +275,25 @@ public class KmMethodHandler implements MethodCallHandler {
             } catch (Exception e) {
                 result.error(ERROR, e.toString(), null);
             }
+        } else if(call.method.equals("updateTeamId")) {
+            try {
+                    KmSettings.updateTeamId(context,
+                            call.hasArgument("conversationId")? (Integer) call.argument("conversationId") : null,
+                            call.hasArgument("clientConversationId")? (String) call.argument("clientConversationId") : null,
+                            (String) call.argument("teamId"),
+                            new KmCallback() {
+                                @Override
+                                public void onSuccess(Object o) {
+                                    result.success(o);
+                                }
+                                @Override
+                                public void onFailure(Object o) {
+                                    result.error(ERROR, o.toString(), null);
+                                }
+                            });
+            } catch(Exception e) {
+                result.error(ERROR, e.toString(), null);
+            }
         }
         else {
             result.notImplemented();
