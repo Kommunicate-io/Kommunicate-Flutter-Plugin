@@ -3,7 +3,7 @@
 Flutter wrapper using the native modules of Kommunicate Android and iOS SDKs.
 Refer to the official docs here: https://docs.kommunicate.io/docs/flutter-installation.html
 
-![Kommunicate Flutter App.png](example/assets/Kommunicate-Flutter-App.png "Kommunicate_Flutter_App")
+<img src="https://user-images.githubusercontent.com/61688116/162123155-6c816cee-7d84-4302-8abd-57b690fb7e90.png" alt="How example looks">
 
 
 ## Installation
