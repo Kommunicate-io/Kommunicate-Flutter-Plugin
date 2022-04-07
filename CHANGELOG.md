@@ -1,3 +1,7 @@
+## 1.4.3
+
+- Bug resolve and improvement
+
 ## 1.4.2
 
 - Android 12 notification issue fixe
