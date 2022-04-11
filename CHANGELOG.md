@@ -1,3 +1,13 @@
+## 1.4.4
+
+- Upgrade Android version to 2.3.8
+- Upgrade iOS version to 6.6.0
+- Added support to send attachment to S3
+
+## 1.4.3+1
+
+- Documentation update
+
 ## 1.4.3
 
 - Bug resolve and improvement
