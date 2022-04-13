@@ -99,6 +99,38 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 return
             }
             self.openParticularConversation(clientConversationId, true, result)
+        } else if(call.method == "updateTeamId") {
+                        guard let jsonObj = call.arguments as? Dictionary<String, Any> else {
+                            return
+                        }
+                        var clientConversationId: String = nil
+                        var conversationId: String = nil
+                        if(jsonObj["clientConversationId"]) != nil {
+
+                            clientConversationId = jsonObj["clientConversationId"] as String?
+                            let conversation = KMConversationBuilder().withClientConversationId(clientConversationId).build()
+                        }
+
+                        if(jsonObj["conversationId"]) != nil {
+                            conversationId = jsonObj["conversationId"] as Int?
+                            let conversation = KMConversationBuilder().withConversationId(conversationId).build()
+                        }
+                      guard let clientConversationId = call.arguments as? String else {
+                          self.sendErrorResultWithCallback(result: result, message: "Invalid or empty clientConversationId")
+                          return
+                      }
+                      //let conversation = KMConversationBuilder().withClientConversationId(clientConversationId).build()
+                                  Kommunicate.updateTeamId(conversation: conversation, teamId: jsonObj["teamId"]){ response in
+                                      switch response {
+                                      case .success(let conversationId):
+                                      result("Success")
+                                          break
+                                      case .failure(let error):
+                                      result("Failed")
+                                          break
+                                      }
+
+                                  }
         } else if(call.method == "buildConversation") {
             self.isSingleConversation = true
             self.createOnly = false;
