@@ -1,7 +1,7 @@
 import Flutter
 import UIKit
 import Kommunicate
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 
 public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFormViewControllerDelegate {
     var appId : String? = nil;
