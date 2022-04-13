@@ -1,11 +1,11 @@
 name: kommunicate_flutter
 description: Flutter plugin for Kommunicate live chat. Kommunicate provides open source live chat SDK in android. The Kommunicate SDK is flexible, lightweight and easily integrable.
-version: 1.4.0
+version: 1.4.4
 homepage: https://kommunicate.io
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
-  flutter: "1.12.0"
+  flutter: ">=1.12.0"
 
 dependencies:
   flutter:
