@@ -56,4 +56,8 @@ class KommunicateFlutterPlugin {
   static Future<dynamic> fetchUserDetails(String userid) async {
     return await _channel.invokeMethod('fetchUserDetails', userid);
   }
+
+  static Future<dynamic> updateTeamId(dynamic conversationObject) async {
+    return await _channel.invokeMethod('updateTeamId', conversationObject);
+  }
 }
