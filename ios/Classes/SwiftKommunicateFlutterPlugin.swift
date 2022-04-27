@@ -1,7 +1,7 @@
 import Flutter
 import UIKit
 import Kommunicate
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 
 public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFormViewControllerDelegate {
     var appId : String? = nil;
@@ -103,34 +103,57 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                         guard let jsonObj = call.arguments as? Dictionary<String, Any> else {
                             return
                         }
-                        var clientConversationId: String = nil
-                        var conversationId: String = nil
-                        if(jsonObj["clientConversationId"]) != nil {
+                        var clientConversationId: String? = nil
+                        var conversationId: Int? = nil
+                        var teamId: String
+                        if(jsonObj["teamId"] != nil) {
+                            teamId = jsonObj["teamId"] as! String
+                            if(jsonObj["clientConversationId"]) != nil {
+                           
+                            clientConversationId = jsonObj["clientConversationId"] as? String
+                            }
+                            if(jsonObj["conversationId"]) != nil {
+                                let alChannelService = ALChannelService()
+                conversationId = jsonObj["conversationId"] as? Int
 
-                            clientConversationId = jsonObj["clientConversationId"] as String?
-                            let conversation = KMConversationBuilder().withClientConversationId(clientConversationId).build()
+                                    alChannelService.getChannelInformation(NSNumber(value: conversationId!), orClientChannelKey: nil) { (channel) in
+                                        if channel != nil && channel?.clientChannelKey != nil {
+                                            clientConversationId = channel!.clientChannelKey
+                                        }
+                                    }
+                            }
+                            
+                             let conversation = KMConversationBuilder().withClientConversationId(clientConversationId).build() 
+                            
+                                Kommunicate.updateTeamId(conversation: conversation, teamId: teamId){ response in
+                                switch response {
+                                case .success(let conversationId):
+                                    result("Success")
+                                    break
+                                case .failure(let error):
+                                    result("Failed")
+                                    break
+                                }
+
+                            }
+                       // }
+                                        
+//                             let conversation =
+//                                            KMConversationBuilder().withClientConversationId(clientConversationId).build()
+//
+//                                Kommunicate.updateTeamId(conversation: conversation, teamId: teamId){ response in
+//                                switch response {
+//                                case .success(let conversationId):
+//                                    result("Success")
+//                                    break
+//                                case .failure(let error):
+//                                    result("Failed")
+//                                    break
+//                                }
+//
+//                            }
+                       // }
                         }
-
-                        if(jsonObj["conversationId"]) != nil {
-                            conversationId = jsonObj["conversationId"] as Int?
-                            let conversation = KMConversationBuilder().withConversationId(conversationId).build()
-                        }
-                      guard let clientConversationId = call.arguments as? String else {
-                          self.sendErrorResultWithCallback(result: result, message: "Invalid or empty clientConversationId")
-                          return
-                      }
-                      //let conversation = KMConversationBuilder().withClientConversationId(clientConversationId).build()
-                                  Kommunicate.updateTeamId(conversation: conversation, teamId: jsonObj["teamId"]){ response in
-                                      switch response {
-                                      case .success(let conversationId):
-                                      result("Success")
-                                          break
-                                      case .failure(let error):
-                                      result("Failed")
-                                          break
-                                      }
-
-                                  }
         } else if(call.method == "buildConversation") {
             self.isSingleConversation = true
             self.createOnly = false;
