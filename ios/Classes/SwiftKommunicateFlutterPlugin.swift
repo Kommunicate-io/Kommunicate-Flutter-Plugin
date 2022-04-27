@@ -136,23 +136,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                                 }
 
                             }
-                       // }
-                                        
-//                             let conversation =
-//                                            KMConversationBuilder().withClientConversationId(clientConversationId).build()
-//
-//                                Kommunicate.updateTeamId(conversation: conversation, teamId: teamId){ response in
-//                                switch response {
-//                                case .success(let conversationId):
-//                                    result("Success")
-//                                    break
-//                                case .failure(let error):
-//                                    result("Failed")
-//                                    break
-//                                }
-//
-//                            }
-                       // }
+                       
                         }
         } else if(call.method == "buildConversation") {
             self.isSingleConversation = true
