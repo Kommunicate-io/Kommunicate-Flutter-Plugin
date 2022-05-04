@@ -16,6 +16,9 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     var conversationInfo: [AnyHashable: Any]? = nil;
     var teamId: String? = nil;
     static let KM_CONVERSATION_METADATA: String = "conversationMetadata";
+    static let CLIENT_CONVERSATION_ID: String = "clientConversationId";
+    static let CONVERSATION_ID: String = "conversationId";
+    
     
     override init() {
     }
@@ -100,42 +103,45 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             }
             self.openParticularConversation(clientConversationId, true, result)
         } else if(call.method == "updateTeamId") {
-                        guard let jsonObj = call.arguments as? Dictionary<String, Any> else {
+            
+                        guard let jsonObj = call.arguments as? Dictionary<String, Any>, let teamId = jsonObj["teamId"] as? String else {
+                            self.sendErrorResultWithCallback(result: result, message: "Invalid or empty teamId")
                             return
                         }
+            guard jsonObj[SwiftKommunicateFlutterPlugin.CLIENT_CONVERSATION_ID] != nil || jsonObj[SwiftKommunicateFlutterPlugin.CONVERSATION_ID] != nil else {
+                self.sendErrorResultWithCallback(result: result, message: "Invalid or empty clientConversationId or conversationId")
+                
+                return
+            }
                         var clientConversationId: String? = nil
-                        var conversationId: Int? = nil
-                        var teamId: String
-                        if(jsonObj["teamId"] != nil) {
-                            teamId = jsonObj["teamId"] as! String
-                            if(jsonObj["clientConversationId"]) != nil {
+                            if(jsonObj[SwiftKommunicateFlutterPlugin.CLIENT_CONVERSATION_ID]) != nil {
                            
-                            clientConversationId = jsonObj["clientConversationId"] as? String
+                            clientConversationId = jsonObj[SwiftKommunicateFlutterPlugin.CLIENT_CONVERSATION_ID] as? String
                             }
-                            if(jsonObj["conversationId"]) != nil {
+                            else {
+                                guard let conversationId = jsonObj[SwiftKommunicateFlutterPlugin.CONVERSATION_ID] as? Int else {
+                                    return
+                                }
                                 let alChannelService = ALChannelService()
-                conversationId = jsonObj["conversationId"] as? Int
-
-                                    alChannelService.getChannelInformation(NSNumber(value: conversationId!), orClientChannelKey: nil) { (channel) in
+                                    alChannelService.getChannelInformation(NSNumber(value: conversationId), orClientChannelKey: nil) { (channel) in
                                         if channel != nil && channel?.clientChannelKey != nil {
                                             clientConversationId = channel!.clientChannelKey
                                         }
                                     }
                             }
-                            
                              let conversation = KMConversationBuilder().withClientConversationId(clientConversationId).build() 
                             
                                 Kommunicate.updateTeamId(conversation: conversation, teamId: teamId){ response in
                                 switch response {
                                 case .success(let conversationId):
-                                    result("Success")
+                                    self.sendSuccessResultWithCallback(result: result, message: "Successfully updated Team")
                                     break
                                 case .failure(let error):
-                                    result("Failed")
+                                    
+                                        self.sendErrorResultWithCallback(result: result, message: "Failed to update Team")
                                     break
                                 }
 
-                            }
                        
                         }
         } else if(call.method == "buildConversation") {
