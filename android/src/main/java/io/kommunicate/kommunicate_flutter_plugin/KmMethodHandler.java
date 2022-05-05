@@ -292,20 +292,37 @@ public class KmMethodHandler implements MethodCallHandler {
             }
         } else if(call.method.equals("updateTeamId")) {
             try {
+                final String clientConversationId = call.hasArgument("clientConversationId") ? (String) call.argument("clientConversationId") : null;
+                final Integer conversationId = call.hasArgument("conversationId") ? (Integer) call.argument("conversationId") : null;
+                final String teamId = call.hasArgument("teamId") ? (String) call.argument("teamId") : null;
+                if (TextUtils.isEmpty(clientConversationId) && conversationId == null) {
+                    result.error(ERROR, "Invalid or empty clientConversationId", null);
+                    return;
+                }
+                if (TextUtils.isEmpty(teamId)) {
+                    result.error(ERROR, "Invalid or empty teamID", null);
+                    return;
+                }
+                if (Kommunicate.isLoggedIn(context)) {
                     KmSettings.updateTeamId(context,
-                            call.hasArgument("conversationId")? (Integer) call.argument("conversationId") : null,
-                            call.hasArgument("clientConversationId")? (String) call.argument("clientConversationId") : null,
+                            conversationId,
+                            clientConversationId,
                             (String) call.argument("teamId"),
                             new KmCallback() {
                                 @Override
                                 public void onSuccess(Object o) {
                                     result.success(o);
                                 }
+
                                 @Override
                                 public void onFailure(Object o) {
                                     result.error(ERROR, o.toString(), null);
                                 }
                             });
+                } else {
+                    result.error(ERROR, "User not authorised. This usually happens when calling the function before conversationBuilder or loginUser. Make sure you call either of the two functions before updating the chatContext", null);
+
+                }
             } catch(Exception e) {
                 result.error(ERROR, e.toString(), null);
             }
