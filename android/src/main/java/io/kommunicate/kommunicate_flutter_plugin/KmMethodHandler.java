@@ -307,7 +307,7 @@ public class KmMethodHandler implements MethodCallHandler {
                     KmSettings.updateTeamId(context,
                             conversationId,
                             clientConversationId,
-                            (String) call.argument("teamId"),
+                            teamId,
                             new KmCallback() {
                                 @Override
                                 public void onSuccess(Object o) {
