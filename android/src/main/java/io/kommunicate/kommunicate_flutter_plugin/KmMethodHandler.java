@@ -313,7 +313,7 @@ public class KmMethodHandler implements MethodCallHandler {
                                 public void onSuccess(Object o) {
                                     result.success(o);
                                 }
-
+                              
                                 @Override
                                 public void onFailure(Object o) {
                                     result.error(ERROR, o.toString(), null);
