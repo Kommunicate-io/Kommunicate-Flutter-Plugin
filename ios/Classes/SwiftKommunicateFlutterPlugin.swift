@@ -113,6 +113,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 
                 return
             }
+            if(Kommunicate.isLoggedIn) {
                         var clientConversationId: String? = nil
                             if(jsonObj[SwiftKommunicateFlutterPlugin.CLIENT_CONVERSATION_ID]) != nil {
                            
@@ -141,8 +142,10 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                                         self.sendErrorResultWithCallback(result: result, message: "Failed to update Team")
                                     break
                                 }
-
+                                }
                        
+                        } else {
+                            sendErrorResultWithCallback(result: result, message: "User not authorised. This usually happens when calling the function before conversationBuilder or loginUser. Make sure you call either of the two functions before updating the chatContext")
                         }
         } else if(call.method == "buildConversation") {
             self.isSingleConversation = true
