@@ -1,7 +1,7 @@
 import Flutter
 import UIKit
 import Kommunicate
-import ApplozicCore
+import KommunicateCore_iOS_SDK
 
 public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFormViewControllerDelegate {
     var appId : String? = nil;
@@ -16,6 +16,9 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     var conversationInfo: [AnyHashable: Any]? = nil;
     var teamId: String? = nil;
     static let KM_CONVERSATION_METADATA: String = "conversationMetadata";
+    static let CLIENT_CONVERSATION_ID: String = "clientConversationId";
+    static let CONVERSATION_ID: String = "conversationId";
+    
     
     override init() {
     }
@@ -99,6 +102,51 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 return
             }
             self.openParticularConversation(clientConversationId, true, result)
+        } else if(call.method == "updateTeamId") {
+            
+                        guard let jsonObj = call.arguments as? Dictionary<String, Any>, let teamId = jsonObj["teamId"] as? String else {
+                            self.sendErrorResultWithCallback(result: result, message: "Invalid or empty teamId")
+                            return
+                        }
+            guard jsonObj[SwiftKommunicateFlutterPlugin.CLIENT_CONVERSATION_ID] != nil || jsonObj[SwiftKommunicateFlutterPlugin.CONVERSATION_ID] != nil else {
+                self.sendErrorResultWithCallback(result: result, message: "Invalid or empty clientConversationId or conversationId")
+                
+                return
+            }
+            if(Kommunicate.isLoggedIn) {
+                        var clientConversationId: String? = nil
+                            if(jsonObj[SwiftKommunicateFlutterPlugin.CLIENT_CONVERSATION_ID]) != nil {
+                           
+                            clientConversationId = jsonObj[SwiftKommunicateFlutterPlugin.CLIENT_CONVERSATION_ID] as? String
+                            }
+                            else {
+                                guard let conversationId = jsonObj[SwiftKommunicateFlutterPlugin.CONVERSATION_ID] as? Int else {
+                                    return
+                                }
+                                let alChannelService = ALChannelService()
+                                    alChannelService.getChannelInformation(NSNumber(value: conversationId), orClientChannelKey: nil) { (channel) in
+                                        if channel != nil && channel?.clientChannelKey != nil {
+                                            clientConversationId = channel!.clientChannelKey
+                                        }
+                                    }
+                            }
+                             let conversation = KMConversationBuilder().withClientConversationId(clientConversationId).build() 
+                            
+                                Kommunicate.updateTeamId(conversation: conversation, teamId: teamId){ response in
+                                switch response {
+                                case .success(let conversationId):
+                                    self.sendSuccessResultWithCallback(result: result, message: "Successfully updated Team")
+                                    break
+                                case .failure(let error):
+                                    
+                                        self.sendErrorResultWithCallback(result: result, message: "Failed to update Team")
+                                    break
+                                }
+                                }
+                       
+                        } else {
+                            sendErrorResultWithCallback(result: result, message: "User not authorised. This usually happens when calling the function before conversationBuilder or loginUser. Make sure you call either of the two functions before updating the chatContext")
+                        }
         } else if(call.method == "buildConversation") {
             self.isSingleConversation = true
             self.createOnly = false;
