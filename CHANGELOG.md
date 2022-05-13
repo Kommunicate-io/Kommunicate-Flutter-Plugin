@@ -1,3 +1,12 @@
+## 1.4.6
+
+- postBackToBotPlatform fix
+- upgrade Android version to 2.4.0
+- 
+## 1.4.5
+
+- iOS build fix
+
 ## 1.4.4
 
 - Upgrade Android version to 2.3.8
