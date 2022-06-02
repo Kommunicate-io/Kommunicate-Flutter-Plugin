@@ -37,7 +37,7 @@ import com.applozic.mobicomkit.api.conversation.AlTotalUnreadCountTask;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import org.json.JSONObject;
 /**
  * KommunicateFlutterPlugin
  */
@@ -62,10 +62,11 @@ public class KmMethodHandler implements MethodCallHandler {
             result.success(Kommunicate.isLoggedIn(context));
         } else if (call.method.equals("login")) {
             try {
-                KMUser user = (KMUser) GsonUtils.getObjectFromJson(call.arguments.toString(), KMUser.class);
+                JSONObject userObject = new JSONObject(call.arguments.toString());
+                KMUser user = (KMUser) GsonUtils.getObjectFromJson(userObject.toString(), KMUser.class);
 
-                if (call.hasArgument("appId") && !TextUtils.isEmpty((String) call.argument("appId"))) {
-                    Kommunicate.init(context, (String) call.argument("appId"));
+                if (userObject.has("appId") && !TextUtils.isEmpty(userObject.get("appId").toString())) {
+                    Kommunicate.init(context, userObject.get("appId").toString());
                 } else {
                     result.error(ERROR, "appId is missing", null);
                     return;
