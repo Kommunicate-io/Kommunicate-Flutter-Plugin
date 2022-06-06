@@ -37,18 +37,16 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         } else if(call.method == "isLoggedIn") {
             result(Kommunicate.isLoggedIn)
         } else if(call.method == "login") {
-            guard var userDict = call.arguments as? Dictionary<String, Any> else {
+            guard let jsonString = call.arguments as? String, var userDict = jsonString.convertToDictionary() else {
                 self.sendErrorResultWithCallback(result: result, message: "Unable to parse user JSON")
                 return
             }
-            
+
             guard let appId = userDict["appId"] as? String, !appId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
                 self.sendErrorResultWithCallback(result: result, message: "Invalid or missing appId")
                 return
             }
-            
             Kommunicate.setup(applicationId: appId)
-            
             userDict.removeValue(forKey: "appId")
             
             do {
@@ -525,3 +523,11 @@ extension UIApplication {
         }
         return controller
     }}
+extension String {
+    func convertToDictionary() -> [String: Any]? {
+             if let data = data(using: .utf8) {
+                 return try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+             }
+             return nil
+         }
+}

@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:flutter/services.dart';
 
 class KommunicateFlutterPlugin {
@@ -28,7 +28,7 @@ class KommunicateFlutterPlugin {
   }
 
   static Future<dynamic> login(dynamic kmUser) async {
-    return await _channel.invokeMethod('login', kmUser);
+    return await _channel.invokeMethod('login', jsonEncode(kmUser));
   }
 
   static Future<dynamic> loginAsVisitor(String appId) async {
