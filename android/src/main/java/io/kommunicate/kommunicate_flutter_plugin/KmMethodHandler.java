@@ -22,6 +22,7 @@ import io.kommunicate.users.KMUser;
 import io.kommunicate.KmConversationHelper;
 import io.kommunicate.KmException;
 
+import com.applozic.mobicomkit.ApplozicClient;
 import com.applozic.mobicomkit.api.account.user.AlUserUpdateTask;
 import com.applozic.mobicomkit.api.conversation.database.MessageDatabaseService;
 import com.applozic.mobicomkit.channel.service.ChannelService;
@@ -324,6 +325,13 @@ public class KmMethodHandler implements MethodCallHandler {
                     result.error(ERROR, "User not authorised. This usually happens when calling the function before conversationBuilder or loginUser. Make sure you call either of the two functions before updating the chatContext", null);
 
                 }
+            } catch(Exception e) {
+                result.error(ERROR, e.toString(), null);
+            }
+        } else if(call.method.equals("hideChatListOnNotification")) {
+            try {
+                ApplozicClient.getInstance(context).hideChatListOnNotification();
+                result.success(SUCCESS);
             } catch(Exception e) {
                 result.error(ERROR, e.toString(), null);
             }
