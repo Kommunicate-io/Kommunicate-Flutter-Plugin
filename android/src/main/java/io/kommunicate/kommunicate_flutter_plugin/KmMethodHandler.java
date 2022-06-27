@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import java.util.List;
+import java.util.ArrayList;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -331,6 +333,37 @@ public class KmMethodHandler implements MethodCallHandler {
         } else if(call.method.equals("hideChatListOnNotification")) {
             try {
                 ApplozicClient.getInstance(context).hideChatListOnNotification();
+                result.success(SUCCESS);
+            } catch(Exception e) {
+                result.error(ERROR, e.toString(), null);
+            }
+        } else if(call.method.equals("updateDefaultSetting")) {
+            try {
+                KmSettings.clearDefaultSettings();
+                JSONObject settingObject = new JSONObject(call.arguments.toString());
+                if (settingObject.has("defaultAgentIds") && !TextUtils.isEmpty(settingObject.get("defaultAgentIds").toString())) {
+                    List<String> agentList = new ArrayList<String>();
+                    for(int i = 0; i < settingObject.getJSONArray("defaultAgentIds").length(); i++){
+                        agentList.add(settingObject.getJSONArray("defaultAgentIds").get(i).toString());
+                    }
+                    KmSettings.setDefaultAgentIds(agentList);
+                }
+                if (settingObject.has("defaultBotIds") && !TextUtils.isEmpty(settingObject.get("defaultBotIds").toString())) {
+                    List<String> botList = new ArrayList<String>();
+                    for(int i = 0; i < settingObject.getJSONArray("defaultBotIds").length(); i++){
+                        botList.add(settingObject.getJSONArray("defaultBotIds").get(i).toString());
+                    }
+                    KmSettings.setDefaultBotIds(botList);
+                }
+                if (settingObject.has("defaultAssignee") && !TextUtils.isEmpty(settingObject.get("defaultAssignee").toString())) {
+                    KmSettings.setDefaultAssignee(settingObject.get("defaultAssignee").toString());
+                }
+                if (settingObject.has("teamId")) {
+                    KmSettings.setDefaultTeamId(settingObject.get("teamId").toString());
+                }
+                if (settingObject.has("skipRouting")) {
+                    KmSettings.setSkipRouting(true);
+                }
                 result.success(SUCCESS);
             } catch(Exception e) {
                 result.error(ERROR, e.toString(), null);
