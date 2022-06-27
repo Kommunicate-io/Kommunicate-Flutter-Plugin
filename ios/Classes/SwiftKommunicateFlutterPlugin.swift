@@ -2,6 +2,7 @@ import Flutter
 import UIKit
 import Kommunicate
 import KommunicateCore_iOS_SDK
+import KommunicateChatUI_iOS_SDK
 
 public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFormViewControllerDelegate {
     var appId : String? = nil;
@@ -287,6 +288,9 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             }
         } else if(call.method == "unreadCount") {
             result(ALUserService().getTotalUnreadCount()?.stringValue)
+        } else if(call.method == "hideChatListOnNotification") {
+            KMPushNotificationHandler.hideChatListOnNotification = true
+            result(String("Chat list hidden on Notification"))
         } else {
             result(FlutterMethodNotImplemented)
         }
