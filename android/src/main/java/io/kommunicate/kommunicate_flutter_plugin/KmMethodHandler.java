@@ -362,7 +362,7 @@ public class KmMethodHandler implements MethodCallHandler {
                     KmSettings.setDefaultTeamId(settingObject.get("teamId").toString());
                 }
                 if (settingObject.has("skipRouting")) {
-                    KmSettings.setSkipRouting(true);
+                    KmSettings.setSkipRouting(Boolean.valueOf(settingObject.get("skipRouting").toString()));
                 }
                 result.success(SUCCESS);
             } catch(Exception e) {
