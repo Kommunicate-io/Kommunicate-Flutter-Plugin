@@ -60,4 +60,11 @@ class KommunicateFlutterPlugin {
   static Future<dynamic> updateTeamId(dynamic conversationObject) async {
     return await _channel.invokeMethod('updateTeamId', conversationObject);
   }
+  
+  static Future<dynamic> hideChatListOnNotification() async {
+    return await _channel.invokeMethod('hideChatListOnNotification');
+  }
+  static Future<dynamic> updateDefaultSetting(dynamic defaultSetting) async {
+    return await _channel.invokeMethod('updateDefaultSetting', jsonEncode(defaultSetting));
+  }
 }

@@ -1,9 +1,14 @@
+## 1.4.8
+
+- added hideChatListOnNotification method 
+- updated iOS SDK to 6.7.0
+
 ## 1.4.7
 
 - Display Name accepting spaces now
 - Upgraded Android SDK version to 2.4.1
 
-- ## 1.4.6
+## 1.4.6
 
 - postBackToBotPlatform fix
 - upgrade Android version to 2.4.0
