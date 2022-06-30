@@ -96,11 +96,23 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 }
             }
         } else if(call.method == "openParticularConversation") {
-            guard let clientConversationId = call.arguments as? String else {
-                self.sendErrorResultWithCallback(result: result, message: "Invalid or empty clientConversationId")
+            guard let conversationId = call.arguments as? String else {
+                self.sendErrorResultWithCallback(result: result, message: "Invalid or empty conversationId")
                 return
             }
-            self.openParticularConversation(clientConversationId, true, result)
+            let alChannelService = ALChannelService()
+            var conversationID = String()
+            if Int(conversationId) != nil {
+                alChannelService.getChannelInformation(NSNumber(value: Int(conversationId)!), orClientChannelKey: nil) { (channel) in
+                    if channel != nil && channel?.clientChannelKey != nil {
+                        conversationID = channel!.clientChannelKey
+                        self.openParticularConversation(conversationID, true, result)
+
+                    }
+                }
+            } else {
+                self.openParticularConversation(conversationId, true, result)
+            }
         } else if(call.method == "updateTeamId") {
             
                         guard let jsonObj = call.arguments as? Dictionary<String, Any>, let teamId = jsonObj["teamId"] as? String else {
@@ -320,19 +332,8 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     
     func openParticularConversation(_ conversationId: String,_ skipConversationList: Bool, _ callback: @escaping FlutterResult) -> Void {
         DispatchQueue.main.async{
-            let alChannelService = ALChannelService()
-            var conversationID = String()
-            if Int(conversationId) != nil {
-                alChannelService.getChannelInformation(NSNumber(value: Int(conversationId)!), orClientChannelKey: nil) { (channel) in
-                    if channel != nil && channel?.clientChannelKey != nil {
-                        conversationID = channel!.clientChannelKey
-                    }
-                }
-            } else {
-                conversationID = conversationId
-            }
             if let top = UIApplication.topViewController(){
-                Kommunicate.showConversationWith(groupId: conversationID, from: top, completionHandler: ({ (shown) in
+                Kommunicate.showConversationWith(groupId: conversationId, from: top, completionHandler: ({ (shown) in
                     if(shown){
                         callback(conversationId)
                     } else {
