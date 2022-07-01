@@ -1,3 +1,13 @@
+## 1.4.9
+
+- Upgraded Android version to 2.4.2
+- Upgraded iOS version to 6.7.1
+- fix for double click on openParticularConversation
+- fix for bot loading message continuously
+- fix for Rich Message button text crop
+- fix for bot name hiding in push notification click
+
+ 
 ## 1.4.8
 
 - added hideChatListOnNotification method 
