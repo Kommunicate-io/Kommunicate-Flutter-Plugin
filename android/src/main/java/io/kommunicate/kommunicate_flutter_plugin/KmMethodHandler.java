@@ -179,7 +179,7 @@ public class KmMethodHandler implements MethodCallHandler {
 
                         @Override
                         public void onFailure(Exception e, Context context) {
-                            result.error(ERROR, e.getMessage(), null);
+                            result.error(ERROR, e != null ? e.getMessage() : "Invalid conversationId", null);
                         }
                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
