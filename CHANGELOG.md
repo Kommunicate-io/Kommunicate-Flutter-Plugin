@@ -1,4 +1,12 @@
-## 1.4.9
+## 1.5.0
+
+- Upgraded Android version to 2.4.3
+- Add color customization for notification icon
+- Added support to set Notification tone
+- Added icon to link Rich Messages
+- Crash fix
+
+ ## 1.4.9
 
 - Upgraded Android version to 2.4.2
 - Upgraded iOS version to 6.7.1
