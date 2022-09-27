@@ -26,77 +26,68 @@ public class KmEventListener implements KmPluginEventListener {
     @Override
     public void onPluginLaunch() {
         methodChannel.invokeMethod("onPluginLaunch", "launch");
-
     }
 
     @Override
     public void onPluginDismiss() {
         methodChannel.invokeMethod("onPluginDismiss", "dismiss");
-
     }
 
     @Override
     public void onConversationResolved(Integer conversationId) {
         methodChannel.invokeMethod("onConversationResolved", conversationId);
-
     }
 
     @Override
     public void onConversationRestarted(Integer conversationId) {
         methodChannel.invokeMethod("onConversationRestarted", conversationId);
-
     }
 
     @Override
     public void onRichMessageButtonClick(Integer conversationId, String actionType, Object action) {
         try  {
-        JSONObject messageActionObject = new JSONObject();
-        messageActionObject.put("conversationId", conversationId);
-        messageActionObject.put("actionType", actionType);
-        messageActionObject.put("action", action);
-        methodChannel.invokeMethod("onRichMessageButtonClick", String.valueOf(messageActionObject));
+            JSONObject messageActionObject = new JSONObject();
+            messageActionObject.put("conversationId", conversationId);
+            messageActionObject.put("actionType", actionType);
+            messageActionObject.put("action", action);
+            methodChannel.invokeMethod("onRichMessageButtonClick", String.valueOf(messageActionObject));
         } catch(JSONException e) {
-            
+            methodChannel.invokeMethod("onRichMessageButtonClick", "error fetching data");
+            e.printStackTrace();
         }
-
     }
 
     @Override
     public void onStartNewConversation(Integer conversationId) {
         methodChannel.invokeMethod("onStartNewConversation", conversationId);
-
-        
     }
 
     @Override
     public void onSubmitRatingClick(Integer conversationId, Integer rating, String feedback) {
         try {
-        JSONObject ratingObject = new JSONObject();
-        ratingObject.put("conversationId", conversationId);
-        ratingObject.put("rating", rating);
-        ratingObject.put("feedback", feedback);
-        methodChannel.invokeMethod("onSubmitRatingClick", String.valueOf(ratingObject));
+            JSONObject ratingObject = new JSONObject();
+            ratingObject.put("conversationId", conversationId);
+            ratingObject.put("rating", rating);
+            ratingObject.put("feedback", feedback);
+            methodChannel.invokeMethod("onSubmitRatingClick", String.valueOf(ratingObject));
         } catch(JSONException e) {
-
+            methodChannel.invokeMethod("onSubmitRatingClick", "error fetching data");
+            e.printStackTrace();
         }
-
     }
 
     @Override
     public void onMessageSent(Message message) {
         methodChannel.invokeMethod("onMessageSent", GsonUtils.getJsonFromObject(message, Message.class));
-
     }
 
     @Override
     public void onMessageReceived(Message message) {
         methodChannel.invokeMethod("onMessageReceived", GsonUtils.getJsonFromObject(message, Message.class));
-
     }
 
     @Override
     public void onBackButtonClicked(boolean isConversationOpened) {
         methodChannel.invokeMethod("onBackButtonClicked", isConversationOpened);
-
     }
 }
