@@ -13,19 +13,24 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 
             private MethodChannel methodChannel;
             private BinaryMessenger binaryMessenger;
+            private KmEventListener kmEventListener;
             public static void registerWith(Registrar registrar) {
                 final MethodChannel channel = new MethodChannel(registrar.messenger(), "kommunicate_flutter");
                 channel.setMethodCallHandler(new KmMethodHandler(registrar.activity()));
+                new KmEventListener().register(channel);
             }
 
             public void setupChannel(Activity context) {
                 methodChannel = new MethodChannel(binaryMessenger, "kommunicate_flutter");
                 methodChannel.setMethodCallHandler(new KmMethodHandler(context));
+                kmEventListener = new KmEventListener();
+                kmEventListener.register(methodChannel);                
             }
 
             private void destroyChannel() {
                 methodChannel.setMethodCallHandler(null);
                 methodChannel = null;
+                kmEventListener.unregister(); 
             }
 
             @Override
