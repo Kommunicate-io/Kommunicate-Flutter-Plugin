@@ -13,16 +13,13 @@ class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
-// ignore: non_constant_identifier_names
-//KommunicateFlutterPlugin.registerEventListener();
+
 MethodChannel channel = MethodChannel('kommunicate_flutter');
 
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    print("start");
     channel.setMethodCallHandler((call){
-      print("callhappens");
       if(call.method == 'onPluginLaunch'){
         print(call.arguments);
       } else if(call.method == 'onPluginDismiss'){
