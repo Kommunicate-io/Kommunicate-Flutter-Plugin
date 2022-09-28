@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:kommunicate_flutter/kommunicate_flutter.dart';
 import 'package:kommunicate_flutter_plugin_example/AppConfig.dart';
@@ -13,9 +14,30 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
+MethodChannel channel = MethodChannel('kommunicate_flutter');
+
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
+    channel.setMethodCallHandler((call){
+      if(call.method == 'onPluginLaunch'){
+        print(call.arguments);
+      } else if(call.method == 'onPluginDismiss'){
+        print(call.arguments);
+      } else if(call.method == 'onConversationResolved'){
+        print(call.arguments);
+      } else if(call.method == 'onConversationRestarted'){
+        print(call.arguments);
+      } else if(call.method == 'onRichMessageButtonClick'){
+        print(call.arguments);
+      } else if(call.method == 'onStartNewConversation'){
+        print(call.arguments);
+      } else if(call.method == 'onMessageSent'){
+        print(call.arguments);
+      } 
+
+      return null;
+    });
     super.initState();
   }
 
