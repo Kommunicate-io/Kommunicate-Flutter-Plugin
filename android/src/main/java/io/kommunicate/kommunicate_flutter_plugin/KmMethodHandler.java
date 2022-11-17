@@ -189,42 +189,44 @@ public class KmMethodHandler implements MethodCallHandler {
         }
         } else if (call.method.equals("buildConversation")) {
             try {
-            KmConversationBuilder conversationBuilder = (KmConversationBuilder) GsonUtils.getObjectFromJson(call.arguments.toString(), KmConversationBuilder.class);
-            conversationBuilder.setContext(context);
+                JSONObject conversationObject = new JSONObject(call.arguments.toString());
+                KmConversationBuilder conversationBuilder = (KmConversationBuilder) GsonUtils.getObjectFromJson(conversationObject.toString(), KmConversationBuilder.class);
+                conversationBuilder.setContext(context);
 
-            if (!call.hasArgument("isSingleConversation")) {
-                conversationBuilder.setSingleConversation(true);
-            }
-            if (!call.hasArgument("skipConversationList")) {
-                conversationBuilder.setSkipConversationList(true);
-            }
-
-            KmCallback callback = new KmCallback() {
-                @Override
-                public void onSuccess(Object message) {
-                    Integer conversationId = (Integer) message;
-                    result.success(ChannelService.getInstance(context).getChannel(conversationId).getClientGroupId());
+                if (!conversationObject.has("isSingleConversation")) {
+                    conversationBuilder.setSingleConversation(true);
+                }
+                if (!conversationObject.has("skipConversationList")) {
+                    conversationBuilder.setSkipConversationList(true);
                 }
 
-                @Override
-                public void onFailure(Object error) {
-                    result.error(ERROR, error != null ? (error instanceof ChannelFeedApiResponse ? GsonUtils.getJsonFromObject(error, ChannelFeedApiResponse.class) : error.toString()) : "Some internal error occurred", null);
-                }
-            };
+                KmCallback callback = new KmCallback() {
+                    @Override
+                    public void onSuccess(Object message) {
+                        Integer conversationId = (Integer) message;
+                        result.success(ChannelService.getInstance(context).getChannel(conversationId).getClientGroupId());
+                    }
 
-            if (call.hasArgument("createOnly") && (boolean) call.argument("createOnly")) {
-                conversationBuilder.createConversation(callback);
-            } else if (call.hasArgument("launchAndCreateIfEmpty") && (boolean) call.argument("launchAndCreateIfEmpty")) {
-                conversationBuilder.launchAndCreateIfEmpty(callback);
-            } else {
-                conversationBuilder.launchConversation(callback);
+                    @Override
+                    public void onFailure(Object error) {
+                        result.error(ERROR, error != null ? (error instanceof ChannelFeedApiResponse ? GsonUtils.getJsonFromObject(error, ChannelFeedApiResponse.class) : error.toString()) : "Some internal error occurred", null);
+                    }
+                };
+                
+                if (conversationObject.has("createOnly") && (boolean) conversationObject.get("createOnly")) {
+                    conversationBuilder.createConversation(callback);
+                } else if (conversationObject.has("launchAndCreateIfEmpty") && (boolean) conversationObject.get("launchAndCreateIfEmpty")) {
+                    conversationBuilder.launchAndCreateIfEmpty(callback);
+                } else {
+                    conversationBuilder.launchConversation(callback);
+                }
+            } catch (Exception e) {
+                result.error(ERROR, e.toString(), null);
             }
-        } catch (Exception e) {
-            result.error(ERROR, e.toString(), null);
-        }
         } else if (call.method.equals("updateChatContext")) {
             try {
-                HashMap<String, Object> chatContext = (HashMap<String, Object>) GsonUtils.getObjectFromJson(call.arguments.toString(), HashMap.class);
+                JSONObject chatContextObject = new JSONObject(call.arguments.toString());
+                HashMap<String, Object> chatContext = (HashMap<String, Object>) GsonUtils.getObjectFromJson(chatContextObject.toString(), HashMap.class);
                 if (Kommunicate.isLoggedIn(context)) {
                     KmSettings.updateChatContext(context, getStringMap(chatContext));
                     result.success(SUCCESS);
@@ -237,7 +239,8 @@ public class KmMethodHandler implements MethodCallHandler {
         } else if (call.method.equals("updateUserDetail")) {
             try {
                 if (KMUser.isLoggedIn(context)) {
-                    KMUser kmUser = (KMUser) GsonUtils.getObjectFromJson(GsonUtils.getJsonFromObject(call.arguments, Object.class), KMUser.class);
+                    JSONObject userObject = new JSONObject(call.arguments.toString());
+                    KMUser kmUser = (KMUser) GsonUtils.getObjectFromJson(userObject.toString(), KMUser.class);
                     new AlUserUpdateTask(context, kmUser, new AlCallback() {
                         @Override
                         public void onSuccess(Object message) {
