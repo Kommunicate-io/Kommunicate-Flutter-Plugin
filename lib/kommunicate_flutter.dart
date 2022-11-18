@@ -12,7 +12,7 @@ class KommunicateFlutterPlugin {
   }
 
   static Future<dynamic> buildConversation(dynamic conversationObject) async {
-    return await _channel.invokeMethod('buildConversation', conversationObject);
+    return await _channel.invokeMethod('buildConversation', jsonEncode(conversationObject));
   }
 
   static Future<dynamic> logout() async {
@@ -20,11 +20,11 @@ class KommunicateFlutterPlugin {
   }
 
   static Future<dynamic> updateChatContext(dynamic chatContext) async {
-    return await _channel.invokeMethod('updateChatContext', chatContext);
+    return await _channel.invokeMethod('updateChatContext', jsonEncode(chatContext));
   }
 
   static Future<dynamic> updateUserDetail(dynamic kmUser) async {
-    return await _channel.invokeMethod('updateUserDetail', kmUser);
+    return await _channel.invokeMethod('updateUserDetail', jsonEncode(kmUser));
   }
 
   static Future<dynamic> login(dynamic kmUser) async {
