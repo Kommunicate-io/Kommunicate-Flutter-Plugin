@@ -90,4 +90,39 @@ public class KmEventListener implements KmPluginEventListener {
     public void onBackButtonClicked(boolean isConversationOpened) {
         methodChannel.invokeMethod("onBackButtonClicked", isConversationOpened);
     }
+
+    @Override
+    public void onAttachmentClick(String attachmentType) {
+        methodChannel.invokeMethod("onAttachmentClick", attachmentType);
+    }
+
+    @Override
+    public void onFaqClick(String faqUrl) {
+        methodChannel.invokeMethod("onFaqClick", faqUrl);
+    }
+
+    @Override
+    public void onLocationClick() {
+        methodChannel.invokeMethod("onLocationClick");
+    }
+
+    @Override
+    public void onNotificationClick(Message message) {
+        methodChannel.invokeMethod("onNotificationClick",  GsonUtils.getJsonFromObject(message, Message.class));
+    }
+
+    @Override
+    public void onVoiceButtonClick(String action) {
+        methodChannel.invokeMethod("onVoiceButtonClick", action);
+    }
+
+    @Override
+    public void onRatingEmoticonsClick(Integer integer) {
+        methodChannel.invokeMethod("onRatingEmoticonsClick", String.valueOf(integer));
+    }
+
+    @Override
+    public void onRateConversationClick() {
+        methodChannel.invokeMethod("onRateConversationClick");
+    }
 }
