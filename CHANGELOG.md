@@ -1,3 +1,13 @@
+## 1.5.1
+
+- Added Support for Android API 33 
+- Added multiple events to Event Listners
+- Added Customisation for Start New Conversation Button background color | Android SDK
+- Added fix for Android API <= 19. Current min SDK version is still 16. All bugs have been fixed for lower SDK versions. | Android SDK
+- Added Edit Message Text box Customization - "messageEditTextBackgroundColor" | Android SDK
+- Added Card Template Customisation | iOS SDK
+- Added support to set Custom bot name through Chat Context | Android SDK
+
 ## 1.5.0
 
 - Upgraded Android version to 2.4.3
