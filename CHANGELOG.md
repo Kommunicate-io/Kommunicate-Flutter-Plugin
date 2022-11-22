@@ -8,6 +8,7 @@
 - Added Card Template Customisation | iOS SDK
 - Form template Issue in small screen devices | iOS SDK
 - Added support to set Custom bot name through Chat Context | Android SDK
+- Moved Android permissions to App level Manifest. You must add permissions in AndroidManifest.xml
 
 ## 1.5.0
 
