@@ -103,7 +103,7 @@ public class KmEventListener implements KmPluginEventListener {
 
     @Override
     public void onLocationClick() {
-        methodChannel.invokeMethod("onLocationClick");
+        methodChannel.invokeMethod("onLocationClick", "clicked");
     }
 
     @Override
@@ -123,6 +123,6 @@ public class KmEventListener implements KmPluginEventListener {
 
     @Override
     public void onRateConversationClick() {
-        methodChannel.invokeMethod("onRateConversationClick");
+        methodChannel.invokeMethod("onRateConversationClick", "clicked");
     }
 }
