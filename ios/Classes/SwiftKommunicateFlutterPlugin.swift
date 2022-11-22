@@ -170,7 +170,8 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             self.conversationTitle = nil
             
             do {
-                guard let jsonObj = call.arguments as? Dictionary<String, Any> else {
+                guard let jsonString = call.arguments as? String, var jsonObj = jsonString.convertToDictionary() else {
+                    self.sendErrorResultWithCallback(result: result, message: "Unable to parse Conversation Object")
                     return
                 }
                 
@@ -274,7 +275,8 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 }
             }
         } else if(call.method == "updateChatContext") {
-            guard let chatContext = call.arguments as? Dictionary<String, Any> else {
+            guard let chatContextString = call.arguments as? String, var chatContext = chatContextString.convertToDictionary() else {
+                self.sendErrorResultWithCallback(result: result, message: "Unable to parse Chat context Object")
                 return
             }
             do {
@@ -289,7 +291,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 sendErrorResultWithCallback(result: result, message: error.localizedDescription)
             }
         } else if(call.method == "updateUserDetail") {
-            guard let kmUser = call.arguments as? Dictionary<String, Any> else {
+            guard let kmUserString = call.arguments as? String, var kmUser = kmUserString.convertToDictionary() else {
                 sendErrorResultWithCallback(result: result, message: "Invalid kmUser object")
                 return
             }
