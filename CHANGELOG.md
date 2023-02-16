@@ -1,3 +1,18 @@
+## 1.5.5
+- Added support to send platform flag for analytics
+- Added logout option on conversation screen - Android
+- Handle Notifications from FCM directly - Android
+- Added support for AES256 encryption and decryption - Android
+- Added fix for API <= 19. Current min SDK version is still 16. All bugs have been fixed for lower SDK versions.
+- Added Edit Message Text box Customization - "messageEditTextBackgroundColor" - Android
+- Added support to set Custom bot name through Chat Context
+- Added Support for Android API 33 
+- Threads optimized and multiple crash fixed - Android
+- Added Support for App Extension - iOS
+- Fixed add contact permission to info.list issue when app is submitted on App Store - iOS
+- Added Button to create new conversation on conversation list screen - iOS 
+
+
 ## 1.5.1
 
 - Added Support for Android API 33 

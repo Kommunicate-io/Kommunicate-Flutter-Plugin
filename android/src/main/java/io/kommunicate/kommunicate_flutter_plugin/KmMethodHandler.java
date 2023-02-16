@@ -74,7 +74,7 @@ public class KmMethodHandler implements MethodCallHandler {
                     result.error(ERROR, "appId is missing", null);
                     return;
                 }
-
+                user.setPlatform(User.Platform.FLUTTER.getValue());
                 Kommunicate.login(context, user, new KMLoginHandler() {
                     @Override
                     public void onSuccess(RegistrationResponse registrationResponse, Context context) {
