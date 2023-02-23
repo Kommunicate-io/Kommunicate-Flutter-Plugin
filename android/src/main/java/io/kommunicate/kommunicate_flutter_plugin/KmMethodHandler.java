@@ -23,7 +23,7 @@ import io.kommunicate.callbacks.KmGetConversationInfoCallback;
 import io.kommunicate.users.KMUser;
 import io.kommunicate.KmConversationHelper;
 import io.kommunicate.KmException;
-
+import com.applozic.mobicomkit.api.account.user.User;
 import com.applozic.mobicomkit.ApplozicClient;
 import com.applozic.mobicomkit.api.account.user.AlUserUpdateTask;
 import com.applozic.mobicomkit.api.conversation.database.MessageDatabaseService;
