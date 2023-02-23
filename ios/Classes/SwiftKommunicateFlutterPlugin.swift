@@ -487,7 +487,6 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         if email != nil {
             dictionary["email"] = email
         }
-
         var postdata: Data? = nil
         do {
             postdata = try JSONSerialization.data(withJSONObject: dictionary, options: [])
@@ -499,8 +498,6 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         if let postdata = postdata {
             theParamString = String(data: postdata, encoding: .utf8)
         }
-       // self.sendErrorResultWithCallback(result: result, message: dictionary["metadata"] as! String) 
-
         let theRequest = ALRequestHandler.createPOSTRequest(withUrlString: theUrlString, paramString: theParamString)
         ALResponseHandler().authenticateAndProcessRequest(theRequest,andTag: "UPDATE_DISPLAY_NAME_AND_PROFILE_IMAGE", withCompletionHandler: {
             theJson, theError in
@@ -532,7 +529,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 alContact?.contactImageUrl = imageLink
             }
             if metadata != nil {
-                //alContact?.metadata = metadata
+                alContact?.metadata = metadata as? NSMutableDictionary
             }
             ALContactDBService().updateContact(inDatabase: alContact)
             self.sendSuccessResultWithCallback(result: result, message: "Success")
