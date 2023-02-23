@@ -296,7 +296,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 return
             }
             if(Kommunicate.isLoggedIn) {
-                self.updateUser(displayName: kmUser["displayName"] as? String, imageLink: kmUser["imageLink"] as? String, status: kmUser["status"] as? String, metadata: kmUser["metadata"] as? NSMutableDictionary, phoneNumber: kmUser["contactNumber"] as? String, email: kmUser["email"] as? String, result: result)
+                self.updateUser(displayName: kmUser["displayName"] as? String, imageLink: kmUser["imageLink"] as? String, status: kmUser["status"] as? String, metadata: kmUser["metadata"] as? [String: Any], phoneNumber: kmUser["contactNumber"] as? String, email: kmUser["email"] as? String, result: result)
             } else {
                 sendErrorResultWithCallback(result: result, message: "User not authorised. This usually happens when calling the function before conversationBuilder or loginUser. Make sure you call either of the two functions before updating the user details")
             }
@@ -464,7 +464,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         }
     }
     
-    func updateUser (displayName: String?, imageLink : String?, status: String?, metadata: NSMutableDictionary?,phoneNumber: String?,email : String?, result: FlutterResult!) {
+    func updateUser (displayName: String?, imageLink : String?, status: String?, metadata: [String: Any]?,phoneNumber: String?,email : String?, result: FlutterResult!) {
         
         let theUrlString = "\(ALUserDefaultsHandler.getBASEURL() as String)/rest/ws/user/update"
         
@@ -487,6 +487,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         if email != nil {
             dictionary["email"] = email
         }
+
         var postdata: Data? = nil
         do {
             postdata = try JSONSerialization.data(withJSONObject: dictionary, options: [])
@@ -498,6 +499,8 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         if let postdata = postdata {
             theParamString = String(data: postdata, encoding: .utf8)
         }
+       // self.sendErrorResultWithCallback(result: result, message: dictionary["metadata"] as! String) 
+
         let theRequest = ALRequestHandler.createPOSTRequest(withUrlString: theUrlString, paramString: theParamString)
         ALResponseHandler().authenticateAndProcessRequest(theRequest,andTag: "UPDATE_DISPLAY_NAME_AND_PROFILE_IMAGE", withCompletionHandler: {
             theJson, theError in
@@ -529,7 +532,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 alContact?.contactImageUrl = imageLink
             }
             if metadata != nil {
-                alContact?.metadata = metadata
+                //alContact?.metadata = metadata
             }
             ALContactDBService().updateContact(inDatabase: alContact)
             self.sendSuccessResultWithCallback(result: result, message: "Success")
