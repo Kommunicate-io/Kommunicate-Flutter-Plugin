@@ -1,3 +1,8 @@
+## 1.5.6
+- Updated Readme.MD and description
+- Fixed build issue
+
+
 ## 1.5.5
 - Added support to send platform flag for analytics
 - Added logout option on conversation screen - Android
