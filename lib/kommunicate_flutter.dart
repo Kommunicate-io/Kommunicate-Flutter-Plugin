@@ -70,4 +70,7 @@ class KommunicateFlutterPlugin {
   static Future<dynamic> createConversationInfo(dynamic defaultSetting) async {
     return await _channel.invokeMethod('createConversationInfo', jsonEncode(defaultSetting));
   }
+  static Future<dynamic> closeConversationScreen() async {
+    return await _channel.invokeMethod('closeConversationScreen');
+  }
 }
