@@ -7,16 +7,16 @@ import io.flutter.plugin.common.MethodChannel;
 import com.applozic.mobicommons.json.GsonUtils;
 import org.json.JSONObject;
 import org.json.JSONException;
+import com.applozic.mobicomkit.listners.KmConversationInfoListener;
 
 
-
-
-public class KmEventListener implements KmPluginEventListener {
+public class KmEventListener implements KmPluginEventListener, KmConversationInfoListener {
     private MethodChannel methodChannel;
 
    public void register(MethodChannel methodChannel) {
     this.methodChannel = methodChannel;
         AlEventManager.getInstance().registerPluginEventListener(this);
+        AlEventManager.getInstance().registerConversationInfoListener(this);
     }
 
     public void unregister() {
@@ -124,5 +124,10 @@ public class KmEventListener implements KmPluginEventListener {
     @Override
     public void onRateConversationClick() {
         methodChannel.invokeMethod("onRateConversationClick", "clicked");
+    }
+
+    @Override
+    public void onConversationInfoClicked() {
+        methodChannel.invokeMethod("onConversationInfoClicked", "clicked");
     }
 }

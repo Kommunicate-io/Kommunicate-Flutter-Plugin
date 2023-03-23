@@ -4,7 +4,9 @@ import Kommunicate
 import KommunicateCore_iOS_SDK
 import KommunicateChatUI_iOS_SDK
 
-public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFormViewControllerDelegate {
+public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFormViewControllerDelegate, ALKCustomEventCallback {
+    
+    var methodChannel: FlutterMethodChannel;
     var appId : String? = nil;
     var agentIds: [String]? = [];
     var botIds: [String]? = [];
@@ -21,15 +23,24 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     static let CONVERSATION_ID: String = "conversationId";
     
     
-    override init() {
+     init(channel: FlutterMethodChannel) {
+         self.methodChannel = channel
+         super.init()
+         self.addListener()
     }
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "kommunicate_flutter", binaryMessenger: registrar.messenger())
-        let instance = SwiftKommunicateFlutterPlugin()
+        let instance = SwiftKommunicateFlutterPlugin(channel: channel)
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
     
+    func addListener() {
+        Kommunicate.subscribeCustomEvents(events: [CustomEvent.messageReceive, CustomEvent.messageSend,CustomEvent.faqClick, CustomEvent.newConversation, CustomEvent.submitRatingClick, CustomEvent.restartConversationClick, CustomEvent.richMessageClick, CustomEvent.conversationBackPress, CustomEvent.conversationListBackPress, CustomEvent.conversationInfoClick ], callback: self)
+    }
+    func removeListener() {
+        Kommunicate.unsubcribeCustomEvents()
+    }
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         self.callback = result
         
@@ -327,7 +338,46 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 Kommunicate.defaultConfiguration.defaultBotIds = botIds
             }
             result(String("Default Settings changed"))
-        } else {
+        } else if(call.method == "createConversationInfo") {
+            guard let jsonString = call.arguments as? String, let settingDict = jsonString.convertToDictionary() else {
+                self.sendErrorResultWithCallback(result: result, message: "Unable to parse JSON")
+                return
+            }
+                if let show = settingDict["show"] as? Bool,
+                    show == false {
+                    return
+                }
+            var bg = UIColor(5, green: 163, blue: 191) ?? UIColor.blue
+            var trailing = UIImage(named: "next") ?? UIImage()
+            var leading = UIImage(named: "file") ?? UIImage()
+            var font = UIFont.systemFont(ofSize: 14.0, weight: .bold)
+            var infoContent: String = ""
+            var contentColor = UIColor.white
+                if(settingDict["backgroundColor"] != nil) {
+                    bg = UIColor(hexString: settingDict["backgroundColor"] as? String, alpha: 1)
+            }
+                if(settingDict["trailingIcon"] != nil) {
+                 trailing = UIImage(named: settingDict["trailingIcon"] as? String ?? "next") ?? UIImage()
+            }
+                if(settingDict["leadingIcon"] != nil) {
+                    leading = UIImage(named: settingDict["leadingIcon"] as? String ?? "files") ?? UIImage()
+            }
+            if(settingDict["infoContent"] != nil) {
+                infoContent = settingDict["infoContent"] as? String ?? ""
+            }
+             if(settingDict["contentTextColor"] != nil) {
+                 contentColor = UIColor(hexString: settingDict["contentTextColor"] as? String, alpha: 1) ?? UIColor.white
+             }
+            
+            let model = KMConversationInfoViewModel(infoContent: infoContent, leadingImage: leading, trailingImage:trailing , backgroundColor: bg, contentColor: contentColor, contentFont:font)
+            Kommunicate.defaultConfiguration.conversationInfoModel = model
+        }
+        else if(call.method == "closeConversationScreen") {
+            DispatchQueue.main.async {
+                UIApplication.topViewController()?.dismiss(animated: false, completion: nil)
+            }
+        }
+        else {
             result(FlutterMethodNotImplemented)
         }
     }
@@ -535,6 +585,54 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             self.sendSuccessResultWithCallback(result: result, message: "Success")
         })
     }
+    
+    public func messageSent(message: ALMessage) {
+        guard let messageDict = message.dictionary() as? NSDictionary else { return }
+        methodChannel.invokeMethod("onMessageSent", arguments: ["data":convertDictToString(dict: messageDict)])
+    }
+    
+    public func messageReceived(message: ALMessage) {
+        guard let messageDict = message.dictionary() as? NSDictionary else { return }
+        methodChannel.invokeMethod("onMessageReceived", arguments: ["data":convertDictToString(dict: messageDict)])
+
+    }
+    
+    public func conversationRestarted(conversationId: String) {
+        methodChannel.invokeMethod("onConversationRestarted", arguments: ["data":conversationId])
+    }
+
+    public func onBackButtonClick(isConversationOpened: Bool) {
+        methodChannel.invokeMethod("onBackButtonClicked", arguments: ["data":isConversationOpened])
+    }
+
+    public func faqClicked(url: String) {
+        methodChannel.invokeMethod("onFaqClick", arguments: ["data":url])
+    }
+
+    public func conversationCreated(conversationId: String) {
+        methodChannel.invokeMethod("onStartNewConversation", arguments: ["data":conversationId])
+    }
+
+    public func ratingSubmitted(conversationId: String, rating: Int, comment: String) {
+        let ratingDict: NSDictionary = ["conversationId": conversationId, "rating":rating, "feedback": comment]
+        methodChannel.invokeMethod("onSubmitRatingClick", arguments: ["data": convertDictToString(dict: ratingDict)])
+    }
+
+    public func richMessageClicked(conversationId: String, action: [String : Any], type: String) {
+        let richMessageDict: NSDictionary = ["conversationId": conversationId, "action": convertDictToString(dict: action as NSDictionary), "actionType": type]
+        methodChannel.invokeMethod("onRichMessageButtonClick", arguments: ["data": convertDictToString(dict: richMessageDict)])
+    }
+    
+    public func conversationInfoClicked() {
+        methodChannel.invokeMethod("conversationInfoClicked", arguments: "clicked")
+    }
+    
+    func convertDictToString(dict: NSDictionary) -> String {
+        guard let data =  try? JSONSerialization.data(withJSONObject: dict, options: []) else {
+            return ""
+        }
+        return String(data:data, encoding:.utf8) ?? ""
+    }
 }
 
 extension UIApplication {
@@ -553,6 +651,7 @@ extension UIApplication {
         return controller
     }}
 extension String {
+    
     func convertToDictionary() -> [String: Any]? {
              if let data = data(using: .utf8) {
                  return try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
