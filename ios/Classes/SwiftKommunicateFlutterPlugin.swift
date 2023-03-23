@@ -26,14 +26,12 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
      init(channel: FlutterMethodChannel) {
          self.methodChannel = channel
          super.init()
-         
          self.addListener()
     }
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "kommunicate_flutter", binaryMessenger: registrar.messenger())
         let instance = SwiftKommunicateFlutterPlugin(channel: channel)
-//        instance.methodChannel = channel
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
     
@@ -346,7 +344,6 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 return
             }
             var bg = UIColor(5, green: 163, blue: 191) ?? UIColor.blue
-//            var backgroundColor UIColor(He)
             var trailing = UIImage(named: "next") ?? UIImage()
             var leading = UIImage(named: "file") ?? UIImage()
             var font = UIFont.systemFont(ofSize: 14.0, weight: .bold)
@@ -584,14 +581,13 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             self.sendSuccessResultWithCallback(result: result, message: "Success")
         })
     }
+    
     public func messageSent(message: ALMessage) {
         guard let messageDict = message.dictionary() as? NSDictionary else { return }
         methodChannel.invokeMethod("onMessageSent", arguments: ["data":convertDictToString(dict: messageDict)])
     }
     
     public func messageReceived(message: ALMessage) {
-        methodChannel.invokeMethod("onPluginLaunch", arguments: nil)
-        
         guard let messageDict = message.dictionary() as? NSDictionary else { return }
         methodChannel.invokeMethod("onMessageReceived", arguments: ["data":convertDictToString(dict: messageDict)])
 
@@ -599,7 +595,6 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     
     public func conversationRestarted(conversationId: String) {
         methodChannel.invokeMethod("onConversationRestarted", arguments: ["data":conversationId])
-
     }
 
     public func onBackButtonClick(isConversationOpened: Bool) {
@@ -627,6 +622,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     public func conversationInfoClicked() {
         methodChannel.invokeMethod("conversationInfoClicked", arguments: "clicked")
     }
+    
     func convertDictToString(dict: NSDictionary) -> String {
         guard let data =  try? JSONSerialization.data(withJSONObject: dict, options: []) else {
             return ""
