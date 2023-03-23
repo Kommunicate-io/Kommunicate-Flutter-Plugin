@@ -36,7 +36,8 @@ import com.applozic.mobicommons.people.channel.Channel;
 import com.applozic.mobicommons.people.contact.Contact;
 import com.applozic.mobicomkit.uiwidgets.conversation.fragment.MobiComConversationFragment;
 import com.applozic.mobicomkit.api.conversation.AlTotalUnreadCountTask;
-
+import io.kommunicate.preference.KmConversationInfoSetting;
+import com.applozic.mobicomkit.broadcast.AlEventManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -366,6 +367,37 @@ public class KmMethodHandler implements MethodCallHandler {
                 }
                 if (settingObject.has("skipRouting")) {
                     KmSettings.setSkipRouting(Boolean.valueOf(settingObject.get("skipRouting").toString()));
+                }
+                result.success(SUCCESS);
+            } catch(Exception e) {
+                result.error(ERROR, e.toString(), null);
+            }
+        } else if(call.method.equals("closeConversationScreen")) {
+            if(context != null) {
+                Kommunicate.closeConversationScreen(context);
+            }
+        } else if(call.method.equals("createConversationInfo")) {
+            try {
+                JSONObject settingObject = new JSONObject(call.arguments.toString());
+                KmConversationInfoSetting kmConversationInfoSetting = KmConversationInfoSetting.getInstance(context);
+                
+                if (settingObject.has("infoContent") && !TextUtils.isEmpty(settingObject.get("infoContent").toString())) {
+                    kmConversationInfoSetting.setInfoContent(settingObject.get("teamId").toString());
+                }
+                if (settingObject.has("contentTextColor") && !TextUtils.isEmpty(settingObject.get("contentTextColor").toString())) {
+                    kmConversationInfoSetting.setContentColor(settingObject.get("contentTextColor").toString());
+                }
+                if (settingObject.has("backgroundColor") && !TextUtils.isEmpty(settingObject.get("backgroundColor").toString())) {
+                    kmConversationInfoSetting.setBackgroundColor(settingObject.get("backgroundColor").toString());
+                }
+                if (settingObject.has("trailingIcon") && !TextUtils.isEmpty(settingObject.get("trailingIcon").toString())) {
+                    kmConversationInfoSetting.setTrailingImageIcon(settingObject.get("trailingIcon").toString());
+                }
+                if (settingObject.has("leadingIcon") && !TextUtils.isEmpty(settingObject.get("leadingIcon").toString())) {
+                    kmConversationInfoSetting.setLeadingImageIcon(settingObject.get("leadingIcon").toString());
+                }
+                if (settingObject.has("show")) {
+                    kmConversationInfoSetting.enableKmConversationInfo(Boolean.valueOf(settingObject.get("show").toString()));
                 }
                 result.success(SUCCESS);
             } catch(Exception e) {
