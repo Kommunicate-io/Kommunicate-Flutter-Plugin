@@ -343,6 +343,10 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 self.sendErrorResultWithCallback(result: result, message: "Unable to parse JSON")
                 return
             }
+                if let show = settingDict["show"] as? Bool,
+                    show == false {
+                    return
+                }
             var bg = UIColor(5, green: 163, blue: 191) ?? UIColor.blue
             var trailing = UIImage(named: "next") ?? UIImage()
             var leading = UIImage(named: "file") ?? UIImage()
