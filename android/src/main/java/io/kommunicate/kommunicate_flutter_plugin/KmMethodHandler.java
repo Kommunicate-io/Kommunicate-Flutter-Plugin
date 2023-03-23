@@ -382,7 +382,7 @@ public class KmMethodHandler implements MethodCallHandler {
                 KmConversationInfoSetting kmConversationInfoSetting = KmConversationInfoSetting.getInstance(context);
                 
                 if (settingObject.has("infoContent") && !TextUtils.isEmpty(settingObject.get("infoContent").toString())) {
-                    kmConversationInfoSetting.setInfoContent(settingObject.get("teamId").toString());
+                    kmConversationInfoSetting.setInfoContent(settingObject.get("infoContent").toString());
                 }
                 if (settingObject.has("contentTextColor") && !TextUtils.isEmpty(settingObject.get("contentTextColor").toString())) {
                     kmConversationInfoSetting.setContentColor(settingObject.get("contentTextColor").toString());
