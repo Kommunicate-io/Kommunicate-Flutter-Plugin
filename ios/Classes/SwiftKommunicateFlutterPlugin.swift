@@ -327,7 +327,38 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 Kommunicate.defaultConfiguration.defaultBotIds = botIds
             }
             result(String("Default Settings changed"))
-        } else {
+        } else if(call.method == "createConversationInfo") {
+            guard let jsonString = call.arguments as? String, let settingDict = jsonString.convertToDictionary() else {
+                self.sendErrorResultWithCallback(result: result, message: "Unable to parse JSON")
+                return
+            }
+            var bg = UIColor(5, green: 163, blue: 191) ?? UIColor.blue
+//            var backgroundColor UIColor(He)
+            var trailing = UIImage(named: "next") ?? UIImage()
+            var leading = UIImage(named: "file") ?? UIImage()
+            var font = UIFont.systemFont(ofSize: 14.0, weight: .bold)
+            var infoContent: String = ""
+            var contentColor = UIColor.white
+                if(settingDict["backgroundColor"] != nil) {
+                    bg = UIColor(hexString: settingDict["backgroundColor"] as? String, alpha: 1)
+            }
+                if(settingDict["trailingIcon"] != nil) {
+                 trailing = UIImage(named: settingDict["trailingIcon"] as? String ?? "next") ?? UIImage()
+            }
+                if(settingDict["leadingIcon"] != nil) {
+                    leading = UIImage(named: settingDict["leadingIcon"] as? String ?? "files") ?? UIImage()
+            }
+            if(settingDict["infoContent"] != nil) {
+                infoContent = settingDict["infoContent"] as? String ?? ""
+            }
+             if(settingDict["contentTextColor"] != nil) {
+                 contentColor = UIColor(hexString: settingDict["contentTextColor"] as? String, alpha: 1) ?? UIColor.white
+             }
+            
+            let model = KMConversationInfoViewModel(infoContent: infoContent, leadingImage: leading, trailingImage:trailing , backgroundColor: bg, contentColor: contentColor, contentFont:font)
+            Kommunicate.defaultConfiguration.conversationInfoModel = model
+        }
+        else {
             result(FlutterMethodNotImplemented)
         }
     }
