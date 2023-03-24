@@ -624,7 +624,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     }
     
     public func conversationInfoClicked() {
-        methodChannel.invokeMethod("conversationInfoClicked", arguments: "clicked")
+        methodChannel.invokeMethod("onConversationInfoClicked", arguments: "clicked")
     }
     
     func convertDictToString(dict: NSDictionary) -> String {
