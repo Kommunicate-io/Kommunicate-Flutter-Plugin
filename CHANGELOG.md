@@ -1,3 +1,7 @@
+## 1.6.0
+- Added support for Multiple Select Button AsMultipleButton
+- Added support to show conversation info view below topbar
+
 ## 1.5.6
 - Updated Readme.MD and description
 - Fixed build issue
