@@ -1,3 +1,6 @@
+## 1.6.2
+- Fixed resetting conversation info view issue
+
 ## 1.6.0
 - Added support for Multiple Select Button AsMultipleButton
 - Added support to show conversation info view below topbar
