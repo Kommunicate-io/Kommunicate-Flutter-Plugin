@@ -345,6 +345,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             }
                 if let show = settingDict["show"] as? Bool,
                     show == false {
+                    Kommunicate.defaultConfiguration.conversationInfoModel = nil
                     return
                 }
             var bg = UIColor(5, green: 163, blue: 191) ?? UIColor.blue
