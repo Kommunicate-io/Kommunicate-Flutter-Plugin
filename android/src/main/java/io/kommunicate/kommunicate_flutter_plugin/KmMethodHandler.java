@@ -403,6 +403,23 @@ public class KmMethodHandler implements MethodCallHandler {
             } catch(Exception e) {
                 result.error(ERROR, e.toString(), null);
             }
+        } else if(call.method.equals("createCustomToolbar")) {
+            try {
+                JSONObject toolbarObject = new JSONObject(call.arguments.toString());
+                KmConversationInfoSetting kmConversationInfoSetting = KmConversationInfoSetting.getInstance(context);
+                if (toolbarObject.has("show")) {
+                    kmConversationInfoSetting.enableCustomToolbarSubtitleDesign(Boolean.valueOf(toolbarObject.get("show").toString()));
+                }
+                if (toolbarObject.has("experienceText") && !TextUtils.isEmpty(toolbarObject.get("experienceText").toString())) {
+                    kmConversationInfoSetting.setToolbarAgentExperience(toolbarObject.get("experienceText").toString());
+
+                }
+                if (toolbarObject.has("rating") && !TextUtils.isEmpty(toolbarObject.get("rating").toString())) {
+                    kmConversationInfoSetting.setToolbarSubtitleRating(Float.valueOf(toolbarObject.get("rating").toString()));
+                }
+            } catch(Exception e) {
+                    result.error(ERROR, e.toString(), null);
+                }
         }
         else {
             result.notImplemented();
