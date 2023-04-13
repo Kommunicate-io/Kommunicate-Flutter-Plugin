@@ -1,3 +1,8 @@
+## 1.6.3
+- Added support for custom toolbar subtitle
+- Changed Message View layout to Top to Bottom
+- Add support to add top static first message
+
 ## 1.6.2
 - Fixed resetting conversation info view issue
 
