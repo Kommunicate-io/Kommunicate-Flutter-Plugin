@@ -73,4 +73,7 @@ class KommunicateFlutterPlugin {
   static Future<dynamic> closeConversationScreen() async {
     return await _channel.invokeMethod('closeConversationScreen');
   }
+  static Future<dynamic> createCustomToolbar(dynamic toolbarObject) async {
+    return await _channel.invokeMethod('createCustomToolbar', jsonEncode(toolbarObject));
+  }
 }
