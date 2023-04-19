@@ -377,6 +377,24 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             DispatchQueue.main.async {
                 UIApplication.topViewController()?.dismiss(animated: false, completion: nil)
             }
+        } else if(call.method == "createCustomToolbar") {
+            guard let jsonString = call.arguments as? String, let toolbarDict = jsonString.convertToDictionary() else {
+                self.sendErrorResultWithCallback(result: result, message: "Unable to parse JSON")
+                return
+            }
+                if let show = toolbarDict["show"] as? Bool,
+                    show == false {
+                    Kommunicate.kmConversationViewConfiguration.toolbarSubtitleText = ""
+                    Kommunicate.kmConversationViewConfiguration.toolbarSubtitleRating = -1.0
+                    return
+                }
+            if(toolbarDict["experienceText"] != nil) {
+                Kommunicate.kmConversationViewConfiguration.toolbarSubtitleText = toolbarDict["experienceText"] as? String ?? ""
+            }
+            if(toolbarDict["rating"] != nil) {
+                Kommunicate.kmConversationViewConfiguration.toolbarSubtitleRating = toolbarDict["rating"] as? Float ?? -1.0
+            }
+
         }
         else {
             result(FlutterMethodNotImplemented)
