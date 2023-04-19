@@ -386,8 +386,6 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                     show == false {
                     Kommunicate.kmConversationViewConfiguration.toolbarSubtitleText = ""
                     Kommunicate.kmConversationViewConfiguration.toolbarSubtitleRating = -1.0
-//                    Kommunicate.kmConversationViewConfiguration.subtitle
-//                    Kommunicate.defaultConfiguration.conversationInfoModel = nil
                     return
                 }
             if(toolbarDict["experienceText"] != nil) {
