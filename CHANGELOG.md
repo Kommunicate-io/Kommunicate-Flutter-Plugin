@@ -1,3 +1,8 @@
+## 1.6.4
+- Added support for custom toolbar subtitle - iOS
+- Added support to add top static first message
+- Fixed form data submission payload 
+
 ## 1.6.3
 - Added support for custom toolbar subtitle
 - Changed Message View layout to Top to Bottom
