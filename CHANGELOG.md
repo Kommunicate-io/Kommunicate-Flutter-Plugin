@@ -1,3 +1,11 @@
+## 1.6.5
+- Added support for group creation source in SDK- Android
+- Added support for Multilingual bot - Android
+- Added support for custom attachment endpoint
+- Fixed Event data not getting passed to List Template 
+- Fixed events build issue - iOS
+
+  
 ## 1.6.4
 - Added support for custom toolbar subtitle - iOS
 - Added support to add top static first message

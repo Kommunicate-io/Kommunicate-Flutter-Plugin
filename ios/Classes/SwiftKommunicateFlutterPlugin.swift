@@ -637,9 +637,20 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         methodChannel.invokeMethod("onSubmitRatingClick", arguments: ["data": convertDictToString(dict: ratingDict)])
     }
 
-    public func richMessageClicked(conversationId: String, action: [String : Any], type: String) {
-        let richMessageDict: NSDictionary = ["conversationId": conversationId, "action": convertDictToString(dict: action as NSDictionary), "actionType": type]
-        methodChannel.invokeMethod("onRichMessageButtonClick", arguments: ["data": convertDictToString(dict: richMessageDict)])
+    public func richMessageClicked(conversationId: String, action: Any, type: String) {
+        let jsonEncoder = JSONEncoder()
+        var actionString: String = ""
+        if action is ListTemplate.Element, let actionElement = action as? ListTemplate.Element,
+           let jsonData = try? jsonEncoder.encode(actionElement)
+        {
+            actionString = String(data: jsonData, encoding: String.Encoding.utf8) ?? ""
+        } else if let actionDict = action as? [String: Any] {
+            actionString = convertDictToString(dict: actionDict as NSDictionary)
+        } else {
+            print("Could not parse Rich Message action object")
+        }
+        let richMessageDict: [String:Any] = ["conversationId": conversationId,"action": actionString, "actionType": type]
+        methodChannel.invokeMethod("onRichMessageButtonClick", arguments: ["data": convertDictToString(dict: richMessageDict as NSDictionary)])
     }
     
     public func conversationInfoClicked() {
