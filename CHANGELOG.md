@@ -1,3 +1,7 @@
+## 1.6.6
+- Added support for custom attachment endpoint - iOS
+
+  
 ## 1.6.5
 - Added support for group creation source in SDK- Android
 - Added support for Multilingual bot - Android
