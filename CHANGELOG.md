@@ -1,3 +1,6 @@
+## 1.6.7
+- Fixed Upload attachment issue to custom cloud service - iOS
+
 ## 1.6.6
 - Added support for custom attachment endpoint - iOS
 
