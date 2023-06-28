@@ -1,3 +1,6 @@
+## 1.6.8
+- Expose Method to hide Assignee online/offline status - `KommunicateFlutterPlugin.hideAssigneeStatus(boolean)`
+
 ## 1.6.7
 - Fixed Upload attachment issue to custom cloud service - iOS
 
