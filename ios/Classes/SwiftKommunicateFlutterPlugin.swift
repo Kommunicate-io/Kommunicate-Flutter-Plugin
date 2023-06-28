@@ -395,6 +395,12 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 Kommunicate.kmConversationViewConfiguration.toolbarSubtitleRating = toolbarDict["rating"] as? Float ?? -1.0
             }
 
+        } else if(call.method == "hideAssigneeStatus") {
+            guard let hide = call.arguments as? Bool else {
+                self.sendErrorResultWithCallback(result: result, message: "Invalid or missing argument")
+                return
+            }
+            Kommunicate.hideAssigneeStatus(hide)
         }
         else {
             result(FlutterMethodNotImplemented)

@@ -420,6 +420,14 @@ public class KmMethodHandler implements MethodCallHandler {
             } catch(Exception e) {
                     result.error(ERROR, e.toString(), null);
                 }
+        } else if(call.method.equals("hideAssigneeStatus")) {
+            try {
+                boolean hide = (boolean) call.arguments();
+                    Kommunicate.hideAssigneeStatus(context, hide);
+            } catch (Exception e) {
+                result.error(ERROR, "Invalid argument passed to hideAssigneeStatus", null);
+            }
+           
         }
         else {
             result.notImplemented();
