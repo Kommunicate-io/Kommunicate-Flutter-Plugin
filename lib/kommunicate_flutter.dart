@@ -76,4 +76,7 @@ class KommunicateFlutterPlugin {
   static Future<dynamic> createCustomToolbar(dynamic toolbarObject) async {
     return await _channel.invokeMethod('createCustomToolbar', jsonEncode(toolbarObject));
   }
+  static Future<dynamic> hideAssigneeStatus(bool hide) async {
+    return await _channel.invokeMethod('hideAssigneeStatus', hide);
+  }
 }
