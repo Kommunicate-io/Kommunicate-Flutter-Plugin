@@ -1,3 +1,6 @@
+## 1.6.9
+- Fix for assignee status not updating
+
 ## 1.6.8
 - Expose Method to hide Assignee online/offline status - `KommunicateFlutterPlugin.hideAssigneeStatus(boolean)`
 
