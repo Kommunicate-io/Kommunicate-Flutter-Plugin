@@ -1,3 +1,8 @@
+## 1.7.0
+- Added support for API Suggestions
+- Fixed visibility of startNewConversation button
+- Fixed crashes
+
 ## 1.6.9
 - Fix for assignee status not updating
 
