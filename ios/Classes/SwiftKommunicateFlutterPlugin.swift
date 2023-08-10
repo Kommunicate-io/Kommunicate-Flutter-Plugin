@@ -66,6 +66,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 let jsonString = String(bytes: jsonData, encoding: .utf8)
                 let kmUser = KMUser(jsonString: jsonString)
                 kmUser?.applicationId = userDict["appId"] as? String
+                kmUser?.platform = NSNumber(value: PLATFORM_FLUTTER.rawValue)
                 
                 Kommunicate.registerUser(kmUser!, completion: {
                     response, error in
@@ -88,6 +89,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             let kmUser = KMUser()
             kmUser.userId = Kommunicate.randomId()
             kmUser.applicationId = appId
+            kmUser.platform = NSNumber(value: PLATFORM_FLUTTER.rawValue)
             
             Kommunicate.registerUser(kmUser, completion: {
                 response, error in
