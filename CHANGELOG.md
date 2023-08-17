@@ -1,3 +1,6 @@
+## Unreleased
+- Added platform flag.
+
 ## 1.7.0
 - Added support for API Suggestions
 - Fixed visibility of startNewConversation button
