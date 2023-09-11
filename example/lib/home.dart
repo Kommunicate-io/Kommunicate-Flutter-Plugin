@@ -1,5 +1,4 @@
 import 'package:kommunicate_flutter_plugin_example/main.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:kommunicate_flutter/kommunicate_flutter.dart';
@@ -64,8 +63,8 @@ class HomePageWidget extends StatelessWidget {
 
   void fetchUserDetails(String userid) {
     try {
-      KommunicateFlutterPlugin.fetchUserDetails(userid).then((value) =>
-          print("User details fetched: " + value));
+      KommunicateFlutterPlugin.fetchUserDetails(userid)
+          .then((value) => print("User details fetched: " + value));
     } on Exception catch (e) {
       print("Fetching user details error : " + e.toString());
     }
@@ -86,22 +85,26 @@ class HomePageWidget extends StatelessWidget {
               decoration: InputDecoration(hintText: "Text Field in Dialog"),
             ),
             actions: <Widget>[
-              FlatButton(
-                color: Colors.red,
-                textColor: Colors.white,
-                child: Text('CANCEL'),
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  primary: Colors.white,
+                ),
                 onPressed: () {
                   Navigator.pop(context);
                 },
+                child: Text('CANCEL'),
               ),
-              FlatButton(
-                color: Colors.green,
-                textColor: Colors.white,
-                child: Text('OK'),
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  primary: Colors.white,
+                ),
                 onPressed: () {
                   fetchUserDetails(valueText);
                   Navigator.pop(context);
                 },
+                child: Text('OK'),
               ),
             ],
           );
@@ -227,7 +230,7 @@ class HomePageWidget extends StatelessWidget {
                       style: style.copyWith(
                           color: Colors.white, fontWeight: FontWeight.bold)),
                 )),
-            SizedBox(height:10),
+            SizedBox(height: 10),
             new Material(
                 elevation: 5.0,
                 borderRadius: BorderRadius.circular(30.0),
@@ -241,10 +244,10 @@ class HomePageWidget extends StatelessWidget {
                     child: Text("Fetch User Details",
                         textAlign: TextAlign.center,
                         style:
-                        TextStyle(fontFamily: 'Montserrat', fontSize: 20.0)
-                            .copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold)))),
+                            TextStyle(fontFamily: 'Montserrat', fontSize: 20.0)
+                                .copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)))),
             SizedBox(height: 10),
             new Material(
                 elevation: 5.0,

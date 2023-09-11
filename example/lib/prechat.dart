@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:kommunicate_flutter/kommunicate_flutter.dart';
 
 import 'AppConfig.dart';
@@ -93,8 +92,7 @@ class PreChatPageState extends State<PreChatPage> {
                         ),
                         Text(
                           "Opening conversation, Please Wait....",
-                          style:
-                              TextStyle(fontSize: 15, color: Colors.black),
+                          style: TextStyle(fontSize: 15, color: Colors.black),
                         )
                       ]),
                     )
@@ -179,17 +177,20 @@ class PreChatPageState extends State<PreChatPage> {
                     child: Text('$errorTextHolder',
                         style: TextStyle(fontSize: 17, color: Colors.red))),
                 Container(
-                    margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                    height: 45,
-                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: RaisedButton(
-                      textColor: Colors.white,
-                      color: Color(0xff5c5aa7),
-                      child: Text('Start conversation'),
-                      onPressed: () {
-                        validateTextFields(context);
-                      },
-                    ))
+                  margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                  height: 45,
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(0xff5c5aa7),
+                      onPrimary: Colors.white,
+                    ),
+                    onPressed: () {
+                      validateTextFields(context);
+                    },
+                    child: Text('Start conversation'),
+                  ),
+                )
               ],
             )));
   }
