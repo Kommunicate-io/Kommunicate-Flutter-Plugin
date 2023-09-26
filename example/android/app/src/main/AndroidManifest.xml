@@ -36,10 +36,13 @@
         android:name="android.permission.ACCESS_FINE_LOCATION"
         tools:node="merge" />
     <application
-        android:name="io.flutter.app.FlutterApplication"
+        android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:label="kommunicate_flutter_plugin_example"
         tools:replace="android:label">
+        <meta-data
+        android:name="flutterEmbedding"
+        android:value="2" />
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
