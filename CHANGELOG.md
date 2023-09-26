@@ -1,4 +1,4 @@
-## Unreleased
+## 1.7.1
 - Added platform flag.
 
 ## 1.7.0
