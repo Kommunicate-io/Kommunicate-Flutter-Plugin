@@ -1,3 +1,6 @@
+## 1.7.2
+- Upgraded minimum deployment target to iOS-13
+- Fixed crashes on android side
 ## 1.7.1
 - Added platform flag.
 
