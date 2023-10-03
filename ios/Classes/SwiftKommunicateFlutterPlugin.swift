@@ -195,15 +195,27 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                     appId = jsonObj["appId"] as? String
                 }
                 
-                if jsonObj["withPreChat"] != nil , let data = jsonObj["withPreChat"] as? Bool {
+                if jsonObj["withPreChat"] != nil {
+                    guard let data = jsonObj["withPreChat"] as? Bool else {
+                        self.sendErrorResult(message: "withPreChat is not Bool")
+                        return 
+                    }
                     withPrechat = data
                 }
                 
-                if jsonObj["isSingleConversation"] != nil, let data = jsonObj["isSingleConversation"] as? Bool {
+                if jsonObj["isSingleConversation"] != nil {
+                    guard let data = jsonObj["isSingleConversation"] as? Bool else {
+                       self.sendErrorResult(message: "isSingleConversation is not Bool")
+                        return 
+                    }
                     self.isSingleConversation = data
                 }
                 
-                if jsonObj["createOnly"] != nil, let data = jsonObj["createOnly"] as? Bool {
+                if jsonObj["createOnly"] != nil {
+                    guard let data = jsonObj["createOnly"] as? Bool else {
+                        self.sendErrorResult(message: "createOnly is not Bool")
+                        return 
+                    }
                     self.createOnly = data
                 }
                 
@@ -242,12 +254,20 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 if Kommunicate.isLoggedIn{
                     self.handleCreateConversation()
                 }else{
-                    if jsonObj["appId"] != nil , let appId =  jsonObj["appId"] as? String {
+                    if jsonObj["appId"] != nil {
+                        guard let appId =  jsonObj["appId"] as? String else {
+                            self.sendErrorResult(message: "AppID is not String")
+                            return
+                        }
                         Kommunicate.setup(applicationId: appId)
                     }
                     
                     if !withPrechat {
-                        if jsonObj["kmUser"] != nil , let kmUserString = jsonObj["kmUser"] as? String {
+                        if jsonObj["kmUser"] != nil {
+                            guard let kmUserString = jsonObj["kmUser"] as? String else { 
+                                self.sendErrorResult(message: "kmUser has not enocoded correctly.")
+                                return 
+                            }
                             var jsonSt = kmUserString
                             jsonSt = jsonSt.replacingOccurrences(of: "\\\"", with: "\"")
                             jsonSt = "\(jsonSt)"
