@@ -34,10 +34,10 @@ import 'package:kommunicate_flutter/kommunicate_flutter.dart';
 pod install
 ```
 
-> Note: Kommunicate iOS requires min ios platform version 12 and uses dynamic frameworks. Make sure you have the below settings at the top of your ios/Podfile:
+> Note: Kommunicate iOS requires min ios platform version 13 and uses dynamic frameworks. Make sure you have the below settings at the top of your ios/Podfile:
 
 ```
- platform :ios, '12.0'
+ platform :ios, '13.0'
  use_frameworks!
 ```
 

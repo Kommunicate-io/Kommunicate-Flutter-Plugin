@@ -1,3 +1,6 @@
+## 1.7.3
+- Fixed the crash when "applozic-settigs.json" is not present in the app
+- Removed Forced TypeCasting 
 ## 1.7.2
 - Upgraded minimum deployment target to iOS-13
 - Fixed crashes on android side
