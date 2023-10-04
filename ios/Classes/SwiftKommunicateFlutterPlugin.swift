@@ -195,16 +195,16 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                     appId = jsonObj["appId"] as? String
                 }
                 
-                if jsonObj["withPreChat"] != nil {
-                    withPrechat = jsonObj["withPreChat"] as! Bool
+                if jsonObj["withPreChat"] != nil, let data = jsonObj["withPreChat"] as? Bool {
+                    withPrechat = data
                 }
                 
-                if jsonObj["isSingleConversation"] != nil {
-                    self.isSingleConversation = jsonObj["isSingleConversation"] as! Bool
+                if jsonObj["isSingleConversation"] != nil, let data = jsonObj["isSingleConversation"] as? Bool {
+                    self.isSingleConversation = data
                 }
                 
-                if jsonObj["createOnly"] != nil {
-                    self.createOnly = jsonObj["createOnly"] as! Bool
+                if jsonObj["createOnly"] != nil, let data = jsonObj["createOnly"] as? Bool {
+                    self.createOnly = data
                 }
                 
                 if jsonObj["conversationAssignee"] != nil {
@@ -243,12 +243,20 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                     self.handleCreateConversation()
                 }else{
                     if jsonObj["appId"] != nil {
-                        Kommunicate.setup(applicationId: jsonObj["appId"] as! String)
+                        guard let appId =  jsonObj["appId"] as? String else {
+                            self.sendErrorResult(message: "Application Id is not a String")
+                            return
+                        }
+                        Kommunicate.setup(applicationId: appId)
                     }
                     
                     if !withPrechat {
                         if jsonObj["kmUser"] != nil {
-                            var jsonSt = jsonObj["kmUser"] as! String
+                            guard let kmUserString = jsonObj["kmUser"] as? String else { 
+                                self.sendErrorResult(message: "kmUser is not enocoded correctly.")
+                                return
+                            }
+                            var jsonSt = kmUserString
                             jsonSt = jsonSt.replacingOccurrences(of: "\\\"", with: "\"")
                             jsonSt = "\(jsonSt)"
                             kmUser = KMUser(jsonString: jsonSt)
@@ -258,8 +266,11 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                             kmUser?.userId = Kommunicate.randomId()
                             kmUser?.applicationId = appId
                         }
-                        
-                        Kommunicate.registerUser(kmUser!, completion:{
+                        guard let kmUser = kmUser else { 
+                            self.sendErrorResult(message: "kmUser is nil")    
+                            return 
+                        }
+                        Kommunicate.registerUser(kmUser, completion:{
                             response, error in
                             guard error == nil else{
                                 self.sendErrorResult(message: error!.localizedDescription)
