@@ -1,3 +1,5 @@
+## Unreleased
+- Exposed the Language change code 
 ## 1.7.3
 - Fixed the crash when "applozic-settigs.json" is not present in the app
 - Removed Forced TypeCasting 
