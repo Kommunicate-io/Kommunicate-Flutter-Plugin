@@ -414,6 +414,17 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 return
             }
             Kommunicate.hideAssigneeStatus(hide)
+        } else if(call.method == "updateUserLanguage")  {
+            guard let ln = call.arguments as? String else {
+                print("language passed is not a string")
+                return
+            }
+            print("Update User Language is Invoked.")
+            do {
+                try Kommunicate.defaultConfiguration.updateUserLanguage(tag: ln)
+            } catch {
+                print("error while passing the language code.")
+            }
         }
         else {
             result(FlutterMethodNotImplemented)
