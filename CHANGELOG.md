@@ -1,6 +1,7 @@
 ## Unreleased
 - Expose the Language change code. `KommunicateFlutterPlugin.updateUserLanguage("fr")`
 - Expose Method to update the chat bar text fill. `KommunicateFlutterPlugin.updatePrefilledText(String)`
+- Expose the Send Message code. `KommunicateFlutterPlugin.sendMessage()`
 ## 1.7.3
 - Fixed the crash when "applozic-settigs.json" is not present in the app
 - Removed Forced TypeCasting 
