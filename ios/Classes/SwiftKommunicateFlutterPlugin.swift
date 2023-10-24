@@ -132,6 +132,23 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 return
             }
             Kommunicate.updatePrefilledText(prefilledText)
+        } else if(call.method == "sendMessage") {
+            guard let jsonObj = call.arguments as? Dictionary<String, Any>, let conversationID = jsonObj["channelID"] as? String, let message = jsonObj["message"] as? String else {
+                self.sendErrorResultWithCallback(result: result, message: "Unable to parse send Message Object")
+                return
+            }
+            let conversationId = conversationID
+            let sendMessage = KMMessageBuilder()
+                .withConversationId(conversationId)
+                .withText(message)
+                .build()
+
+            Kommunicate.sendMessage(message: sendMessage) { error in
+                guard error == nil else {
+                    print("Failed to send message: \(String(describing: error?.localizedDescription))")
+                    return
+                }
+            }
         } else if(call.method == "updateTeamId") {
             
                         guard let jsonObj = call.arguments as? Dictionary<String, Any>, let teamId = jsonObj["teamId"] as? String else {

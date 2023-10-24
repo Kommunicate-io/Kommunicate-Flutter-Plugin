@@ -47,6 +47,10 @@ class KommunicateFlutterPlugin {
     return await _channel.invokeMethod('updatePrefilledText', text);
   }
 
+  static Future<dynamic> sendMessage(dynamic messageObjc) async {
+    return await _channel.invokeMethod('sendMessage', jsonEncode(messageObjc));
+  }
+
   static Future<dynamic> openParticularConversation(
       String clientConversationId) async {
     return await _channel.invokeMethod(
