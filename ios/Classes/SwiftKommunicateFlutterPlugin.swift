@@ -201,7 +201,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             ALUserService().fetchAndupdateUserDetails([userId]) {
                 userDetails, error in
                 guard let userDetails = userDetails, let userDetail = userDetails[0] as? ALUserDetail else {
-                    self.sendErrorResultWithCallback(result: result, message: error?.localizedDescription ?? "Error while paris")
+                    self.sendErrorResultWithCallback(result: result, message: error?.localizedDescription ?? "Error while parsing the user details.")
                     return
                 }
                 let userData = userDetail.toDictionary()
