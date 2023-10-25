@@ -194,6 +194,19 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                         } else {
                             sendErrorResultWithCallback(result: result, message: "User not authorised. This usually happens when calling the function before conversationBuilder or loginUser. Make sure you call either of the two functions before updating the chatContext")
                         }
+        } else if(call.method == "fetchUserDetails") {
+            guard let userId = call.arguments as? String else {
+                return
+            }
+            ALUserService().fetchAndupdateUserDetails([userId]) {
+                userDetails, error in
+                guard let userDetails = userDetails, let userDetail = userDetails[0] as? ALUserDetail else {
+                    self.sendErrorResultWithCallback(result: result, message: error?.localizedDescription ?? "Error while paris")
+                    return
+                }
+                let userData = userDetail.toDictionary()
+                self.sendSuccessResultWithCallback(result: result, object: userData)
+            }
         } else if(call.method == "buildConversation") {
             self.isSingleConversation = true
             self.createOnly = false;
@@ -740,4 +753,30 @@ extension String {
              }
              return nil
          }
+}
+
+extension ALUserDetail {
+    func toDictionary() -> [String: Any] {
+         var dict: [String: Any] = [:]
+         dict["userId"] = userId
+         dict["connected"] = connected
+         dict["lastSeenAtTime"] = lastSeenAtTime
+         dict["unreadCount"] = unreadCount
+         dict["displayName"] = displayName
+         dict["userDetailDBObjectId"] = userDetailDBObjectId
+         dict["imageLink"] = imageLink
+         dict["contactNumber"] = contactNumber
+         dict["userStatus"] = userStatus
+         dict["keyArray"] = keyArray
+         dict["valueArray"] = valueArray
+         dict["userIdString"] = userIdString
+         dict["userTypeId"] = userTypeId
+         dict["deletedAtTime"] = deletedAtTime
+         dict["roleType"] = roleType
+         dict["metadata"] = metadata
+         dict["notificationAfterTime"] = notificationAfterTime
+         dict["email"] = email
+         dict["status"] = status
+         return dict
+     }
 }
