@@ -204,8 +204,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                     self.sendErrorResultWithCallback(result: result, message: error?.localizedDescription ?? "Error while parsing the user details.")
                     return
                 }
-                let userData = userDetail.toDictionary()
-                self.sendSuccessResultWithCallback(result: result, object: userData)
+                self.sendSuccessResultWithCallback(result: result, object: userDetail.toDictionary())
             }
         } else if(call.method == "buildConversation") {
             self.isSingleConversation = true
@@ -762,7 +761,7 @@ extension ALUserDetail {
          dict["connected"] = connected
          dict["lastSeenAtTime"] = lastSeenAtTime
          dict["unreadCount"] = unreadCount
-         dict["displayName"] = displayName
+         dict["fullName"] = displayName
          dict["userDetailDBObjectId"] = userDetailDBObjectId
          dict["imageLink"] = imageLink
          dict["contactNumber"] = contactNumber
@@ -775,7 +774,7 @@ extension ALUserDetail {
          dict["roleType"] = roleType
          dict["metadata"] = metadata
          dict["notificationAfterTime"] = notificationAfterTime
-         dict["email"] = email
+         dict["emailId"] = email
          dict["status"] = status
          return dict
      }
