@@ -31,12 +31,24 @@ class KommunicateFlutterPlugin {
     return await _channel.invokeMethod('login', jsonEncode(kmUser));
   }
 
+  static Future<dynamic> updateUserLanguage(String language) async {
+    return await _channel.invokeMethod('updateUserLanguage', language);
+  }
+
   static Future<dynamic> loginAsVisitor(String appId) async {
     return await _channel.invokeMethod('loginAsVisitor', appId);
   }
 
   static Future<dynamic> openConversations() async {
     return await _channel.invokeMethod('openConversations');
+  }
+
+  static Future<dynamic> updatePrefilledText(String text) async {
+    return await _channel.invokeMethod('updatePrefilledText', text);
+  }
+
+  static Future<dynamic> sendMessage(dynamic messageObjc) async {
+    return await _channel.invokeMethod('sendMessage', jsonEncode(messageObjc));
   }
 
   static Future<dynamic> openParticularConversation(

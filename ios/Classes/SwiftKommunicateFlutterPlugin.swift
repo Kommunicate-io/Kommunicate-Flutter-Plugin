@@ -126,6 +126,29 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             } else {
                 self.openParticularConversation(conversationId, true, result)
             }
+        } else if(call.method == "updatePrefilledText") {
+            guard let prefilledText = call.arguments as? String else {
+                self.sendErrorResultWithCallback(result: result, message: "Invalid PreFilled Text")
+                return
+            }
+            Kommunicate.updatePrefilledText(prefilledText)
+        } else if(call.method == "sendMessage") {
+            guard let jsonObj = call.arguments as? Dictionary<String, Any>, let conversationID = jsonObj["channelID"] as? String, let message = jsonObj["message"] as? String else {
+                self.sendErrorResultWithCallback(result: result, message: "Unable to parse send Message Object")
+                return
+            }
+            let conversationId = conversationID
+            let sendMessage = KMMessageBuilder()
+                .withConversationId(conversationId)
+                .withText(message)
+                .build()
+
+            Kommunicate.sendMessage(message: sendMessage) { error in
+                guard error == nil else {
+                    print("Failed to send message: \(String(describing: error?.localizedDescription))")
+                    return
+                }
+            }
         } else if(call.method == "updateTeamId") {
             
                         guard let jsonObj = call.arguments as? Dictionary<String, Any>, let teamId = jsonObj["teamId"] as? String else {
@@ -171,6 +194,18 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                         } else {
                             sendErrorResultWithCallback(result: result, message: "User not authorised. This usually happens when calling the function before conversationBuilder or loginUser. Make sure you call either of the two functions before updating the chatContext")
                         }
+        } else if(call.method == "fetchUserDetails") {
+            guard let userId = call.arguments as? String else {
+                return
+            }
+            ALUserService().fetchAndupdateUserDetails([userId]) {
+                userDetails, error in
+                guard let userDetails = userDetails, let userDetail = userDetails[0] as? ALUserDetail else {
+                    self.sendErrorResultWithCallback(result: result, message: error?.localizedDescription ?? "Error while parsing the user details.")
+                    return
+                }
+                self.sendSuccessResultWithCallback(result: result, object: userDetail.toDictionary())
+            }
         } else if(call.method == "buildConversation") {
             self.isSingleConversation = true
             self.createOnly = false;
@@ -414,6 +449,16 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 return
             }
             Kommunicate.hideAssigneeStatus(hide)
+        } else if(call.method == "updateUserLanguage")  {
+            guard let languageCode = call.arguments as? String else {
+                print("language passed is not a string")
+                return
+            }
+            do {
+                try Kommunicate.defaultConfiguration.updateUserLanguage(tag: languageCode)
+            } catch {
+                print("error while passing the language code.")
+            }
         }
         else {
             result(FlutterMethodNotImplemented)
@@ -707,4 +752,30 @@ extension String {
              }
              return nil
          }
+}
+
+extension ALUserDetail {
+    func toDictionary() -> [String: Any] {
+         var dict: [String: Any] = [:]
+         dict["userId"] = userId
+         dict["connected"] = connected
+         dict["lastSeenAtTime"] = lastSeenAtTime
+         dict["unreadCount"] = unreadCount
+         dict["fullName"] = displayName
+         dict["userDetailDBObjectId"] = userDetailDBObjectId
+         dict["imageLink"] = imageLink
+         dict["contactNumber"] = contactNumber
+         dict["userStatus"] = userStatus
+         dict["keyArray"] = keyArray
+         dict["valueArray"] = valueArray
+         dict["userIdString"] = userIdString
+         dict["userTypeId"] = userTypeId
+         dict["deletedAtTime"] = deletedAtTime
+         dict["roleType"] = roleType
+         dict["metadata"] = metadata
+         dict["notificationAfterTime"] = notificationAfterTime
+         dict["emailId"] = email
+         dict["status"] = status
+         return dict
+     }
 }

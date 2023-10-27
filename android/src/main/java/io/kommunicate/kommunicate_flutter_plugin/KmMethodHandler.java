@@ -38,6 +38,7 @@ import com.applozic.mobicomkit.uiwidgets.conversation.fragment.MobiComConversati
 import com.applozic.mobicomkit.api.conversation.AlTotalUnreadCountTask;
 import io.kommunicate.preference.KmConversationInfoSetting;
 import com.applozic.mobicomkit.broadcast.AlEventManager;
+import com.applozic.mobicomkit.api.conversation.MessageBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -90,6 +91,35 @@ public class KmMethodHandler implements MethodCallHandler {
             } catch (Exception e) {
                     result.error(ERROR, e.toString(), null);
                 }
+        } else if (call.method.equals("updatePrefilledText")) {
+            try {
+                String preFilledText = (String) call.arguments();
+                Kommunicate.setChatText(context,preFilledText);
+            } catch (Exception e) {
+                result.error(ERROR, e.toString(), null);
+            }
+        } else if (call.method.equals("updateUserLanguage")) {
+            try {
+                final String languageCode = (String) call.arguments();
+                KmSettings.updateUserLanguage(context, languageCode);
+            } catch (Exception e) {
+                result.error(ERROR, e.getMessage(), null);
+            }
+        } else if (call.method.equals("sendMessage")) {
+            try {
+                JSONObject messageObject = new JSONObject(call.arguments.toString());
+                if (messageObject.has("channelID") && !TextUtils.isEmpty(messageObject.get("channelID").toString()) && messageObject.has("message") && !TextUtils.isEmpty(messageObject.get("message").toString())) {
+                    final String Message = messageObject.get("message").toString();
+                    final String ConversationId = messageObject.get("channelID").toString();
+                    new MessageBuilder(context)
+                    .setMessage(Message)
+                    .setGroupId(Integer.valueOf(ConversationId))
+                    .send();
+                }
+                
+            } catch (Exception e) {
+                result.error(ERROR, e.toString(), null);
+            }
         } else if (call.method.equals("loginAsVisitor")) {
             try {
             String appId = (String) call.arguments();
