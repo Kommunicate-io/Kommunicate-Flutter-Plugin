@@ -1,8 +1,4 @@
 ## 1.7.5
-- Expose the Language change code. `KommunicateFlutterPlugin.updateUserLanguage("fr")`
-- Expose Method to update the chat bar text fill. `KommunicateFlutterPlugin.updatePrefilledText(String)`
-- Expose the Send Message code. `KommunicateFlutterPlugin.sendMessage()`
-- Added Support of `fetchUserDetails` - iOS.
 - Fixed hidePostCta
 ## 1.7.4
 - Reduce time taken for conversation creation
