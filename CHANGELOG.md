@@ -1,9 +1,10 @@
-## Unreleased
+## 1.7.5
+- Fixed hidePostCta
+## 1.7.4
 - Expose the Language change code. `KommunicateFlutterPlugin.updateUserLanguage("fr")`
 - Expose Method to update the chat bar text fill. `KommunicateFlutterPlugin.updatePrefilledText(String)`
 - Expose the Send Message code. `KommunicateFlutterPlugin.sendMessage()`
 - Added Support of `fetchUserDetails` - iOS.
-## 1.7.4
 - Reduce time taken for conversation creation
 ## 1.7.3
 - Fixed the crash when "applozic-settigs.json" is not present in the app
