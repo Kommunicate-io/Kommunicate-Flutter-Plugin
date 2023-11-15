@@ -41,14 +41,15 @@ class PreChatPageState extends State<PreChatPage> {
 
     KommunicateFlutterPlugin.buildConversation(conversationObject)
         .then((result) {
-      Navigator.of(conversationLoader.currentContext, rootNavigator: true)
-          .pop();
-      print("Conversation builder success : " + result.toString());
-      Navigator.pop(context);
+       // Use null-aware operator to access the context or provide a default context.
+    final currentContext = conversationLoader.currentContext ?? context;
+    Navigator.of(currentContext, rootNavigator: true).pop();
+    print("Conversation builder success: $result");
+    Navigator.pop(context);
     }).catchError((error) {
-      Navigator.of(conversationLoader.currentContext, rootNavigator: true)
-          .pop();
-      print("Conversation builder error occurred : " + error.toString());
+      final currentContext = conversationLoader.currentContext ?? context;
+    Navigator.of(currentContext, rootNavigator: true).pop();
+    print("Conversation builder error occurred: $error");
     });
   }
 
@@ -182,8 +183,8 @@ class PreChatPageState extends State<PreChatPage> {
                   padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Color(0xff5c5aa7),
-                      onPrimary: Colors.white,
+                      backgroundColor: Color(0xff5c5aa7),
+                      foregroundColor: Colors.white,
                     ),
                     onPressed: () {
                       validateTextFields(context);

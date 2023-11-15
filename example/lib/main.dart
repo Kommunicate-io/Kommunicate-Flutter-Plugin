@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
         print(call.arguments);
       } 
 
-      return null;
+      return Future.value(null);
     });
     super.initState();
   }
