@@ -1,3 +1,7 @@
+## 1.7.6
+- Fixed unread Count in android Side.
+- Added support of prefill checkboxes on Form Template.
+- Default configuration added for disabling the form submit button using 'disableFormPostSubmit'.
 ## 1.7.5
 - Fixed hidePostCta
 ## 1.7.4
