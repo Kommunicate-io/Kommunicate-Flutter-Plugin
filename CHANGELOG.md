@@ -1,3 +1,5 @@
+## 1.7.7
+- Fixed send message method in android.
 ## 1.7.6
 - Fixed unread Count in android Side.
 - Added support of prefill checkboxes on Form Template.
