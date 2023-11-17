@@ -151,7 +151,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             }
         } else if(call.method == "updateTeamId") {
             
-                        guard let jsonString = call.arguments as? String, var jsonObj = jsonString.convertToDictionary(), let teamId = jsonObj["teamId"] as? String else {
+                       guard let jsonObj = call.arguments as? Dictionary<String, Any>, let teamId = jsonObj["teamId"] as? String else {
                             self.sendErrorResultWithCallback(result: result, message: "Invalid or empty teamId")
                             return
                         }
