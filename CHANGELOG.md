@@ -1,3 +1,6 @@
+## 1.7.7
+- Updated the conversion of arguments in send message and updating team id.
+- Fixed send message method in android.
 ## 1.7.6
 - Fixed unread Count in android Side.
 - Added support of prefill checkboxes on Form Template.
