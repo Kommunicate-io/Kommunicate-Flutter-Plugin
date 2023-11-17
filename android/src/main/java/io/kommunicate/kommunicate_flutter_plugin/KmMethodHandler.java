@@ -113,7 +113,7 @@ public class KmMethodHandler implements MethodCallHandler {
                     final String ConversationId = messageObject.get("channelID").toString();
                     new MessageBuilder(context)
                     .setMessage(Message)
-                    .setGroupId(Integer.valueOf(ConversationId))
+                    .setClientGroupId(ConversationId)
                     .send();
                 }
                 
