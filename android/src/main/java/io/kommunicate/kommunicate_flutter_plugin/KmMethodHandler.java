@@ -156,6 +156,50 @@ public class KmMethodHandler implements MethodCallHandler {
                     result.error(ERROR, error.toString(), null);
                 }
             });
+        } else if (call.method.equals("getConversarionIdOrKey")) {
+            try {
+            JSONObject searchObject = new JSONObject(call.arguments.toString());
+            if (searchObject.has("channelID") && !TextUtils.isEmpty(searchObject.get("channelID").toString())) {
+                final String searchChannelID = searchObject.get("channelID").toString();
+            
+                new KmConversationInfoTask(context, Integer.valueOf(searchChannelID), new KmGetConversationInfoCallback() {
+                    @Override
+                    public void onSuccess(Channel channel, Context context) {
+                        if (channel != null) {
+                           result.success(String.valueOf(channel.getClientGroupId()));
+                        } else {
+                           result.error(ERROR, "Conversation Not Found", null);
+                        }
+                    }
+                    @Override
+                    public void onFailure(Exception e, Context context) {
+                        result.error(ERROR, e != null ? e.getMessage() : "Invalid channelID", null);
+                    }  
+                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else if (searchObject.has("clientChannelKey") && !TextUtils.isEmpty(searchObject.get("clientChannelKey").toString())) {
+                final String searchClientChannelKey = searchObject.get("clientChannelKey").toString();
+                
+
+                new KmConversationInfoTask(context, searchClientChannelKey, new KmGetConversationInfoCallback() {
+                    @Override
+                    public void onSuccess(Channel channel, Context context) {
+                        if (channel != null) {
+                           result.success(String.valueOf(channel.getKey()));
+                        } else {
+                           result.error(ERROR, "Conversation Not Found", null);
+                        }
+                    }
+                    @Override
+                    public void onFailure(Exception e, Context context) {
+                        result.error(ERROR, e != null ? e.getMessage() : "Invalid clientChannelKey", null);
+                    }  
+                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                result.error(ERROR, "Wrong Object passed for searching conversation information", null);
+            }
+        } catch (Exception e) {
+            result.error(ERROR, e.getMessage(), null);
+        }
         } else if (call.method.equals("openParticularConversation")) {
             try {
             final String clientConversationId = (String) call.arguments;
