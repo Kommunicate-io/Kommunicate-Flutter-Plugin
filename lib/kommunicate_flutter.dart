@@ -51,8 +51,8 @@ class KommunicateFlutterPlugin {
     return await _channel.invokeMethod('sendMessage', jsonEncode(messageObjc));
   }
 
-  static Future<dynamic> getConversarionIdOrKey(dynamic searchObj) async {
-    return await _channel.invokeMethod('getConversarionIdOrKey', jsonEncode(searchObj));
+  static Future<dynamic> getConversarionIdOrKey(dynamic conversationIdObjc) async {
+    return await _channel.invokeMethod('getConversarionIdOrKey', jsonEncode(conversationIdObjc));
   }
 
   static Future<dynamic> openParticularConversation(

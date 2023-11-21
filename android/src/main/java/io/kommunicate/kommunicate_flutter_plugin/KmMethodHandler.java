@@ -158,9 +158,9 @@ public class KmMethodHandler implements MethodCallHandler {
             });
         } else if (call.method.equals("getConversarionIdOrKey")) {
             try {
-            JSONObject searchObject = new JSONObject(call.arguments.toString());
-            if (searchObject.has("channelID") && !TextUtils.isEmpty(searchObject.get("channelID").toString())) {
-                final String searchChannelID = searchObject.get("channelID").toString();
+            JSONObject conversationIdObjc = new JSONObject(call.arguments.toString());
+            if (conversationIdObjc.has("channelID") && !TextUtils.isEmpty(conversationIdObjc.get("channelID").toString())) {
+                final String searchChannelID = conversationIdObjc.get("channelID").toString();
             
                 new KmConversationInfoTask(context, Integer.valueOf(searchChannelID), new KmGetConversationInfoCallback() {
                     @Override
@@ -176,8 +176,8 @@ public class KmMethodHandler implements MethodCallHandler {
                         result.error(ERROR, e != null ? e.getMessage() : "Invalid channelID", null);
                     }  
                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            } else if (searchObject.has("clientChannelKey") && !TextUtils.isEmpty(searchObject.get("clientChannelKey").toString())) {
-                final String searchClientChannelKey = searchObject.get("clientChannelKey").toString();
+            } else if (conversationIdObjc.has("clientChannelKey") && !TextUtils.isEmpty(conversationIdObjc.get("clientChannelKey").toString())) {
+                final String searchClientChannelKey = conversationIdObjc.get("clientChannelKey").toString();
                 
 
                 new KmConversationInfoTask(context, searchClientChannelKey, new KmGetConversationInfoCallback() {
@@ -195,7 +195,7 @@ public class KmMethodHandler implements MethodCallHandler {
                     }  
                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
-                result.error(ERROR, "Wrong Object passed for searching conversation information", null);
+                result.error(ERROR, "Object doesn't contain 'clientChannelKey' or 'channelID'", null);
             }
         } catch (Exception e) {
             result.error(ERROR, e.getMessage(), null);

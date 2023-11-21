@@ -173,14 +173,14 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                     return
                 }
                 alChannelService.getChannelInformation(nil, orClientChannelKey: clientChannelKey) { channel in
-                    guard let channel = channel , let channelKey = channel.key else {
+                    guard let channel = channel , let conversationID = channel.key else {
                         self.sendErrorResultWithCallback(result: result, message: "Conversation Not Found \(channel)")
                         return
                     }
-                    self.sendSuccessResult(message: "\(channelKey)")
+                    self.sendSuccessResult(message: "\(conversationID)")
                 }
             } else {
-                self.sendErrorResultWithCallback(result: result, message: "Wrong Object passed for searching conversation information")
+                self.sendErrorResultWithCallback(result: result, message: "Object doesn't contain 'clientChannelKey' or 'channelID'")
             }
         }else if(call.method == "updateTeamId") {
             
