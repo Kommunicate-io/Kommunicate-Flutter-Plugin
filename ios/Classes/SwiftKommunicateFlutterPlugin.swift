@@ -133,7 +133,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             }
             Kommunicate.updatePrefilledText(prefilledText)
         } else if(call.method == "sendMessage") {
-            guard let jsonObj = call.arguments as? Dictionary<String, Any>, let conversationID = jsonObj["channelID"] as? String, let message = jsonObj["message"] as? String else {
+            guard let jsonString = call.arguments as? String, var jsonObj = jsonString.convertToDictionary(), let conversationID = jsonObj["channelID"] as? String, let message = jsonObj["message"] as? String else {
                 self.sendErrorResultWithCallback(result: result, message: "Unable to parse send Message Object")
                 return
             }
@@ -151,7 +151,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             }
         } else if(call.method == "updateTeamId") {
             
-                        guard let jsonObj = call.arguments as? Dictionary<String, Any>, let teamId = jsonObj["teamId"] as? String else {
+                       guard let jsonObj = call.arguments as? Dictionary<String, Any>, let teamId = jsonObj["teamId"] as? String else {
                             self.sendErrorResultWithCallback(result: result, message: "Invalid or empty teamId")
                             return
                         }
