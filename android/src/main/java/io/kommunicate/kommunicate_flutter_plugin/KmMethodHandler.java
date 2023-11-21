@@ -347,17 +347,7 @@ public class KmMethodHandler implements MethodCallHandler {
             });
         } else if (call.method.equals("unreadCount")) {
             try {
-                new AlTotalUnreadCountTask(context, new AlTotalUnreadCountTask.TaskListener() {
-                    @Override
-                    public void onSuccess(Integer unreadCount) {
-                        result.success(String.valueOf(unreadCount));
-                    }
-
-                    @Override
-                    public void onFailure(String error) {
-                        result.error(ERROR, error, null);
-                    }
-                }).execute();
+                result.success(String.valueOf(new MessageDatabaseService(context).getTotalUnreadCount()));
             } catch (Exception e) {
                 result.error(ERROR, e.toString(), null);
             }
