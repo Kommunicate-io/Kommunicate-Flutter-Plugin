@@ -1,3 +1,6 @@
+## 1.7.8
+- Added a method to get channel key if you pass channelID or clientChannelKey if you pass channel key
+- Fixed issue related to unread Count
 ## 1.7.7
 - Fixed send message method in android.
 ## 1.7.6
