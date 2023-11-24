@@ -145,11 +145,44 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
 
             Kommunicate.sendMessage(message: sendMessage) { error in
                 guard error == nil else {
-                    print("Failed to send message: \(String(describing: error?.localizedDescription))")
+                    self.sendErrorResultWithCallback(result: result, message: "Failed to send message: \(String(describing: error?.localizedDescription))")
                     return
                 }
             }
-        } else if(call.method == "updateTeamId") {
+        } else if(call.method == "getConversarionIdOrKey") {
+            guard let jsonString = call.arguments as? String, var jsonObj = jsonString.convertToDictionary() else {
+                self.sendErrorResultWithCallback(result: result, message: "Empty Object no data")
+                return
+            }
+            let alChannelService = ALChannelService()
+            if let channelID = jsonObj["channelID"] {
+                guard let channelID = channelID as? Int else{
+                    self.sendErrorResultWithCallback(result: result, message: "Channel ID is not Integer")
+                    return
+                }
+                alChannelService.getChannelInformation(NSNumber(integerLiteral: channelID), orClientChannelKey: nil) { channel in
+                    guard let channel = channel else {
+                        self.sendErrorResultWithCallback(result: result, message: "Conversation Not Found \(channel)")
+                        return
+                    }
+                    self.sendSuccessResult(message: channel.clientChannelKey)
+                }
+            } else if let clientChannelKey = jsonObj["clientChannelKey"] {
+                guard let clientChannelKey = clientChannelKey as? String else {
+                    self.sendErrorResultWithCallback(result: result, message: "Client Channel Key is not String")
+                    return
+                }
+                alChannelService.getChannelInformation(nil, orClientChannelKey: clientChannelKey) { channel in
+                    guard let channel = channel , let conversationID = channel.key else {
+                        self.sendErrorResultWithCallback(result: result, message: "Conversation Not Found \(channel)")
+                        return
+                    }
+                    self.sendSuccessResult(message: "\(conversationID)")
+                }
+            } else {
+                self.sendErrorResultWithCallback(result: result, message: "Object doesn't contain 'clientChannelKey' or 'channelID'")
+            }
+        }else if(call.method == "updateTeamId") {
             
                        guard let jsonObj = call.arguments as? Dictionary<String, Any>, let teamId = jsonObj["teamId"] as? String else {
                             self.sendErrorResultWithCallback(result: result, message: "Invalid or empty teamId")
