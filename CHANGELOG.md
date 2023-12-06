@@ -1,3 +1,7 @@
+## 1.8.0
+- Added Support of Video Rich Message(iOS).
+- Fixed the attachment upload issue(iOS).
+- Fixed Conversation Missmatch issue(iOS).
 ## 1.7.9
 - Bug fixes
 ## 1.7.8
