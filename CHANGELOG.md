@@ -1,3 +1,9 @@
+## 1.8.1
+- Fixed typing indicator for welcome message (ANDROID)
+- Fixed "no conversations" showing sometimes for the first time when conversation is created (ANDROID)
+- Fix the random order of item in dropdown list (ANDROID)
+- Provided customisation To change mainDivider line colour (ANDROID & iOS)
+- Changed UI for typing indicator (iOS)
 ## 1.8.0
 - Added Support of Video Rich Message(iOS).
 - Fixed the attachment upload issue(iOS).
