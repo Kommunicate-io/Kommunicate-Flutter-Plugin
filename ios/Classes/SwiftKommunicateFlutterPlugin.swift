@@ -752,6 +752,10 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         methodChannel.invokeMethod("onConversationInfoClicked", arguments: "clicked")
     }
     
+    public func conversationResolved(conversationId: String) {
+        
+    }
+
     func convertDictToString(dict: NSDictionary) -> String {
         guard let data =  try? JSONSerialization.data(withJSONObject: dict, options: []) else {
             return ""
