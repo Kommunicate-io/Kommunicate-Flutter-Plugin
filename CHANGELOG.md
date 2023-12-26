@@ -1,3 +1,5 @@
+## 1.8.2
+- Added a conversationResolved event listener on iOS
 ## 1.8.1
 - Fixed typing indicator for welcome message (ANDROID)
 - Fixed "no conversations" showing sometimes for the first time when conversation is created (ANDROID)
