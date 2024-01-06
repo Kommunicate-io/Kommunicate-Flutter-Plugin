@@ -1,3 +1,11 @@
+## 1.8.3
+-Fixed link preview showing for deep link
+-Added the caption Screen for Attachment.
+-Fixed HTML Message view in Conversation List Screen.
+-Fixed Location blue bar coming in message bubble
+-Fixed New Form UI Cutting from Bottom.
+-Updated the User Update Api
+-Fixed message status icon colour customisation(Android)
 ## 1.8.2
 - Added a conversationResolved event listener on iOS
 ## 1.8.1
