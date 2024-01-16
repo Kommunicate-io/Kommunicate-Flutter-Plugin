@@ -1,13 +1,10 @@
 ## 1.8.4
-
 ### Android
 - Added customisation for multiple attachment selection
 - Fixed documents showing incorrect filename for non-english names
 - Fixed autosuggestion rich message
-
 ### iOS
 - Fixed documents showing incorrect filename for non-english names
-  
 ## 1.8.3
 -Fixed link preview showing for deep link
 -Added the caption Screen for Attachment.
