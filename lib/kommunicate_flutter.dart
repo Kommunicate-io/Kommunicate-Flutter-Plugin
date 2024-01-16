@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'dart:io';
 
 class KommunicateFlutterPlugin {
   static const MethodChannel _channel =
@@ -12,7 +13,7 @@ class KommunicateFlutterPlugin {
   }
 
   static Future<dynamic> buildConversation(dynamic conversationObject) async {
-    return await _channel.invokeMethod('buildConversation', jsonEncode(conversationObject));
+    return await _channel.invokeMethod('buildConversation', Platform.isAndroid ? conversationObject : jsonEncode(conversationObject));
   }
 
   static Future<dynamic> logout() async {
