@@ -1,3 +1,7 @@
+## 1.8.4
+- Added customisation for multiple attachment selection
+- Fixed documents showing incorrect filename for non-english names
+- Fixed autosuggestion rich message
 ## 1.8.3
 -Fixed link preview showing for deep link
 -Added the caption Screen for Attachment.
