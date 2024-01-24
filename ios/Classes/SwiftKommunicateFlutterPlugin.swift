@@ -295,10 +295,8 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                     conversationInfo = [SwiftKommunicateFlutterPlugin.KM_CONVERSATION_METADATA: jsonObj["conversationInfo"] as Any]
                 }
                 
-                if let messageMetadataStr = (jsonObj["messageMetadata"] as? String)?.data(using: .utf8) {
-                    if let messageMetadataDict = try JSONSerialization.jsonObject(with: messageMetadataStr, options : .allowFragments) as? Dictionary<String,Any> {
-                        Kommunicate.defaultConfiguration.messageMetadata = messageMetadataDict
-                    }
+                if let messageMetadataStr = jsonObj["messageMetadata"] as? [String : Any] {
+                        Kommunicate.defaultConfiguration.messageMetadata = messageMetadataStr
                 }
                 
                 let agentIds = jsonObj["agentIds"] as? [String]
@@ -754,6 +752,10 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         methodChannel.invokeMethod("onConversationInfoClicked", arguments: "clicked")
     }
     
+    public func conversationResolved(conversationId: String) {
+        
+    }
+
     func convertDictToString(dict: NSDictionary) -> String {
         guard let data =  try? JSONSerialization.data(withJSONObject: dict, options: []) else {
             return ""

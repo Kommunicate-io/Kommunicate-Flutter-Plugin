@@ -1,3 +1,28 @@
+## 1.8.4
+### Android
+- Added customisation for multiple attachment selection
+- Fixed documents showing incorrect filename for non-english names
+- Fixed autosuggestion rich message
+## 1.8.3
+-Fixed link preview showing for deep link
+-Added the caption Screen for Attachment.
+-Fixed HTML Message view in Conversation List Screen.
+-Fixed Location blue bar coming in message bubble
+-Fixed New Form UI Cutting from Bottom.
+-Updated the User Update Api
+-Fixed message status icon colour customisation(Android)
+## 1.8.2
+- Added a conversationResolved event listener on iOS
+## 1.8.1
+- Fixed typing indicator for welcome message (ANDROID)
+- Fixed "no conversations" showing sometimes for the first time when conversation is created (ANDROID)
+- Fix the random order of item in dropdown list (ANDROID)
+- Provided customisation To change mainDivider line colour (ANDROID & iOS)
+- Changed UI for typing indicator (iOS)
+## 1.8.0
+- Added Support of Video Rich Message(iOS).
+- Fixed the attachment upload issue(iOS).
+- Fixed Conversation Missmatch issue(iOS).
 ## 1.7.9
 - Bug fixes
 ## 1.7.8
