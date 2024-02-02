@@ -86,12 +86,11 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             }
             
             Kommunicate.setup(applicationId: appId)
-            let kmUser = KMUser()
-            kmUser.userId = Kommunicate.randomId()
+            let kmUser = Kommunicate.createVisitorUser()
             kmUser.applicationId = appId
             kmUser.platform = NSNumber(value: PLATFORM_FLUTTER.rawValue)
             
-            Kommunicate.registerUser(kmUser, completion: {
+            Kommunicate.registerUserAsVistor (kmUser, completion: {
                 response, error in
                 guard error == nil else {
                     self.sendErrorResultWithCallback(result: result, message: error!.localizedDescription)
