@@ -1,3 +1,10 @@
+## 1.8.5
+### iOS
+- Zendesk (Zopim) integration optimisations
+- Fixed Suggested Reply Rich Message is not getting rendered while scrolling on conversation screen
+- Time Label Font Change
+- Added support of form data using dialog flow fulfillment
+- Fixed minor crashes
 ## 1.8.4
 ### Android
 - Added customisation for multiple attachment selection
