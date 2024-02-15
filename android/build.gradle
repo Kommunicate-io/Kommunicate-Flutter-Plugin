@@ -34,6 +34,7 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
+    namespace "io.kommunicate.kommunicate_flutter_plugin"
 }
 
 dependencies {
