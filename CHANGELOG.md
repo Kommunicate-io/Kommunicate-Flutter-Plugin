@@ -1,3 +1,14 @@
+## 1.8.6
+### iOS
+- Fixed Form Rich Message Rendering issue
+- Added support for showing assingment message
+- Fixed Reply meta issue on Quick Reply Button
+### Android
+- Added support for dialogflow fulfilment form
+- Fixed agent app not showing notifications after automatic assignment
+- Added support for chatwidget disabled flag
+- Fixed autosuggestion
+- Fixed channel messages showing in SDK
 ## 1.8.5
 ### iOS
 - Zendesk (Zopim) integration optimisations
