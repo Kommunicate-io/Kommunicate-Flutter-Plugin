@@ -1,3 +1,6 @@
+## 1.8.7
+### iOS
+- Fixed Build Conversation issue
 ## 1.8.6
 ### iOS
 - Fixed Form Rich Message Rendering issue
