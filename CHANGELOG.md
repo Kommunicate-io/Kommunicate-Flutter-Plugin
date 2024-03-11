@@ -1,3 +1,11 @@
+## 1.8.8
+### iOS
+- Added Dynamic online/offline status Feature
+- Added the last Message icon in Conversation List Screen.
+- Fixed Link preview issue.
+- Fixed Assignee Image not showing with custom title.
+### Android
+- Added Dynamic online/offline status Feature
 ## 1.8.7
 ### iOS
 - Fixed Build Conversation issue
