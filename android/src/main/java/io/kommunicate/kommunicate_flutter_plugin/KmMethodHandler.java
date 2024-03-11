@@ -37,6 +37,7 @@ import com.applozic.mobicommons.people.contact.Contact;
 import com.applozic.mobicomkit.uiwidgets.conversation.fragment.MobiComConversationFragment;
 import com.applozic.mobicomkit.api.conversation.AlTotalUnreadCountTask;
 import io.kommunicate.preference.KmConversationInfoSetting;
+import io.kommunicate.utils.KMAgentStatusHelper;
 import com.applozic.mobicomkit.broadcast.AlEventManager;
 import com.applozic.mobicomkit.api.conversation.MessageBuilder;
 
@@ -104,6 +105,38 @@ public class KmMethodHandler implements MethodCallHandler {
                 KmSettings.updateUserLanguage(context, languageCode);
             } catch (Exception e) {
                 result.error(ERROR, e.getMessage(), null);
+            }
+        } else if (call.method.equals("updateStatus")) {
+            try {
+                JSONObject updateStatusObjc = new JSONObject(call.arguments.toString());
+                if (updateStatusObjc.has("assigneID") && updateStatusObjc.has("status")) {
+                    final String assigneID = updateStatusObjc.get("assigneID").toString();
+                    final String status = updateStatusObjc.get("status").toString();
+
+                    if (status.isEmpty()) {
+                        result.error(ERROR, "Status is empty.", null);
+                    }
+
+                    switch (status.toLowerCase()) {
+                        case "online":
+                            Kommunicate.updateAssigneeStatus(assigneID, KMAgentStatusHelper.KMAgentStatus.ONLINE);
+                            break;
+                        case "offline":
+                            Kommunicate.updateAssigneeStatus(assigneID, KMAgentStatusHelper.KMAgentStatus.OFFLINE);
+                            break;
+                        case "away":
+                            Kommunicate.updateAssigneeStatus(assigneID, KMAgentStatusHelper.KMAgentStatus.AWAY);
+                            break;
+                        default:
+                            Kommunicate.updateAssigneeStatus(assigneID, KMAgentStatusHelper.KMAgentStatus.DefaultStatus);
+                            break;
+                    }
+                } else{
+                    result.error(ERROR, "passed object is not having 'assigneID' or 'status' ", null);
+                }
+
+            } catch (Exception e) {
+                result.error(ERROR, e.toString(), null);
             }
         } else if (call.method.equals("sendMessage")) {
             try {

@@ -52,6 +52,10 @@ class KommunicateFlutterPlugin {
     return await _channel.invokeMethod('sendMessage', jsonEncode(messageObjc));
   }
 
+  static Future<dynamic> updateUserStatus(dynamic updateStatusObjc) async {
+    return await _channel.invokeMethod('updateStatus', jsonEncode(updateStatusObjc));
+  }
+
   static Future<dynamic> getConversarionIdOrKey(dynamic conversationIdObjc) async {
     return await _channel.invokeMethod('getConversarionIdOrKey', jsonEncode(conversationIdObjc));
   }

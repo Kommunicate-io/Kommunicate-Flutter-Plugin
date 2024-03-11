@@ -131,6 +131,25 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 return
             }
             Kommunicate.updatePrefilledText(prefilledText)
+        } else if(call.method == "updateStatus") {
+            guard let jsonString = call.arguments as? String, var jsonObj = jsonString.convertToDictionary(), let assigneeID = jsonObj["assigneID"] as? String, let status = jsonObj["status"] as? String else {
+                self.sendErrorResultWithCallback(result: result, message: "Unable to parse update user status Object")
+                return
+            }
+            if status.isEmpty {
+                self.sendErrorResult(message: "Status is Empty.")
+                return
+            }
+            switch status.lowercased() {
+            case "online":
+                Kommunicate.updateAssigneeStatus(assigneeID: assigneeID, status: .online)
+            case "offline":
+                Kommunicate.updateAssigneeStatus(assigneeID: assigneeID, status: .offline)
+            case "away":
+                Kommunicate.updateAssigneeStatus(assigneeID: assigneeID, status: .away)
+            default:
+                Kommunicate.updateAssigneeStatus(assigneeID: assigneeID, status: .default)
+            }
         } else if(call.method == "sendMessage") {
             guard let jsonString = call.arguments as? String, var jsonObj = jsonString.convertToDictionary(), let conversationID = jsonObj["channelID"] as? String, let message = jsonObj["message"] as? String else {
                 self.sendErrorResultWithCallback(result: result, message: "Unable to parse send Message Object")
