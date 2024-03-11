@@ -140,28 +140,15 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 self.sendErrorResult(message: "Status is Empty.")
                 return
             }
-            if assigneeID.isEmpty {
-                switch status.lowercased() {
-                case "online":
-                    Kommunicate.updateAssigneeStatus(status: .online)
-                case "offline":
-                    Kommunicate.updateAssigneeStatus(status: .offline)
-                case "away":
-                    Kommunicate.updateAssigneeStatus(status: .away)
-                default:
-                    Kommunicate.updateAssigneeStatus(status: .default)
-                }
-            } else {
-                switch status.lowercased() {
-                case "online":
-                    Kommunicate.updateAssigneeStatus(assigneeID: assigneeID, status: .online)
-                case "offline":
-                    Kommunicate.updateAssigneeStatus(assigneeID: assigneeID, status: .offline)
-                case "away":
-                    Kommunicate.updateAssigneeStatus(assigneeID: assigneeID, status: .away)
-                default:
-                    Kommunicate.updateAssigneeStatus(assigneeID: assigneeID, status: .default)
-                }
+            switch status.lowercased() {
+            case "online":
+                Kommunicate.updateAssigneeStatus(assigneeID: assigneeID, status: .online)
+            case "offline":
+                Kommunicate.updateAssigneeStatus(assigneeID: assigneeID, status: .offline)
+            case "away":
+                Kommunicate.updateAssigneeStatus(assigneeID: assigneeID, status: .away)
+            default:
+                Kommunicate.updateAssigneeStatus(assigneeID: assigneeID, status: .default)
             }
         } else if(call.method == "sendMessage") {
             guard let jsonString = call.arguments as? String, var jsonObj = jsonString.convertToDictionary(), let conversationID = jsonObj["channelID"] as? String, let message = jsonObj["message"] as? String else {

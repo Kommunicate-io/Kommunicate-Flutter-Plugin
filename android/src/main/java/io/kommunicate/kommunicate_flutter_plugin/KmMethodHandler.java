@@ -110,43 +110,26 @@ public class KmMethodHandler implements MethodCallHandler {
             try {
                 JSONObject updateStatusObjc = new JSONObject(call.arguments.toString());
                 if (updateStatusObjc.has("assigneID") && updateStatusObjc.has("status")) {
-                    final String AssigneeID = updateStatusObjc.get("assigneID").toString();
-                    final String Status = updateStatusObjc.get("status").toString();
+                    final String assigneID = updateStatusObjc.get("assigneID").toString();
+                    final String status = updateStatusObjc.get("status").toString();
 
-                    if (Status.isEmpty()) {
+                    if (status.isEmpty()) {
                         result.error(ERROR, "Status is empty.", null);
                     }
 
-                    if (AssigneeID.isEmpty()) {
-                        switch (Status.toLowerCase()) {
-                            case "online":
-                                Kommunicate.updateAssigneeStatus("", KMAgentStatusHelper.KMAgentStatus.ONLINE);
-                                break;
-                            case "offline":
-                                Kommunicate.updateAssigneeStatus("", KMAgentStatusHelper.KMAgentStatus.OFFLINE);
-                                break;
-                            case "away":
-                                Kommunicate.updateAssigneeStatus("", KMAgentStatusHelper.KMAgentStatus.AWAY);
-                                break;
-                            default:
-                                Kommunicate.updateAssigneeStatus("", KMAgentStatusHelper.KMAgentStatus.DefaultStatus);
-                                break;
-                        }
-                    } else {
-                        switch (Status.toLowerCase()) {
-                            case "online":
-                                Kommunicate.updateAssigneeStatus(AssigneeID, KMAgentStatusHelper.KMAgentStatus.ONLINE);
-                                break;
-                            case "offline":
-                                Kommunicate.updateAssigneeStatus(AssigneeID, KMAgentStatusHelper.KMAgentStatus.OFFLINE);
-                                break;
-                            case "away":
-                                Kommunicate.updateAssigneeStatus(AssigneeID, KMAgentStatusHelper.KMAgentStatus.AWAY);
-                                break;
-                            default:
-                                Kommunicate.updateAssigneeStatus(AssigneeID, KMAgentStatusHelper.KMAgentStatus.DefaultStatus);
-                                break;
-                        }
+                    switch (status.toLowerCase()) {
+                        case "online":
+                            Kommunicate.updateAssigneeStatus(assigneID, KMAgentStatusHelper.KMAgentStatus.ONLINE);
+                            break;
+                        case "offline":
+                            Kommunicate.updateAssigneeStatus(assigneID, KMAgentStatusHelper.KMAgentStatus.OFFLINE);
+                            break;
+                        case "away":
+                            Kommunicate.updateAssigneeStatus(assigneID, KMAgentStatusHelper.KMAgentStatus.AWAY);
+                            break;
+                        default:
+                            Kommunicate.updateAssigneeStatus(assigneID, KMAgentStatusHelper.KMAgentStatus.DefaultStatus);
+                            break;
                     }
                 } else{
                     result.error(ERROR, "passed object is not having 'assigneID' or 'status' ", null);
