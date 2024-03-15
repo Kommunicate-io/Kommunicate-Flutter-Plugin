@@ -1,3 +1,13 @@
+## 1.8.9
+### iOS
+- Fixed name getting cut issue in Navigation Bar.
+- Improved the Flow of Showing Rating Bar.
+- Improved read receipt label for messages.
+### Android
+- Added support for iframe in HTML type rich message.
+- Fixed location issues.
+- Image full screen view improvement.
+- Added back button in in-app browser.
 ## 1.8.8
 ### iOS
 - Added Dynamic online/offline status Feature
