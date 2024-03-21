@@ -1,3 +1,8 @@
+## 1.9.0
+### Android
+- Added customization for image compression
+- Fixed crash caused by empty form action message when submitting the form
+
 ## 1.8.9
 ### iOS
 - Fixed name getting cut issue in Navigation Bar.
