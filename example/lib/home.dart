@@ -1,9 +1,8 @@
-import 'package:kommunicate_flutter_plugin_example/main.dart';
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
 import 'package:kommunicate_flutter/kommunicate_flutter.dart';
 import 'dart:io' show Platform;
-import 'package:intl/intl.dart';
+import 'main.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -70,7 +69,7 @@ class HomePageWidget extends StatelessWidget {
     }
   }
 
-  String valueText;
+  String valueText = '';
   Future<void> _displayTextInputDialog(BuildContext context) async {
     return showDialog(
         context: context,
@@ -88,7 +87,7 @@ class HomePageWidget extends StatelessWidget {
               TextButton(
                 style: TextButton.styleFrom(
                   backgroundColor: Colors.red,
-                  primary: Colors.white,
+                  foregroundColor: Colors.white,
                 ),
                 onPressed: () {
                   Navigator.pop(context);
@@ -98,7 +97,7 @@ class HomePageWidget extends StatelessWidget {
               TextButton(
                 style: TextButton.styleFrom(
                   backgroundColor: Colors.green,
-                  primary: Colors.white,
+                  foregroundColor: Colors.white,
                 ),
                 onPressed: () {
                   fetchUserDetails(valueText);

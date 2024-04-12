@@ -1,9 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:kommunicate_flutter/kommunicate_flutter.dart';
-import 'package:kommunicate_flutter_plugin_example/AppConfig.dart';
-import 'package:kommunicate_flutter_plugin_example/prechat.dart';
+import 'AppConfig.dart';
+import 'prechat.dart';
 
 import 'home.dart';
 
@@ -35,8 +37,7 @@ class _MyAppState extends State<MyApp> {
       } else if(call.method == 'onMessageSent'){
         print(call.arguments);
       } 
-
-      return null;
+      return Future.value(null);
     });
     super.initState();
   }
@@ -70,7 +71,8 @@ class LoginPage extends StatelessWidget {
     dynamic user = {
       'userId': userId.text,
       'password': password.text,
-      'appId': AppConfig.APP_ID
+      'appId': AppConfig.APP_ID,
+      'contactNumber': "31213124124"
     };
 
     KommunicateFlutterPlugin.login(user).then((result) {
@@ -234,7 +236,7 @@ class LoginPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(30.0),
                 color: Color(0xff5c5aa7),
                 child: new MaterialButton(
-                    onPressed: () {
+                    onPressed: () async {
                       buildConversationWithPreChat(context);
                     },
                     minWidth: 400,
