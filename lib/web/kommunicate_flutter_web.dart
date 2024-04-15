@@ -1,9 +1,6 @@
-// Inside web/kommunicate_flutter_web.dart
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:js' as js;
-import 'dart:js_util' as js_util;
 import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'dart:html' as html;
@@ -24,43 +21,42 @@ class KommunicateFlutterPluginWeb {
     switch (call.method) {
       case 'getPlatformVersion':
         return platformVersion();
+      case 'isChatWidgetHidden':
+        return hideChatWidget(call.arguments);
       case 'login':
         return login(call.arguments);
-      case 'logout': 
+      case 'logout':
         return logout();
       case 'loginAsVisitor':
         return loginAsVisitor(call.arguments);
-      case 'openConversations': 
+      case 'openConversations':
         return openConversations();
       case 'sendMessage':
         return sendMessage(call.arguments);
-      case 'openParticularConversation': 
+      case 'openParticularConversation':
         return openParticularConversation(call.arguments);
       case 'isLoggedIn':
         return isLoggedIn();
-      case 'buildConversation': 
+      case 'buildConversation':
         return buildConversation(call.arguments);
-      case 'updateChatContext':
-        return updateChatContext(call.arguments);
-      case 'updateUserDetail': 
-        return updateUserDetail(call.arguments); 
       default:
         throw PlatformException(
           code: 'Unimplemented',
-          details: 'kommunicate_flutter for web doesn\'t implement \'${call.method}\'',
+          details:
+              'kommunicate_flutter for web doesn\'t implement \'${call.method}\'',
         );
     }
   }
 
   Future<dynamic> login(dynamic kmUser) async {
-    Map<String, dynamic> user =  jsonDecode(kmUser);
+    Map<String, dynamic> user = jsonDecode(kmUser);
     String appId = user["appId"];
     String userId = user['userId'];
     Map<String, dynamic> registerUserObjc = {
-        "appId": "$appId",
-        "automaticChatOpenOnNavigation": true,
-        "popupWidget": true,
-        "userId": "$userId"
+      "appId": "$appId",
+      "automaticChatOpenOnNavigation": true,
+      "popupWidget": true,
+      "userId": "$userId"
     };
     if (user['password'] != null) {
       registerUserObjc['password'] = user['password'];
@@ -68,12 +64,12 @@ class KommunicateFlutterPluginWeb {
     if (user['email'] != null) {
       registerUserObjc['email'] = user['email'];
     }
-    if (user['authenticationTypeId'] != null){
+    if (user['authenticationTypeId'] != null) {
       registerUserObjc['authenticationTypeId'] = user['authenticationTypeId'];
     }
     if (!appId.isEmpty && !userId.isEmpty) {
       String jsCode = '''
-              (function(d, m){
+                (function(d, m){
                 var s = document.createElement("script");
                 s.type = "text/javascript";
                 s.async = true;
@@ -92,18 +88,34 @@ class KommunicateFlutterPluginWeb {
     return 'Flutter Web : ' + html.window.navigator.userAgent;
   }
 
-  Future<dynamic> logout() async {
-    await js.context.callMethod('eval', ['Kommunicate.logout()']);
+  Future<dynamic> hideChatWidget(bool ishidden) async {
+    await js.context.callMethod(
+        'eval', ['Kommunicate.displayKommunicateWidget($ishidden)']);
   }
 
- Future<dynamic> loginAsVisitor(String appId) async {
-      String jsCode = '''
+  Future<dynamic> logout() async {
+    Completer completer = Completer();
+    void callbackFunction(js.JsObject response) {
+      completer.complete(response);
+    }
+
+    js.context['loggedOut'] = callbackFunction;
+    String jsCode = '''
+            Kommunicate.logout();
+            loggedOut("true");
+        ''';
+    await js.context.callMethod('eval', [jsCode]);
+    return completer.future;
+  }
+
+  Future<dynamic> loginAsVisitor(String appId) async {
+    Map<String, dynamic> registerUserObjc = {
+      "appId": "$appId",
+      "automaticChatOpenOnNavigation": true,
+      "popupWidget": true,
+    };
+    String jsCode = '''
               (function(d, m){
-                var kommunicateSettings = {
-                  "appId": "$appId",
-                  "automaticChatOpenOnNavigation": true,
-                  "popupWidget": true
-                };
                 var s = document.createElement("script");
                 s.type = "text/javascript";
                 s.async = true;
@@ -111,10 +123,10 @@ class KommunicateFlutterPluginWeb {
                 var h = document.getElementsByTagName("head")[0];
                 h.appendChild(s);
                 window.kommunicate = m;
-                m._globals = kommunicateSettings;
+                m._globals = ${jsonEncode(registerUserObjc)};
               })(document, window.kommunicate || {});
             ''';
-      await js.context.callMethod('eval', [jsCode]);
+    await js.context.callMethod('eval', [jsCode]);
   }
 
   Future<dynamic> openConversations() async {
@@ -122,43 +134,58 @@ class KommunicateFlutterPluginWeb {
   }
 
   Future<dynamic> sendMessage(dynamic messageData) async {
-     Map<String, dynamic> messageObjc =  jsonDecode(messageData);
-     String channelID = messageObjc["channelID"];
-     String message = messageObjc["message"];
+    Map<String, dynamic> messageObjc = jsonDecode(messageData);
+    String channelID = messageObjc["channelID"];
+    String message = messageObjc["message"];
 
-    await js.context.callMethod('eval', ['Kommunicate.sendMessage({"goupId": "$channelID", "message": "$message"})']);
+    await js.context.callMethod('eval', [
+      'Kommunicate.sendMessage({"goupId": "$channelID", "message": "$message"})'
+    ]);
   }
 
-  Future<dynamic> openParticularConversation(String clientConversationId) async {
-    await js.context.callMethod('eval', ['Kommunicate.openConversation("$clientConversationId")']);
+  Future<dynamic> openParticularConversation(
+      String clientConversationId) async {
+    await js.context.callMethod(
+        'eval', ['Kommunicate.openConversation("$clientConversationId")']);
   }
 
   Future<dynamic> isLoggedIn() async {
-    // await js.context.callMethod('eval', ['Kommunciate']);
-  }
+    Completer completer = Completer();
+    void callbackFunction(js.JsObject response) {
+      completer.complete(response);
+    }
 
-  Future<dynamic> updateChatContext(dynamic chatContext) async {
-    
-  }
+    js.context['isLoginCallbacks'] = callbackFunction;
+    String jsCode = '''
+            if (window.KommunicateGlobal == null) {
+              isLoginCallbacks(false);
+            } else {
+              isLoginCallbacks(true);
+            }
+        ''';
 
-  Future<dynamic> updateUserDetail(dynamic kmUser) async {
+    await js.context.callMethod('eval', [jsCode]);
 
+    return completer.future;
   }
 
   Future<dynamic> buildConversation(dynamic conversationObject) async {
     Map<String, dynamic> conversationData;
+    Completer completer = Completer();
     if (conversationObject is String) {
       conversationData = jsonDecode(conversationObject);
     } else if (conversationObject is Map<String, dynamic>) {
       conversationData = conversationObject;
     } else {
-      throw ArgumentError('conversationObject must be a JSON string or a Map<String, dynamic>');
+      throw ArgumentError(
+          'conversationObject must be a JSON string or a Map<String, dynamic>');
     }
 
     Map<String, dynamic> conversationDetail = {};
 
     if (conversationData["messageMetadata"] != null) {
-      conversationDetail["conversationMetadata"] = conversationData["messageMetadata"];
+      conversationDetail["conversationMetadata"] =
+          conversationData["messageMetadata"];
     }
     if (conversationData["agentIds"] != null) {
       conversationDetail["agentIds"] = conversationData["agentIds"];
@@ -179,18 +206,28 @@ class KommunicateFlutterPluginWeb {
       }
     }
     if (conversationData["clientConversationId"] != null) {
-      conversationDetail["clientGroupId"] = conversationData["clientConversationId"];
+      conversationDetail["clientGroupId"] =
+          conversationData["clientConversationId"];
     }
     if (conversationData["conversationTitle"] != null) {
-      conversationDetail["defaultGroupName"] = conversationData["conversationTitle"];
+      conversationDetail["defaultGroupName"] =
+          conversationData["conversationTitle"];
     }
+
+    void callbackFunction(js.JsObject response) {
+      completer.complete(response);
+    }
+
+    js.context['dartCallback'] = callbackFunction;
 
     String jsCode = '''
             Kommunicate.startConversation(${jsonEncode(conversationDetail)}, function (response) {
             console.log("new conversation created");
+            dartCallback(response);
             });
         ''';
 
     await js.context.callMethod('eval', [jsCode]);
+    return completer.future;
   }
 }
