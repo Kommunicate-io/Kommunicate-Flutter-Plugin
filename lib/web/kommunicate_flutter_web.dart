@@ -3,10 +3,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:js' as js;
-
+import 'dart:js_util' as js_util;
 import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:kommunicate_flutter/kommunicate_flutter.dart';
 
 class KommunicateFlutterPluginWeb {
   static void registerWith(Registrar registrar) {
@@ -131,37 +130,51 @@ class KommunicateFlutterPluginWeb {
   }
 
   Future<dynamic> buildConversation(dynamic conversationObject) async {
-    Map<String, dynamic> conversationData =  jsonDecode(conversationObject);
+    Map<String, dynamic> conversationData;
+    if (conversationObject is String) {
+      conversationData = jsonDecode(conversationObject);
+    } else if (conversationObject is Map<String, dynamic>) {
+      conversationData = conversationObject;
+    } else {
+      throw ArgumentError('conversationObject must be a JSON string or a Map<String, dynamic>');
+    }
+
     Map<String, dynamic> conversationDetail = {};
 
-    if (conversationData["messageMetadata"]) {
+    if (conversationData["messageMetadata"] != null) {
       conversationDetail["conversationMetadata"] = conversationData["messageMetadata"];
     }
-    if (conversationData["agentIds"]) {
+    if (conversationData["agentIds"] != null) {
       conversationDetail["agentIds"] = conversationData["agentIds"];
-      if (!conversationDetail["skipRouting"]) {
+      if (conversationDetail["skipRouting"] == null) {
         conversationDetail["skipRouting"] = "true";
       }
     }
-    if (conversationData["botIds"]) {
+    if (conversationData["botIds"] != null) {
       conversationDetail["botIds"] = conversationData["botIds"];
-      if (!conversationDetail["skipRouting"]) {
+      if (conversationDetail["skipRouting"] == null) {
         conversationDetail["skipRouting"] = "true";
       }
     }
-    if (conversationData["conversationAssignee"]) {
+    if (conversationData["conversationAssignee"] != null) {
       conversationDetail["assignee"] = conversationData["conversationAssignee"];
-      if (!conversationDetail["skipRouting"]) {
+      if (conversationDetail["skipRouting"] == null) {
         conversationDetail["skipRouting"] = "true";
       }
     }
-    if (conversationData["clientConversationId"]) {
+    if (conversationData["clientConversationId"] != null) {
       conversationDetail["clientGroupId"] = conversationData["clientConversationId"];
     }
-    if (conversationData["conversationTitle"]) {
+    if (conversationData["conversationTitle"] != null) {
       conversationDetail["defaultGroupName"] = conversationData["conversationTitle"];
     }
-    print("converastionON : $conversationDetail");
+
+    String jsCode = '''
+            Kommunicate.startConversation(${jsonEncode(conversationDetail)}, function (response) {
+            console.log("new conversation created");
+            });
+        ''';
+
+    await js.context.callMethod('eval', [jsCode]);
   }
-  
 }
