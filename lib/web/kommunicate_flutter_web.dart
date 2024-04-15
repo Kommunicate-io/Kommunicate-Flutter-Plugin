@@ -6,6 +6,7 @@ import 'dart:js' as js;
 import 'dart:js_util' as js_util;
 import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'dart:html' as html;
 
 class KommunicateFlutterPluginWeb {
   static void registerWith(Registrar registrar) {
@@ -21,6 +22,8 @@ class KommunicateFlutterPluginWeb {
 
   Future<dynamic> handleMethodCall(MethodCall call) async {
     switch (call.method) {
+      case 'getPlatformVersion':
+        return platformVersion();
       case 'login':
         return login(call.arguments);
       case 'logout': 
@@ -53,15 +56,24 @@ class KommunicateFlutterPluginWeb {
     Map<String, dynamic> user =  jsonDecode(kmUser);
     String appId = user["appId"];
     String userId = user['userId'];
+    Map<String, dynamic> registerUserObjc = {
+        "appId": "$appId",
+        "automaticChatOpenOnNavigation": true,
+        "popupWidget": true,
+        "userId": "$userId"
+    };
+    if (user['password'] != null) {
+      registerUserObjc['password'] = user['password'];
+    }
+    if (user['email'] != null) {
+      registerUserObjc['email'] = user['email'];
+    }
+    if (user['authenticationTypeId'] != null){
+      registerUserObjc['authenticationTypeId'] = user['authenticationTypeId'];
+    }
     if (!appId.isEmpty && !userId.isEmpty) {
       String jsCode = '''
               (function(d, m){
-                var kommunicateSettings = {
-                  "appId": "$appId",
-                  "automaticChatOpenOnNavigation": true,
-                  "popupWidget": true,
-                  "userId": "$userId"
-                };
                 var s = document.createElement("script");
                 s.type = "text/javascript";
                 s.async = true;
@@ -69,11 +81,15 @@ class KommunicateFlutterPluginWeb {
                 var h = document.getElementsByTagName("head")[0];
                 h.appendChild(s);
                 window.kommunicate = m;
-                m._globals = kommunicateSettings;
+                m._globals = ${jsonEncode(registerUserObjc)};
               })(document, window.kommunicate || {});
             ''';
       await js.context.callMethod('eval', [jsCode]);
     }
+  }
+
+  Future<dynamic> platformVersion() async {
+    return 'Flutter Web : ' + html.window.navigator.userAgent;
   }
 
   Future<dynamic> logout() async {
