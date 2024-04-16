@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kommunicate_flutter/kommunicate_flutter.dart';
@@ -47,6 +48,8 @@ class HomePageWidget extends StatelessWidget {
       return "Android";
     } else if (Platform.isIOS) {
       return "iOS";
+    } else if (kIsWeb) {
+      return "Web";
     } else {
       return "NOP";
     }
@@ -110,16 +113,114 @@ class HomePageWidget extends StatelessWidget {
         });
   }
 
+String coversationIDValue = '';
+  Future<void> _displayConversationIDInputDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Enter Conversation ID'),
+            content: TextField(
+              onChanged: (value) {
+                coversationIDValue = value;
+                print(value);
+              },
+              decoration: InputDecoration(hintText: "Enter Conversation ID"),
+            ),
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('CANCEL'),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () {
+                  KommunicateFlutterPlugin.openParticularConversation(coversationIDValue);
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        });
+  }
+
+  String messageText = '';
+  Future<void> _displayMessageInputDialog(BuildContext context) async {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text('Enter Message and Conversation ID'),
+        content: SizedBox(
+          height: MediaQuery.of(context).size.height * 0.2, // Set the height to 30% of the screen height
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextField(
+                  onChanged: (value) {
+                    coversationIDValue = value;
+                    print(value);
+                  },
+                  decoration: InputDecoration(hintText: "Enter Conversation ID"),
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  onChanged: (value) {
+                    messageText = value;
+                    print(value);
+                  },
+                  decoration: InputDecoration(hintText: "Enter Message"),
+                ),
+              ],
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('CANCEL'),
+          ),
+          TextButton(
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              KommunicateFlutterPlugin.sendMessage({
+                "channelID": "$coversationIDValue",
+                "message": "$messageText"
+              });
+              Navigator.pop(context);
+            },
+            child: Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.all(36.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Material(
+    List<Widget> widgets = [
+      new Material(
                 elevation: 5.0,
                 borderRadius: BorderRadius.circular(30.0),
                 color: Color(0xff5c5aa7),
@@ -141,8 +242,9 @@ class HomePageWidget extends StatelessWidget {
                 color: Color(0xff5c5aa7),
                 child: new MaterialButton(
                   onPressed: () {
-                    KommunicateFlutterPlugin.openParticularConversation(
-                        '46286348');
+                    // KommunicateFlutterPlugin.openParticularConversation(
+                    //     '46286348');
+                    _displayConversationIDInputDialog(context);
                   },
                   minWidth: 400,
                   padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -267,8 +369,125 @@ class HomePageWidget extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: style.copyWith(
                           color: Colors.white, fontWeight: FontWeight.bold)),
-                ))
-          ],
+                )),
+    ];
+
+    if (kIsWeb) {
+      widgets.removeRange(widgets.length - 9, widgets.length - 1);
+      widgets.insert(
+        widgets.length - 1, // Insert before the logout button
+        new Material(
+          elevation: 5.0,
+          borderRadius: BorderRadius.circular(30.0),
+          color: Color(0xff5c5aa7),
+          child: new MaterialButton(
+            onPressed: () {
+              KommunicateFlutterPlugin.buildConversation({})
+              .then((result) {
+                print("Conversation builder success : " + result.toString());
+              }).catchError((error) {
+                print("Conversation builder error occurred : " + error.toString());
+              });
+            },
+            minWidth: 400,
+            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            child: Text(
+              "Build Conversation",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontFamily: 'Montserrat', fontSize: 20.0)
+                  .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      );
+      widgets.insert(
+        widgets.length - 1,
+        SizedBox(height: 10),
+      );
+      widgets.insert(
+        widgets.length - 1, // Insert before the logout button
+        new Material(
+          elevation: 5.0,
+          borderRadius: BorderRadius.circular(30.0),
+          color: Color(0xff5c5aa7),
+          child: new MaterialButton(
+            onPressed: () {
+              _displayMessageInputDialog(context);
+            },
+            minWidth: 400,
+            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            child: Text(
+              "Send Message",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontFamily: 'Montserrat', fontSize: 20.0)
+                  .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      );
+      widgets.insert(
+        widgets.length - 1,
+        SizedBox(height: 10),
+      );
+      widgets.insert(
+        widgets.length - 1, // Insert before the logout button
+        new Material(
+          elevation: 5.0,
+          borderRadius: BorderRadius.circular(30.0),
+          color: Color(0xff5c5aa7),
+          child: new MaterialButton(
+            onPressed: () {
+              KommunicateFlutterPlugin.isChatWidgetVisible(false);
+            },
+            minWidth: 400,
+            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            child: Text(
+              "Hide Chat Widget",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontFamily: 'Montserrat', fontSize: 20.0)
+                  .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      );
+      widgets.insert(
+        widgets.length - 1,
+        SizedBox(height: 10),
+      );
+      widgets.insert(
+        widgets.length - 1, // Insert before the logout button
+        new Material(
+          elevation: 5.0,
+          borderRadius: BorderRadius.circular(30.0),
+          color: Color(0xff5c5aa7),
+          child: new MaterialButton(
+            onPressed: () {
+              KommunicateFlutterPlugin.isChatWidgetVisible(true);
+            },
+            minWidth: 400,
+            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            child: Text(
+              "Show Widget",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontFamily: 'Montserrat', fontSize: 20.0)
+                  .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      );
+      widgets.insert(
+        widgets.length - 1,
+        SizedBox(height: 10),
+      );
+    }
+
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.all(36.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: widgets,
         ),
       ),
     );

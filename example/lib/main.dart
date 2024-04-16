@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:kommunicate_flutter/kommunicate_flutter.dart';
 import 'AppConfig.dart';
 import 'prechat.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'home.dart';
 
@@ -21,6 +22,7 @@ MethodChannel channel = MethodChannel('kommunicate_flutter');
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
+    if (kIsWeb == false) {
     channel.setMethodCallHandler((call){
       if(call.method == 'onPluginLaunch'){
         print(call.arguments);
@@ -39,6 +41,7 @@ class _MyAppState extends State<MyApp> {
       } 
       return Future.value(null);
     });
+    }
     super.initState();
   }
 
@@ -72,7 +75,7 @@ class LoginPage extends StatelessWidget {
       'userId': userId.text,
       'password': password.text,
       'appId': AppConfig.APP_ID,
-      'contactNumber': "31213124124"
+      'authenticationTypeId': 1
     };
 
     KommunicateFlutterPlugin.login(user).then((result) {
