@@ -21,8 +21,8 @@ class KommunicateFlutterPlugin {
     }
   }
 
-  static Future<dynamic> isChatWidgetHidden(bool ishidden) async {
-    return await _channel.invokeListMethod('isChatWidgetHidden', ishidden);
+  static Future<dynamic> isChatWidgetVisible(bool ishidden) async {
+    return await _channel.invokeListMethod('isChatWidgetVisible', ishidden);
   }
 
   static Future<dynamic> logout() async {

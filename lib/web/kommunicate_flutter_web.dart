@@ -21,8 +21,8 @@ class KommunicateFlutterPluginWeb {
     switch (call.method) {
       case 'getPlatformVersion':
         return platformVersion();
-      case 'isChatWidgetHidden':
-        return hideChatWidget(call.arguments);
+      case 'isChatWidgetVisible':
+        return showChatWidget(call.arguments);
       case 'login':
         return login(call.arguments);
       case 'logout':
@@ -50,6 +50,7 @@ class KommunicateFlutterPluginWeb {
 
   Future<dynamic> login(dynamic kmUser) async {
     Map<String, dynamic> user = jsonDecode(kmUser);
+    Completer completer = Completer();
     String appId = user["appId"];
     String userId = user['userId'];
     Map<String, dynamic> registerUserObjc = {
@@ -67,42 +68,64 @@ class KommunicateFlutterPluginWeb {
     if (user['authenticationTypeId'] != null) {
       registerUserObjc['authenticationTypeId'] = user['authenticationTypeId'];
     }
+    
+    void loginCallBackFunction(js.JsObject response) {
+      completer.complete(response);
+    }
+    js.context['loginCallBack'] = loginCallBackFunction;
+
     if (!appId.isEmpty && !userId.isEmpty) {
       String jsCode = '''
-                (function(d, m){
-                var s = document.createElement("script");
-                s.type = "text/javascript";
-                s.async = true;
-                s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
-                var h = document.getElementsByTagName("head")[0];
-                h.appendChild(s);
-                window.kommunicate = m;
-                m._globals = ${jsonEncode(registerUserObjc)};
-              })(document, window.kommunicate || {});
-            ''';
+              try {
+                  (function(d, m) {
+                        var kommunicateSettings = ${jsonEncode(registerUserObjc)};
+                        kommunicateSettings["onInit"] = function (){
+                                      Kommunicate.displayKommunicateWidget(false);
+                                      loginCallBack(JSON.stringify(window.kommunicate._globals));};
+
+                        var s = document.createElement("script");
+                        s.type = "text/javascript";
+                        s.async = true;
+                        s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
+                        var h = document.getElementsByTagName("head")[0];
+                        h.appendChild(s);
+                        window.kommunicate = m;
+                        m._globals = kommunicateSettings;
+                  })(document, window.kommunicate || {});
+                } catch (error) {
+                        console.error("An error occurred while executing the code:", error);
+                        loginCallBack(error);
+                      }
+                ''';
       await js.context.callMethod('eval', [jsCode]);
     }
+    return completer.future;
   }
 
   Future<dynamic> platformVersion() async {
     return 'Flutter Web : ' + html.window.navigator.userAgent;
   }
 
-  Future<dynamic> hideChatWidget(bool ishidden) async {
+  Future<dynamic> showChatWidget(bool isVisible) async {
     await js.context.callMethod(
-        'eval', ['Kommunicate.displayKommunicateWidget($ishidden)']);
+        'eval', ['Kommunicate.displayKommunicateWidget($isVisible)']);
   }
 
   Future<dynamic> logout() async {
     Completer completer = Completer();
-    void callbackFunction(js.JsObject response) {
+    void loggedOutcallbackFunction(js.JsObject response) {
       completer.complete(response);
     }
+    js.context['loggedOut'] = loggedOutcallbackFunction;
 
-    js.context['loggedOut'] = callbackFunction;
     String jsCode = '''
-            Kommunicate.logout();
-            loggedOut("true");
+            try {
+                Kommunicate.logout();
+                loggedOut("true");
+            } catch (error) {
+                console.error("An error occurred while logging out:", error);
+                loggedOut("false");
+            }
         ''';
     await js.context.callMethod('eval', [jsCode]);
     return completer.future;
@@ -114,19 +137,38 @@ class KommunicateFlutterPluginWeb {
       "automaticChatOpenOnNavigation": true,
       "popupWidget": true,
     };
-    String jsCode = '''
-              (function(d, m){
-                var s = document.createElement("script");
-                s.type = "text/javascript";
-                s.async = true;
-                s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
-                var h = document.getElementsByTagName("head")[0];
-                h.appendChild(s);
-                window.kommunicate = m;
-                m._globals = ${jsonEncode(registerUserObjc)};
-              })(document, window.kommunicate || {});
-            ''';
-    await js.context.callMethod('eval', [jsCode]);
+    Completer completer = Completer();
+    void loginAsVisitorCallBackFunction(js.JsObject response) {
+      completer.complete(response);
+    }
+    js.context['loginAsVisitorCallback'] = loginAsVisitorCallBackFunction;
+
+    if (!appId.isEmpty) {
+      String jsCode = '''
+              try {
+                  (function(d, m) {
+                        var kommunicateSettings = ${jsonEncode(registerUserObjc)};
+                        kommunicateSettings["onInit"] = function (){
+                                      Kommunicate.displayKommunicateWidget(false);
+                                      loginAsVisitorCallback(JSON.stringify(window.kommunicate._globals));};
+
+                        var s = document.createElement("script");
+                        s.type = "text/javascript";
+                        s.async = true;
+                        s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
+                        var h = document.getElementsByTagName("head")[0];
+                        h.appendChild(s);
+                        window.kommunicate = m;
+                        m._globals = kommunicateSettings;
+                  })(document, window.kommunicate || {});
+                } catch (error) {
+                        console.error("An error occurred while executing the code:", error);
+                        loginAsVisitorCallback(error);
+                      }
+                ''';
+      await js.context.callMethod('eval', [jsCode]);
+    }
+    return completer.future;
   }
 
   Future<dynamic> openConversations() async {
@@ -151,21 +193,20 @@ class KommunicateFlutterPluginWeb {
 
   Future<dynamic> isLoggedIn() async {
     Completer completer = Completer();
-    void callbackFunction(js.JsObject response) {
+    void isLoginCallBackFunction(js.JsObject response) {
       completer.complete(response);
     }
+    js.context['isLoginCallBack'] = isLoginCallBackFunction;
 
-    js.context['isLoginCallbacks'] = callbackFunction;
     String jsCode = '''
             if (window.KommunicateGlobal == null) {
-              isLoginCallbacks(false);
+              isLoginCallBack(false);
             } else {
-              isLoginCallbacks(true);
+              isLoginCallBack(true);
             }
         ''';
 
     await js.context.callMethod('eval', [jsCode]);
-
     return completer.future;
   }
 
@@ -214,16 +255,16 @@ class KommunicateFlutterPluginWeb {
           conversationData["conversationTitle"];
     }
 
-    void callbackFunction(js.JsObject response) {
+    void createConversationCallBackFunction(js.JsObject response) {
       completer.complete(response);
     }
 
-    js.context['dartCallback'] = callbackFunction;
+    js.context['createConversationCallBack'] = createConversationCallBackFunction;
 
     String jsCode = '''
             Kommunicate.startConversation(${jsonEncode(conversationDetail)}, function (response) {
             console.log("new conversation created");
-            dartCallback(response);
+            createConversationCallBack(response);
             });
         ''';
 
