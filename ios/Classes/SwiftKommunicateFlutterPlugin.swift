@@ -18,6 +18,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     var conversationTitle: String? = nil;
     var conversationInfo: [AnyHashable: Any]? = nil;
     var teamId: String? = nil;
+    var serverConfig: KMServerConfiguration = .defaultConfiguration;
     static let KM_CONVERSATION_METADATA: String = "conversationMetadata";
     static let CLIENT_CONVERSATION_ID: String = "clientConversationId";
     static let CONVERSATION_ID: String = "conversationId";
@@ -36,7 +37,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     }
     
     func addListener() {
-        Kommunicate.subscribeCustomEvents(events: [CustomEvent.messageReceive, CustomEvent.messageSend,CustomEvent.faqClick, CustomEvent.newConversation, CustomEvent.submitRatingClick, CustomEvent.restartConversationClick, CustomEvent.richMessageClick, CustomEvent.conversationBackPress, CustomEvent.conversationListBackPress, CustomEvent.conversationInfoClick ], callback: self)
+        Kommunicate.subscribeCustomEvents(events: [KMCustomEvent.messageReceive, KMCustomEvent.messageSend,KMCustomEvent.faqClick, KMCustomEvent.newConversation, KMCustomEvent.submitRatingClick, KMCustomEvent.restartConversationClick, KMCustomEvent.richMessageClick, KMCustomEvent.conversationBackPress, KMCustomEvent.conversationListBackPress, KMCustomEvent.conversationInfoClick ], callback: self)
     }
     func removeListener() {
         Kommunicate.unsubcribeCustomEvents()
@@ -46,6 +47,17 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         
         if(call.method == "getPlatformVersion") {
             result("iOS " + UIDevice.current.systemVersion)
+        } else if(call.method == "setServerConfiguration") {
+            guard let serverConfig = call.arguments as? String else {
+                self.sendErrorResultWithCallback(result: result, message: "Invalid Server Config")
+                return
+            }
+            switch serverConfig {
+                case "euConfiguration":
+                    self.serverConfig = .euConfiguration
+                default:
+                    self.sendErrorResultWithCallback(result: result, message: "It only supports `euConfiguration` for now.")
+            }
         } else if(call.method == "isLoggedIn") {
             result(Kommunicate.isLoggedIn)
         } else if(call.method == "login") {
@@ -57,6 +69,9 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             guard let appId = userDict["appId"] as? String, !appId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
                 self.sendErrorResultWithCallback(result: result, message: "Invalid or missing appId")
                 return
+            }
+            if serverConfig == .euConfiguration {
+                Kommunicate.setServerConfiguration(.euConfiguration)
             }
             Kommunicate.setup(applicationId: appId)
             userDict.removeValue(forKey: "appId")
@@ -84,7 +99,9 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 self.sendErrorResultWithCallback(result: result, message: "Invalid or missing appId")
                 return
             }
-            
+            if serverConfig == .euConfiguration {
+                Kommunicate.setServerConfiguration(.euConfiguration)
+            }
             Kommunicate.setup(applicationId: appId)
             let kmUser = Kommunicate.createVisitorUser()
             kmUser.applicationId = appId
@@ -322,7 +339,9 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 
                 self.agentIds = agentIds
                 self.botIds = botIds
-                
+                if serverConfig == .euConfiguration {
+                    Kommunicate.setServerConfiguration(.euConfiguration)
+                }
                 if Kommunicate.isLoggedIn{
                     self.handleCreateConversation()
                 }else{
@@ -553,6 +572,9 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         
         kmUser.contactNumber = phoneNumber
         kmUser.displayName = name
+        if serverConfig == .euConfiguration {
+            Kommunicate.setServerConfiguration(.euConfiguration)
+        }
         Kommunicate.setup(applicationId: applicationKey)
         Kommunicate.registerUser(kmUser, completion:{
             response, error in
@@ -753,7 +775,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     public func richMessageClicked(conversationId: String, action: Any, type: String) {
         let jsonEncoder = JSONEncoder()
         var actionString: String = ""
-        if action is ListTemplate.Element, let actionElement = action as? ListTemplate.Element,
+        if action is KMListTemplate.Element, let actionElement = action as? KMListTemplate.Element,
            let jsonData = try? jsonEncoder.encode(actionElement)
         {
             actionString = String(data: jsonData, encoding: String.Encoding.utf8) ?? ""

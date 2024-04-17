@@ -100,4 +100,7 @@ class KommunicateFlutterPlugin {
   static Future<dynamic> hideAssigneeStatus(bool hide) async {
     return await _channel.invokeMethod('hideAssigneeStatus', hide);
   }
+  static Future<dynamic> setServerConfiguration(String serverName) async {
+    return await _channel.invokeListMethod('setServerConfiguration', serverName);
+  }
 }
