@@ -12,6 +12,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.kommunicate.KMServerConfiguration;
 import io.kommunicate.KmConversationBuilder;
 import io.kommunicate.KmSettings;
 import io.kommunicate.Kommunicate;
@@ -55,7 +56,7 @@ public class KmMethodHandler implements MethodCallHandler {
     private static final String ERROR = "Error";
     private Activity context;
     private MethodChannel methodChannel;
-
+    private KMServerConfiguration serverConfig  = KMServerConfiguration.DEFAULTCONFIGURATION;
     public KmMethodHandler(Activity context) {
         this.context = context;
     }
@@ -64,6 +65,25 @@ public class KmMethodHandler implements MethodCallHandler {
     public void onMethodCall(MethodCall call, final Result result) {
         if (call.method.equals("getPlatformVersion")) {
             result.success("Android " + android.os.Build.VERSION.RELEASE);
+        } else if (call.method.equals("setServerConfiguration")){
+            try {
+                String serverConfigText = (String) call.arguments();
+                if (!TextUtils.isEmpty(serverConfigText)) {
+                    switch (serverConfigText) {
+                        case "euConfiguration":
+                            this.serverConfig = KMServerConfiguration.EUCONFIGURATION;
+                            Kommunicate.setServerConfiguration(context, KMServerConfiguration.DEFAULTCONFIGURATION);
+                            break;
+                        default:
+                            result.error(ERROR, "It only supports `euConfiguration` for now.", null);
+                    }
+                } else {
+                    result.error(ERROR, "Invalid Server Config", null);
+                    return;
+                }
+            } catch (Exception e) {
+                result.error(ERROR, e.toString(), null);
+            }
         } else if (call.method.equals("isLoggedIn")) {
             result.success(Kommunicate.isLoggedIn(context));
         } else if (call.method.equals("login")) {
@@ -72,6 +92,9 @@ public class KmMethodHandler implements MethodCallHandler {
                 KMUser user = (KMUser) GsonUtils.getObjectFromJson(userObject.toString(), KMUser.class);
 
                 if (userObject.has("appId") && !TextUtils.isEmpty(userObject.get("appId").toString())) {
+                    if (serverConfig == KMServerConfiguration.EUCONFIGURATION) {
+                        Kommunicate.setServerConfiguration(context, serverConfig);
+                    }
                     Kommunicate.init(context, userObject.get("appId").toString());
                 } else {
                     result.error(ERROR, "appId is missing", null);
@@ -157,6 +180,9 @@ public class KmMethodHandler implements MethodCallHandler {
             try {
             String appId = (String) call.arguments();
             if (!TextUtils.isEmpty(appId)) {
+                if (serverConfig == KMServerConfiguration.EUCONFIGURATION) {
+                    Kommunicate.setServerConfiguration(context, serverConfig);
+                }
                 Kommunicate.init(context, appId);
             } else {
                 result.error(ERROR, "appId is missing", null);

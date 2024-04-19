@@ -55,6 +55,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             switch serverConfig {
                 case "euConfiguration":
                     self.serverConfig = .euConfiguration
+                    Kommunicate.setServerConfiguration(.euConfiguration)
                 default:
                     self.sendErrorResultWithCallback(result: result, message: "It only supports `euConfiguration` for now.")
             }
