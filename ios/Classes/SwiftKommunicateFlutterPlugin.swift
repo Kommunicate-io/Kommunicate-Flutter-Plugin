@@ -18,7 +18,6 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     var conversationTitle: String? = nil;
     var conversationInfo: [AnyHashable: Any]? = nil;
     var teamId: String? = nil;
-    var serverConfig: KMServerConfiguration = .defaultConfiguration;
     static let KM_CONVERSATION_METADATA: String = "conversationMetadata";
     static let CLIENT_CONVERSATION_ID: String = "clientConversationId";
     static let CONVERSATION_ID: String = "conversationId";
@@ -52,12 +51,10 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 self.sendErrorResultWithCallback(result: result, message: "Invalid Server Config")
                 return
             }
-            switch serverConfig {
-                case "euConfiguration":
-                    self.serverConfig = .euConfiguration
-                    Kommunicate.setServerConfiguration(.euConfiguration)
-                default:
-                    self.sendErrorResultWithCallback(result: result, message: "It only supports `euConfiguration` for now.")
+            if (serverConfig == "euConfiguration") {
+                Kommunicate.setServerConfiguration(.euConfiguration)
+            } else {
+                Kommunicate.setServerConfiguration(.defaultConfiguration)
             }
         } else if(call.method == "isLoggedIn") {
             result(Kommunicate.isLoggedIn)
@@ -70,9 +67,6 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             guard let appId = userDict["appId"] as? String, !appId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
                 self.sendErrorResultWithCallback(result: result, message: "Invalid or missing appId")
                 return
-            }
-            if serverConfig == .euConfiguration {
-                Kommunicate.setServerConfiguration(.euConfiguration)
             }
             Kommunicate.setup(applicationId: appId)
             userDict.removeValue(forKey: "appId")
@@ -99,9 +93,6 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             guard let appId = call.arguments as? String, !appId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
                 self.sendErrorResultWithCallback(result: result, message: "Invalid or missing appId")
                 return
-            }
-            if serverConfig == .euConfiguration {
-                Kommunicate.setServerConfiguration(.euConfiguration)
             }
             Kommunicate.setup(applicationId: appId)
             let kmUser = Kommunicate.createVisitorUser()
@@ -340,9 +331,6 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 
                 self.agentIds = agentIds
                 self.botIds = botIds
-                if serverConfig == .euConfiguration {
-                    Kommunicate.setServerConfiguration(.euConfiguration)
-                }
                 if Kommunicate.isLoggedIn{
                     self.handleCreateConversation()
                 }else{
@@ -573,9 +561,6 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         
         kmUser.contactNumber = phoneNumber
         kmUser.displayName = name
-        if serverConfig == .euConfiguration {
-            Kommunicate.setServerConfiguration(.euConfiguration)
-        }
         Kommunicate.setup(applicationId: applicationKey)
         Kommunicate.registerUser(kmUser, completion:{
             response, error in

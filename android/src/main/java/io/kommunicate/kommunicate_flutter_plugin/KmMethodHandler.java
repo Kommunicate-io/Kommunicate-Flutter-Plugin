@@ -56,7 +56,6 @@ public class KmMethodHandler implements MethodCallHandler {
     private static final String ERROR = "Error";
     private Activity context;
     private MethodChannel methodChannel;
-    private KMServerConfiguration serverConfig  = KMServerConfiguration.DEFAULTCONFIGURATION;
     public KmMethodHandler(Activity context) {
         this.context = context;
     }
@@ -69,13 +68,10 @@ public class KmMethodHandler implements MethodCallHandler {
             try {
                 String serverConfigText = (String) call.arguments();
                 if (!TextUtils.isEmpty(serverConfigText)) {
-                    switch (serverConfigText) {
-                        case "euConfiguration":
-                            this.serverConfig = KMServerConfiguration.EUCONFIGURATION;
-                            Kommunicate.setServerConfiguration(context, KMServerConfiguration.DEFAULTCONFIGURATION);
-                            break;
-                        default:
-                            result.error(ERROR, "It only supports `euConfiguration` for now.", null);
+                    if (serverConfigText == "euConfiguration") {
+                        Kommunicate.setServerConfiguration(context, KMServerConfiguration.EUCONFIGURATION);
+                    } else {
+                        Kommunicate.setServerConfiguration(context, KMServerConfiguration.DEFAULTCONFIGURATION);
                     }
                 } else {
                     result.error(ERROR, "Invalid Server Config", null);
@@ -92,9 +88,6 @@ public class KmMethodHandler implements MethodCallHandler {
                 KMUser user = (KMUser) GsonUtils.getObjectFromJson(userObject.toString(), KMUser.class);
 
                 if (userObject.has("appId") && !TextUtils.isEmpty(userObject.get("appId").toString())) {
-                    if (serverConfig == KMServerConfiguration.EUCONFIGURATION) {
-                        Kommunicate.setServerConfiguration(context, serverConfig);
-                    }
                     Kommunicate.init(context, userObject.get("appId").toString());
                 } else {
                     result.error(ERROR, "appId is missing", null);
@@ -180,9 +173,6 @@ public class KmMethodHandler implements MethodCallHandler {
             try {
             String appId = (String) call.arguments();
             if (!TextUtils.isEmpty(appId)) {
-                if (serverConfig == KMServerConfiguration.EUCONFIGURATION) {
-                    Kommunicate.setServerConfiguration(context, serverConfig);
-                }
                 Kommunicate.init(context, appId);
             } else {
                 result.error(ERROR, "appId is missing", null);
