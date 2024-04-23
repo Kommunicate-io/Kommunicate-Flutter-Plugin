@@ -1,3 +1,8 @@
+## 1.9.1
+- Added Support for EU region.
+- Added Web Support.
+- Updated Sample App.
+ 
 ## 1.9.0
 ### Android
 - Added customization for image compression
