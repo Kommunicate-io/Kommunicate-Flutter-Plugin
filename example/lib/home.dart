@@ -70,7 +70,7 @@ class HomePageWidget extends StatelessWidget {
     }
   }
 
-  String valueText;
+ String valueText = '';
   Future<void> _displayTextInputDialog(BuildContext context) async {
     return showDialog(
         context: context,
@@ -88,7 +88,7 @@ class HomePageWidget extends StatelessWidget {
               TextButton(
                 style: TextButton.styleFrom(
                   backgroundColor: Colors.red,
-                  primary: Colors.white,
+                  foregroundColor: Colors.white,
                 ),
                 onPressed: () {
                   Navigator.pop(context);
@@ -98,7 +98,7 @@ class HomePageWidget extends StatelessWidget {
               TextButton(
                 style: TextButton.styleFrom(
                   backgroundColor: Colors.green,
-                  primary: Colors.white,
+                  foregroundColor: Colors.white,
                 ),
                 onPressed: () {
                   fetchUserDetails(valueText);
