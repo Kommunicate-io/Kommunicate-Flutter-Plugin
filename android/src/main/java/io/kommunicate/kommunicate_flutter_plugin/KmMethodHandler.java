@@ -12,6 +12,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.kommunicate.KMServerConfiguration;
 import io.kommunicate.KmConversationBuilder;
 import io.kommunicate.KmSettings;
 import io.kommunicate.Kommunicate;
@@ -55,7 +56,6 @@ public class KmMethodHandler implements MethodCallHandler {
     private static final String ERROR = "Error";
     private Activity context;
     private MethodChannel methodChannel;
-
     public KmMethodHandler(Activity context) {
         this.context = context;
     }
@@ -64,6 +64,22 @@ public class KmMethodHandler implements MethodCallHandler {
     public void onMethodCall(MethodCall call, final Result result) {
         if (call.method.equals("getPlatformVersion")) {
             result.success("Android " + android.os.Build.VERSION.RELEASE);
+        } else if (call.method.equals("setServerConfiguration")){
+            try {
+                String serverConfigText = (String) call.arguments();
+                if (!TextUtils.isEmpty(serverConfigText)) {
+                    if (serverConfigText == "euConfiguration") {
+                        Kommunicate.setServerConfiguration(context, KMServerConfiguration.EUCONFIGURATION);
+                    } else {
+                        Kommunicate.setServerConfiguration(context, KMServerConfiguration.DEFAULTCONFIGURATION);
+                    }
+                } else {
+                    result.error(ERROR, "Invalid Server Config", null);
+                    return;
+                }
+            } catch (Exception e) {
+                result.error(ERROR, e.toString(), null);
+            }
         } else if (call.method.equals("isLoggedIn")) {
             result.success(Kommunicate.isLoggedIn(context));
         } else if (call.method.equals("login")) {
