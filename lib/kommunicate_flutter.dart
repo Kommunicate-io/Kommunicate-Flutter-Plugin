@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class KommunicateFlutterPlugin {
   static const MethodChannel _channel =
@@ -13,7 +14,15 @@ class KommunicateFlutterPlugin {
   }
 
   static Future<dynamic> buildConversation(dynamic conversationObject) async {
+    if (kIsWeb) {
+    return await _channel.invokeMethod('buildConversation', jsonEncode(conversationObject));
+    } else {
     return await _channel.invokeMethod('buildConversation', Platform.isAndroid ? conversationObject : jsonEncode(conversationObject));
+    }
+  }
+
+  static Future<dynamic> isChatWidgetVisible(bool ishidden) async {
+    return await _channel.invokeListMethod('isChatWidgetVisible', ishidden);
   }
 
   static Future<dynamic> logout() async {

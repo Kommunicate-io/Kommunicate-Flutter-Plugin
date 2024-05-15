@@ -1,6 +1,6 @@
 name: kommunicate_flutter
-description: Flutter plugin for Kommunicate Chatbot & live chat. Kommunicate provides open source chatbot & live chat SDK in android. The Kommunicate SDK is flexible, lightweight and easily integrable.
-version: 1.9.0
+description: Flexible, lightweight, and easily integrable Flutter SDK for Kommunicate AI chatbot & Live Chat.
+version: 1.9.1
 homepage: https://kommunicate.io
 
 environment:
@@ -10,6 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.2
 
 dev_dependencies:
   flutter_test:
@@ -31,6 +34,9 @@ flutter:
         pluginClass: KommunicateFlutterPlugin
       ios:
         pluginClass: KommunicateFlutterPlugin
+      web:
+        pluginClass: KommunicateFlutterPluginWeb
+        fileName: web/kommunicate_flutter_web.dart
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
