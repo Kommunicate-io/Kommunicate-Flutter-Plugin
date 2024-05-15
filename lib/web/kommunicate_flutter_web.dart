@@ -74,7 +74,7 @@ class KommunicateFlutterPluginWeb {
     }
     js.context['loginCallBack'] = loginCallBackFunction;
 
-    if (!appId.isEmpty && !userId.isEmpty) {
+    if (appId.isNotEmpty && userId.isNotEmpty) {
       String jsCode = '''
               try {
                   (function(d, m) {
@@ -143,7 +143,7 @@ class KommunicateFlutterPluginWeb {
     }
     js.context['loginAsVisitorCallback'] = loginAsVisitorCallBackFunction;
 
-    if (!appId.isEmpty) {
+    if (appId.isNotEmpty) {
       String jsCode = '''
               try {
                   (function(d, m) {
