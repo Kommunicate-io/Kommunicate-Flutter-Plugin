@@ -322,16 +322,6 @@ public class KmMethodHandler implements MethodCallHandler {
             }
         } else if (call.method.equals("buildConversation")) {
             try {
-//                JSONObject conversationObject = new JSONObject(call.arguments.toString());
-//                KmConversationBuilder conversationBuilder = (KmConversationBuilder) GsonUtils.getObjectFromJson(conversationObject.toString(), KmConversationBuilder.class);
-//                conversationBuilder.setContext(context);
-//
-//                if (!conversationObject.has("isSingleConversation")) {
-//                    conversationBuilder.setSingleConversation(true);
-//                }
-//                if (!conversationObject.has("skipConversationList")) {
-//                    conversationBuilder.setSkipConversationList(true);
-//                }
                 JSONObject conversationObject = new JSONObject(call.arguments.toString());
                 HashMap<String, String> messageMetadata = null;
                 if (conversationObject.has("messageMetadata")) {
@@ -340,6 +330,15 @@ public class KmMethodHandler implements MethodCallHandler {
                 }
                 KmConversationBuilder conversationBuilder = (KmConversationBuilder) GsonUtils.getObjectFromJson(conversationObject.toString(), KmConversationBuilder.class);
                 conversationBuilder.setContext(context);
+
+                if (!conversationObject.has("isSingleConversation")) {
+                    conversationBuilder.setSingleConversation(true);
+                }
+
+                if (!conversationObject.has("skipConversationList")) {
+                    conversationBuilder.setSkipConversationList(true);
+                }
+
                 if (messageMetadata != null && !messageMetadata.isEmpty()) {
                     conversationBuilder.setMessageMetadata(messageMetadata);
                 }
