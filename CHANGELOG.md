@@ -1,3 +1,6 @@
+## 1.9.2
+- Fixed hidding submit button on conversation assignment.
+
 ## 1.9.1
 - Added Support for EU region.
 - Added Web Support.
