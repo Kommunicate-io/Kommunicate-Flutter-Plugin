@@ -13,7 +13,7 @@ Refer to the official docs here: https://docs.kommunicate.io/docs/flutter-instal
 ```
 dependencies:
   //other dependencies
-  kommunicate_flutter: ^1.9.2
+  kommunicate_flutter: ^1.9.3
 ```
 
 2. Install the package as below:
