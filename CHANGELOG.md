@@ -1,3 +1,6 @@
+## 1.9.5
+- Bug fixes
+
 ## 1.9.4
 - Enhanced tap gesture to open shared attachments on Android.
 
