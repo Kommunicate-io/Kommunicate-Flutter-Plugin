@@ -75,7 +75,7 @@ public class KmMethodHandler implements MethodCallHandler {
             try {
                 String serverConfigText = (String) call.arguments();
                 if (!TextUtils.isEmpty(serverConfigText)) {
-                    if (serverConfigText == "euConfiguration") {
+                    if (serverConfigText.equals("euConfiguration")) {
                         Kommunicate.setServerConfiguration(context, KMServerConfiguration.EUCONFIGURATION);
                     } else {
                         Kommunicate.setServerConfiguration(context, KMServerConfiguration.DEFAULTCONFIGURATION);
