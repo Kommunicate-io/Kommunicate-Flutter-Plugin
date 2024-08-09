@@ -1,3 +1,9 @@
+## 1.9.4
+- Enhanced tap gesture to open shared attachments on Android.
+
+## 1.9.3 
+- Fixed assignment message visibility issue on Android.
+
 ## 1.9.2
 - Fixed hidding submit button on conversation assignment.
 

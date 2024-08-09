@@ -1,6 +1,6 @@
 name: kommunicate_flutter
 description: Flexible, lightweight, and easily integrable Flutter SDK for Kommunicate AI chatbot & Live Chat.
-version: 1.9.3
+version: 1.9.4
 homepage: https://kommunicate.io
 
 environment:
