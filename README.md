@@ -123,6 +123,9 @@ Below are all the parameters you can use to customize the conversation according
 | agentIds             | List<String> | Optional, Pass the list of agents you want to add in this conversation. The agent ID is the email ID with which your agent is registered on Kommunicate. You may use this to add agents to the conversation while creating the conversation. Note that, conversation assignment will be done on the basis of the routing rules set in the [Conversation Rules section](https://dashboard.kommunicate.io/settings/conversation-rules). Adding agent ID here will only add the agents to the conversation and will not alter the routing rules. |
 | botIds               | List<String> | Optional, Pass the list of bots you want to add in this conversation. Go to [bots](https://dashboard.kommunicate.io/bot) -> Manage Bots -> Copy botID . Ignore if you haven't integrated any bots. You may use this to add any number of bots to the conversation while creating the conversation. Note that this has no effect on the conversation assignee, as the [Conversation Rules](https://dashboard.kommunicate.io/settings/conversation-rules) set forth in the Dashboard will prevail.                                              |
 | createOnly           |   boolean    | Optional. Pass true if you need to create the conversation and not launch it. In this case you will receive the clientChannelKey of the created conversation in the success callback function.                                                                                                                                                                                                                                                                                                                                                |
+| defaultAssignee      |    String    | You need to pass the agentId/botId. If nothing is passed the default agent will automatically get selected. **NOTE:** You need to pass "skipRouting": true with defaultAssignee parameter if you have assigned a default assignee from the [conversation rules](https://dashboard.kommunicate.io/settings/conversation-rules) section                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| skipRouting      |    boolean    | If you pass this value true then it will skip routing rules set from [conversation rules](https://dashboard.kommunicate.io/settings/conversation-rules) section.                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+
 
 ## Send data to bot platform
 
@@ -174,15 +177,15 @@ You can call the `logout` method to logout the user from kommunicate. Use the me
 ```
 
 Here is the sample app which implements this SDK: https://github.com/Kommunicate-io/Kommunicate-Flutter-Plugin/tree/master/example
-  
-  
+
+
 ## Dialogflow chatbot integration in your Flutter app
 
-Dialogflow is a Google-owned NLP platform to facilitate human-computer interactions such as chatbots, voice bots, etc. 
+Dialogflow is a Google-owned NLP platform to facilitate human-computer interactions such as chatbots, voice bots, etc.
 
-Kommunicate's Dialogflow integration provides a more versatile, customizable and better chatting experience. Kommunicate Flutter Live Chat SDK supports all of Dialogflow's features such as Google Assistant, Rich Messaging, etc. On top of that, it is equipped with advanced features such as bot-human handoff, conversation managing dashboard, reporting, and others. 
+Kommunicate's Dialogflow integration provides a more versatile, customizable and better chatting experience. Kommunicate Flutter Live Chat SDK supports all of Dialogflow's features such as Google Assistant, Rich Messaging, etc. On top of that, it is equipped with advanced features such as bot-human handoff, conversation managing dashboard, reporting, and others.
 
-You can connect your Dialogflow chatbot with Kommunicate in the following 3 simple steps. [Here](https://www.kommunicate.io/blog/integrate-dialogflow-flutter-app/) is a step by step blog to add Kommunicate SDK in your Flutter app. 
+You can connect your Dialogflow chatbot with Kommunicate in the following 3 simple steps. [Here](https://www.kommunicate.io/blog/integrate-dialogflow-flutter-app/) is a step by step blog to add Kommunicate SDK in your Flutter app.
 
 ### Step 1: Get your API credentials from Dialogflow
 - Login to Dialogflow console and select your agent from the dropdown in the left panel.
@@ -200,8 +203,8 @@ Create a free account on [Kommunicate](https://dashboard.kommunicate.io/signup) 
 - Enable/Disable chatbot to human handoff. If enabled, it will automatically assign conversations to humans in case the chatbot is not able to answer.
 
 ### Step 4: Install the Kommunicate Flutter SDK to your app
-You can add the Kommunicate SDK in your Flutter app easily. More information on how to integrate with your Flutter app [here](https://docs.kommunicate.io/docs/flutter-installation). 
+You can add the Kommunicate SDK in your Flutter app easily. More information on how to integrate with your Flutter app [here](https://docs.kommunicate.io/docs/flutter-installation).
 
-> Note: Here's a [sample chatbot](https://docs.kommunicate.io/docs/bot-samples) for you to get started with Dialogflow. 
+> Note: Here's a [sample chatbot](https://docs.kommunicate.io/docs/bot-samples) for you to get started with Dialogflow.
 
- 
+
