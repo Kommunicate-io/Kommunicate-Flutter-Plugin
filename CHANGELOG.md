@@ -1,3 +1,6 @@
+## 1.9.7
+- Fixed minor bugs. (Android)
+
 ## 1.9.6
 - Fixed minor bugs.
 - Added customization option to hide the chat bar for bot-handled conversations (Android & iOS).
