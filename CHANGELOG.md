@@ -1,3 +1,6 @@
+## 1.9.8
+- Fixed response with date and time format in postback message. (iOS)
+
 ## 1.9.7
 - Fixed minor bugs. (Android)
 
