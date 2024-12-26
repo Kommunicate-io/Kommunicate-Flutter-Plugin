@@ -1,7 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="io.kommunicate.kommunicate_flutter_plugin_example">
-
+    xmlns:tools="http://schemas.android.com/tools">
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
          In most cases you can leave this as-is, but you if you want to provide
@@ -39,7 +37,8 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:label="kommunicate_flutter_plugin_example"
-        tools:replace="android:label">
+        android:allowBackup="false"
+        tools:replace="android:label, android:allowBackup">
         <meta-data
         android:name="flutterEmbedding"
         android:value="2" />
