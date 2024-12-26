@@ -1,3 +1,7 @@
+## 1.9.9
+ - Disable SSL Pinning in Android and IOS by default.
+ - Improved the CSAT 3 Star and 5 Star Ratings. (Android) 
+
 ## 1.9.8
 - Fixed response with date and time format in postback message. (iOS)
 
