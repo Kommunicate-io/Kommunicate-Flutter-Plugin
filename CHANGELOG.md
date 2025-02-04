@@ -1,3 +1,7 @@
+## 2.0.0
+ - Added waiting queue in iOS
+ - Fixed bugs in Android
+
 ## 1.9.9
  - Disable SSL Pinning in Android and IOS by default.
  - Improved the CSAT 3 Star and 5 Star Ratings. (Android) 
