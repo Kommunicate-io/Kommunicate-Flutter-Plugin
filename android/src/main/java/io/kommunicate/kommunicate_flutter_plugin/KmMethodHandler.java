@@ -201,6 +201,9 @@ public class KmMethodHandler implements MethodCallHandler {
                 result.error(ERROR, e.toString(), null);
             }
         } else if (call.method.equals("openConversations")) {
+            if (!Kommunicate.isLoggedIn(context)) { 
+                result.error(ERROR, "User is not logged in. Please log in to continue.", null); 
+            }
             Kommunicate.openConversation(context, new KmCallback() {
                 @Override
                 public void onSuccess(Object message) {
@@ -260,6 +263,9 @@ public class KmMethodHandler implements MethodCallHandler {
             }
         } else if (call.method.equals("openParticularConversation")) {
             try {
+                if (!Kommunicate.isLoggedIn(context)) { 
+                    result.error(ERROR, "User is not logged in. Please log in to continue.", null); 
+                }
                 final String clientConversationId = (String) call.arguments;
                 if (TextUtils.isEmpty(clientConversationId)) {
                     result.error(ERROR, "Invalid or empty clientConversationId", null);
@@ -331,6 +337,11 @@ public class KmMethodHandler implements MethodCallHandler {
                 KmConversationBuilder conversationBuilder = (KmConversationBuilder) GsonUtils.getObjectFromJson(conversationObject.toString(), KmConversationBuilder.class);
                 conversationBuilder.setContext(context);
 
+                if (conversationObject.has("appId")) {
+                    Kommunicate.init(context, conversationObject.get("appId").toString());
+                } else {
+                    Kommunicate.isLoggedIn(context);
+                }
                 if (!conversationObject.has("isSingleConversation")) {
                     conversationBuilder.setSingleConversation(true);
                 }
