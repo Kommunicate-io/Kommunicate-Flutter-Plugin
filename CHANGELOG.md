@@ -1,3 +1,6 @@
+## 2.0.1
+- Fixed Build Conversation issue. (Android)
+
 ## 2.0.0
  - Added waiting queue in iOS
  - Fixed bugs in Android
