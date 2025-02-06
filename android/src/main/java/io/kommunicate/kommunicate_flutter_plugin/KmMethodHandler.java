@@ -186,7 +186,7 @@ public class KmMethodHandler implements MethodCallHandler {
                     return;
                 }
 
-                Kommunicate.loginAsVisitor(context, new KMLoginHandler() {
+                Kommunicate.loginAsVisitor(context, User.Platform.FLUTTER, new KMLoginHandler() {
                     @Override
                     public void onSuccess(RegistrationResponse registrationResponse, Context context) {
                         result.success(GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class));
