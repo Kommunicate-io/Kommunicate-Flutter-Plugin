@@ -1,3 +1,6 @@
+## 2.0.2
+- [iOS] Updated Kingfisher from 7.6.2 to 7.10.0 to align with Privacy Manifest requirements.
+
 ## 2.0.1
 - Fixed Build Conversation issue. (Android)
 
