@@ -7,18 +7,12 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodChannel;
-// import io.flutter.plugin.common.PluginRegistry.Registrar;
 
         public class KommunicateFlutterPlugin implements FlutterPlugin, ActivityAware  {
 
             private MethodChannel methodChannel;
             private BinaryMessenger binaryMessenger;
             private KmEventListener kmEventListener;
-            // public static void registerWith(Registrar registrar) {
-            //     final MethodChannel channel = new MethodChannel(registrar.messenger(), "kommunicate_flutter");
-            //     channel.setMethodCallHandler(new KmMethodHandler(registrar.activity()));
-            //     new KmEventListener().register(channel);
-            // }
 
             public void setupChannel(Activity context) {
                 methodChannel = new MethodChannel(binaryMessenger, "kommunicate_flutter");
