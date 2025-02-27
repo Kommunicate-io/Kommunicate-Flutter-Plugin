@@ -12,7 +12,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+// import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.kommunicate.KMServerConfiguration;
 import io.kommunicate.KmConversationBuilder;
 import io.kommunicate.KmSettings;
@@ -201,8 +201,8 @@ public class KmMethodHandler implements MethodCallHandler {
                 result.error(ERROR, e.toString(), null);
             }
         } else if (call.method.equals("openConversations")) {
-            if (!Kommunicate.isLoggedIn(context)) { 
-                result.error(ERROR, "User is not logged in. Please log in to continue.", null); 
+            if (!Kommunicate.isLoggedIn(context)) {
+                result.error(ERROR, "User is not logged in. Please log in to continue.", null);
             }
             Kommunicate.openConversation(context, new KmCallback() {
                 @Override
@@ -263,8 +263,8 @@ public class KmMethodHandler implements MethodCallHandler {
             }
         } else if (call.method.equals("openParticularConversation")) {
             try {
-                if (!Kommunicate.isLoggedIn(context)) { 
-                    result.error(ERROR, "User is not logged in. Please log in to continue.", null); 
+                if (!Kommunicate.isLoggedIn(context)) {
+                    result.error(ERROR, "User is not logged in. Please log in to continue.", null);
                 }
                 final String clientConversationId = (String) call.arguments;
                 if (TextUtils.isEmpty(clientConversationId)) {
