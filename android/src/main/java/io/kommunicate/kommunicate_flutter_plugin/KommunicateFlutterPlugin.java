@@ -7,55 +7,68 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 
-        public class KommunicateFlutterPlugin implements FlutterPlugin, ActivityAware  {
+public class KommunicateFlutterPlugin implements FlutterPlugin, ActivityAware {
 
-            private MethodChannel methodChannel;
-            private BinaryMessenger binaryMessenger;
-            private KmEventListener kmEventListener;
-            public static void registerWith(Registrar registrar) {
-                final MethodChannel channel = new MethodChannel(registrar.messenger(), "kommunicate_flutter");
-                channel.setMethodCallHandler(new KmMethodHandler(registrar.activity()));
-                new KmEventListener().register(channel);
-            }
+    private MethodChannel methodChannel;
+    private BinaryMessenger binaryMessenger;
+    private KmEventListener kmEventListener;
+    private Activity activity;
 
-            public void setupChannel(Activity context) {
-                methodChannel = new MethodChannel(binaryMessenger, "kommunicate_flutter");
-                methodChannel.setMethodCallHandler(new KmMethodHandler(context));
-                kmEventListener = new KmEventListener();
-                kmEventListener.register(methodChannel);                
-            }
+    // Remove the old registerWith method
+    // public static void registerWith(Registrar registrar) {
+    //     final MethodChannel channel = new MethodChannel(registrar.messenger(), "kommunicate_flutter");
+    //     channel.setMethodCallHandler(new KmMethodHandler(registrar.activity()));
+    //     new KmEventListener().register(channel);
+    // }
 
-            private void destroyChannel() {
-                methodChannel.setMethodCallHandler(null);
-                methodChannel = null;
-                kmEventListener.unregister(); 
-            }
+    public void setupChannel(Activity context) {
+        methodChannel = new MethodChannel(binaryMessenger, "kommunicate_flutter");
+        methodChannel.setMethodCallHandler(new KmMethodHandler(context));
+        kmEventListener = new KmEventListener();
+        kmEventListener.register(methodChannel);
+    }
 
-            @Override
-            public void onAttachedToEngine(FlutterPlugin.FlutterPluginBinding binding) {
-                binaryMessenger = binding.getBinaryMessenger();
-            }
-            @Override
-            public void onDetachedFromEngine(FlutterPlugin.FlutterPluginBinding binding) {
-                destroyChannel();
-            }
+    private void destroyChannel() {
+        if (methodChannel != null) {
+            methodChannel.setMethodCallHandler(null);
+            methodChannel = null;
+        }
+        if (kmEventListener != null) {
+            kmEventListener.unregister();
+            kmEventListener = null;
+        }
+    }
 
-            @Override
-            public void onAttachedToActivity(ActivityPluginBinding activityPluginBinding) {
-                setupChannel(activityPluginBinding.getActivity());
-            }
+    @Override
+    public void onAttachedToEngine(FlutterPlugin.FlutterPluginBinding binding) {
+        binaryMessenger = binding.getBinaryMessenger();
+    }
 
-            @Override
-            public void onDetachedFromActivityForConfigChanges() {
-            }
+    @Override
+    public void onDetachedFromEngine(FlutterPlugin.FlutterPluginBinding binding) {
+        destroyChannel();
+    }
 
-            @Override
-            public void onReattachedToActivityForConfigChanges(ActivityPluginBinding activityPluginBinding) {
-            }
+    @Override
+    public void onAttachedToActivity(ActivityPluginBinding activityPluginBinding) {
+        activity = activityPluginBinding.getActivity();
+        setupChannel(activity);
+    }
 
-            @Override
-            public void onDetachedFromActivity() {
-            }
+    @Override
+    public void onDetachedFromActivityForConfigChanges() {
+        onDetachedFromActivity();
+    }
+
+    @Override
+    public void onReattachedToActivityForConfigChanges(ActivityPluginBinding activityPluginBinding) {
+        onAttachedToActivity(activityPluginBinding);
+    }
+
+    @Override
+    public void onDetachedFromActivity() {
+        destroyChannel();
+        activity = null;
+    }
 }
