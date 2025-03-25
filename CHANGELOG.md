@@ -1,3 +1,14 @@
+## 2.0.3
+-  Typing indicator For bot message delay.
+### Android
+- Migration to Coroutines and removed Depricated Async Tasks for Android.
+- Remove Raw query querries usage for Android.
+- Added edge to edge support for Android 15 and Above.
+### iOS
+- Internal Code Refactor.
+- Updated TableView Update function.
+- Updated depricated Code and resolved Warnings.
+
 ## 2.0.2
 - [iOS] Updated Kingfisher from 7.6.2 to 7.10.0 to align with Privacy Manifest requirements.
 
