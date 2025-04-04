@@ -1,3 +1,5 @@
+## 2.0.4
+- Fixed Recording button not working properly in iOS.
 ## 2.0.3
 -  Typing indicator For bot message delay.
 ### Android
