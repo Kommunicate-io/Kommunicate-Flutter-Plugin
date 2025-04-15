@@ -1,3 +1,10 @@
+## 2.0.5
+### iOS
+- Added Business Hours feature.
+- Disabled conversation restart when the restart button is hidden.
+- Enabled form data persistence in local cache.
+- Fixed character limit bug in Dialogflow bot.
+- Resolved bug in Text Area component.
 ## 2.0.4
 - Fixed Recording button not working properly in iOS.
 ## 2.0.3

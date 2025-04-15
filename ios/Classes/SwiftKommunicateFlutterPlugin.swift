@@ -260,7 +260,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             }
             ALUserService().fetchAndupdateUserDetails([userId]) {
                 userDetails, error in
-                guard let userDetails = userDetails, let userDetail = userDetails[0] as? ALUserDetail else {
+                guard let userDetails = userDetails, let userDetail = userDetails[0] as? KMCoreUserDetail else {
                     self.sendErrorResultWithCallback(result: result, message: error?.localizedDescription ?? "Error while parsing the user details.")
                     return
                 }
@@ -656,7 +656,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     
     func updateUser (displayName: String?, imageLink : String?, status: String?, metadata: [String: Any]?,phoneNumber: String?,email : String?, result: FlutterResult!) {
         
-        let theUrlString = "\(ALUserDefaultsHandler.getBASEURL() as String)/rest/ws/user/update"
+        let theUrlString = "\(KMCoreUserDefaultsHandler.getBASEURL() as String)/rest/ws/user/update"
         
         let dictionary = NSMutableDictionary()
         if (displayName != nil) {
@@ -701,7 +701,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 return
             }
             //Update the local contact
-            let alContact = ALContactDBService().loadContact(byKey: "userId", value: ALUserDefaultsHandler.getUserId())
+            let alContact = ALContactDBService().loadContact(byKey: "userId", value: KMCoreUserDefaultsHandler.getUserId())
             if alContact == nil {
                 self.sendErrorResultWithCallback(result: result, message: "User not found")
                 return
@@ -815,7 +815,7 @@ extension String {
          }
 }
 
-extension ALUserDetail {
+extension KMCoreUserDetail {
     func toDictionary() -> [String: Any] {
          var dict: [String: Any] = [:]
          dict["userId"] = userId
