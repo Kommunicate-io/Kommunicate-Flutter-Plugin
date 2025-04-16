@@ -5,6 +5,12 @@
 - Enabled form data persistence in local cache.
 - Fixed character limit bug in Dialogflow bot.
 - Resolved bug in Text Area component.
+### Android
+- Enabled form data persistence in local cache.
+- Added download file listner
+- ReDirected URL from Help center to Browser.
+- Fixed dialogue flow crash
+- Disabled conversation restart when the restart button is hidden.
 ## 2.0.4
 - Fixed Recording button not working properly in iOS.
 ## 2.0.3
