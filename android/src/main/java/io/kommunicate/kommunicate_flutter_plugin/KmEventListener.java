@@ -1,13 +1,13 @@
 package io.kommunicate.kommunicate_flutter_plugin;
 
-import com.applozic.mobicomkit.broadcast.AlEventManager;
 import io.kommunicate.callbacks.KmPluginEventListener;
-import com.applozic.mobicomkit.api.conversation.Message;
 import io.flutter.plugin.common.MethodChannel;
-import com.applozic.mobicommons.json.GsonUtils;
+import io.kommunicate.commons.json.GsonUtils;
+import io.kommunicate.devkit.api.conversation.Message;
+import io.kommunicate.devkit.broadcast.EventManager;
+
 import org.json.JSONObject;
 import org.json.JSONException;
-import com.applozic.mobicomkit.listners.KmConversationInfoListener;
 
 
 public class KmEventListener implements KmPluginEventListener, KmConversationInfoListener {
@@ -15,12 +15,12 @@ public class KmEventListener implements KmPluginEventListener, KmConversationInf
 
    public void register(MethodChannel methodChannel) {
     this.methodChannel = methodChannel;
-        AlEventManager.getInstance().registerPluginEventListener(this);
-        AlEventManager.getInstance().registerConversationInfoListener(this);
+        EventManager.getInstance().registerPluginEventListener(this);
+       EventManager.getInstance().registerConversationInfoListener(this);
     }
 
     public void unregister() {
-        AlEventManager.getInstance().unregisterPluginEventListener();
+        EventManager.getInstance().unregisterPluginEventListener();
     }
 
     @Override

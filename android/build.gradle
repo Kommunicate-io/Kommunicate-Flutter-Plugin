@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.3'
+        classpath 'com.android.tools.build:gradle:7.4.2' // Update this
     }
 }
 
@@ -39,5 +39,5 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    api 'io.kommunicate.sdk:kommunicateui:2.13.3'
+    api 'io.kommunicate.sdk:kommunicateui:2.14.0'
 }
