@@ -5,6 +5,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.kommunicate.commons.json.GsonUtils;
 import io.kommunicate.devkit.api.conversation.Message;
 import io.kommunicate.devkit.broadcast.EventManager;
+import io.kommunicate.devkit.listners.KmConversationInfoListener;
 
 import org.json.JSONObject;
 import org.json.JSONException;

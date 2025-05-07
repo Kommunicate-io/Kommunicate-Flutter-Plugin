@@ -1,10 +1,10 @@
 package io.pushnotification;
 
-import com.applozic.mobicommons.commons.core.utils.Utils;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import io.kommunicate.Kommunicate;
+import io.kommunicate.commons.commons.core.utils.Utils;
 
 public class KmFirebaseMessagingService extends FirebaseMessagingService {
 
