@@ -1,3 +1,6 @@
+## 2.0.6
+### Android
+- Update android dependency with applozic mitration code.
 ## 2.0.5
 ### iOS
 - Added Business Hours feature.

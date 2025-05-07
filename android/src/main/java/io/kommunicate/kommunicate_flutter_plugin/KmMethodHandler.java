@@ -21,29 +21,25 @@ import io.kommunicate.callbacks.KMLoginHandler;
 import io.kommunicate.callbacks.KMLogoutHandler;
 import io.kommunicate.callbacks.KmCallback;
 import io.kommunicate.callbacks.KmGetConversationInfoCallback;
+import io.kommunicate.commons.json.GsonUtils;
+import io.kommunicate.commons.people.channel.Channel;
+import io.kommunicate.commons.people.contact.Contact;
+import io.kommunicate.devkit.SettingsSharedPreference;
+import io.kommunicate.devkit.api.account.register.RegistrationResponse;
+import io.kommunicate.devkit.api.account.user.User;
+import io.kommunicate.devkit.api.account.user.UserUpdateTask;
+import io.kommunicate.devkit.api.conversation.MessageBuilder;
+import io.kommunicate.devkit.api.conversation.database.MessageDatabaseService;
+import io.kommunicate.devkit.channel.service.ChannelService;
+import io.kommunicate.devkit.feed.ChannelFeedApiResponse;
+import io.kommunicate.devkit.listners.ResultCallback;
+import io.kommunicate.ui.conversation.fragment.MobiComConversationFragment;
 import io.kommunicate.users.KMUser;
 import io.kommunicate.KmConversationHelper;
 import io.kommunicate.KmException;
 
-import com.applozic.mobicomkit.api.account.user.User;
-import com.applozic.mobicomkit.ApplozicClient;
-import com.applozic.mobicomkit.api.account.user.AlUserUpdateTask;
-import com.applozic.mobicomkit.api.conversation.database.MessageDatabaseService;
-import com.applozic.mobicomkit.channel.service.ChannelService;
-import com.applozic.mobicomkit.feed.ChannelFeedApiResponse;
-import com.applozic.mobicomkit.listners.AlCallback;
-import com.applozic.mobicommons.json.GsonUtils;
-import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
-import com.applozic.mobicommons.people.channel.Channel;
-import com.applozic.mobicommons.people.contact.Contact;
-import com.applozic.mobicomkit.uiwidgets.conversation.fragment.MobiComConversationFragment;
-import com.applozic.mobicomkit.api.conversation.AlTotalUnreadCountTask;
-
 import io.kommunicate.preference.KmConversationInfoSetting;
 import io.kommunicate.utils.KMAgentStatusHelper;
-
-import com.applozic.mobicomkit.broadcast.AlEventManager;
-import com.applozic.mobicomkit.api.conversation.MessageBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -393,7 +389,7 @@ public class KmMethodHandler implements MethodCallHandler {
                 if (KMUser.isLoggedIn(context)) {
                     JSONObject userObject = new JSONObject(call.arguments.toString());
                     KMUser kmUser = (KMUser) GsonUtils.getObjectFromJson(userObject.toString(), KMUser.class);
-                    new AlUserUpdateTask(context, kmUser, new AlCallback() {
+                    new UserUpdateTask(context, kmUser, new ResultCallback() {
                         @Override
                         public void onSuccess(Object message) {
                             result.success(SUCCESS);
@@ -477,7 +473,7 @@ public class KmMethodHandler implements MethodCallHandler {
             }
         } else if (call.method.equals("hideChatListOnNotification")) {
             try {
-                ApplozicClient.getInstance(context).hideChatListOnNotification();
+                SettingsSharedPreference.getInstance(context).hideChatListOnNotification();
                 result.success(SUCCESS);
             } catch (Exception e) {
                 result.error(ERROR, e.toString(), null);
