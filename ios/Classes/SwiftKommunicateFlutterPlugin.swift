@@ -36,7 +36,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     }
     
     func addListener() {
-        Kommunicate.subscribeCustomEvents(events: [KMCustomEvent.messageReceive, KMCustomEvent.messageSend,KMCustomEvent.faqClick, KMCustomEvent.newConversation, KMCustomEvent.submitRatingClick, KMCustomEvent.restartConversationClick, KMCustomEvent.richMessageClick, KMCustomEvent.conversationBackPress, KMCustomEvent.conversationListBackPress, KMCustomEvent.conversationInfoClick ], callback: self)
+        Kommunicate.subscribeCustomEvents(callback: self)
     }
     func removeListener() {
         Kommunicate.unsubcribeCustomEvents()
