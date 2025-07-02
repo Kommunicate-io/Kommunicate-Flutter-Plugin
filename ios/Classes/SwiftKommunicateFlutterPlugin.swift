@@ -4,7 +4,7 @@ import Kommunicate
 import KommunicateCore_iOS_SDK
 import KommunicateChatUI_iOS_SDK
 
-public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFormViewControllerDelegate, ALKCustomEventCallback {
+public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFormViewControllerDelegate, KMChatCustomEventCallback {
     
     var methodChannel: FlutterMethodChannel;
     var appId : String? = nil;
@@ -36,7 +36,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
     }
     
     func addListener() {
-        Kommunicate.subscribeCustomEvents(events: [KMCustomEvent.messageReceive, KMCustomEvent.messageSend,KMCustomEvent.faqClick, KMCustomEvent.newConversation, KMCustomEvent.submitRatingClick, KMCustomEvent.restartConversationClick, KMCustomEvent.richMessageClick, KMCustomEvent.conversationBackPress, KMCustomEvent.conversationListBackPress, KMCustomEvent.conversationInfoClick ], callback: self)
+        Kommunicate.subscribeCustomEvents(callback: self)
     }
     func removeListener() {
         Kommunicate.unsubcribeCustomEvents()
@@ -121,10 +121,10 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 self.sendErrorResultWithCallback(result: result, message: "Invalid or empty conversationId")
                 return
             }
-            let alChannelService = ALChannelService()
+            let kmCoreChannelService = KMCoreChannelService()
             var conversationID = String()
             if Int(conversationId) != nil {
-                alChannelService.getChannelInformation(NSNumber(value: Int(conversationId)!), orClientChannelKey: nil) { (channel) in
+                kmCoreChannelService.getChannelInformation(NSNumber(value: Int(conversationId)!), orClientChannelKey: nil) { (channel) in
                     if channel != nil && channel?.clientChannelKey != nil {
                         conversationID = channel!.clientChannelKey
                         self.openParticularConversation(conversationID, true, result)
@@ -181,13 +181,13 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 self.sendErrorResultWithCallback(result: result, message: "Empty Object no data")
                 return
             }
-            let alChannelService = ALChannelService()
+            let kmCoreChannelService = KMCoreChannelService()
             if let channelID = jsonObj["channelID"] {
                 guard let channelID = channelID as? Int else{
                     self.sendErrorResultWithCallback(result: result, message: "Channel ID is not Integer")
                     return
                 }
-                alChannelService.getChannelInformation(NSNumber(integerLiteral: channelID), orClientChannelKey: nil) { channel in
+                kmCoreChannelService.getChannelInformation(NSNumber(integerLiteral: channelID), orClientChannelKey: nil) { channel in
                     guard let channel = channel else {
                         self.sendErrorResultWithCallback(result: result, message: "Conversation Not Found \(channel)")
                         return
@@ -199,7 +199,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                     self.sendErrorResultWithCallback(result: result, message: "Client Channel Key is not String")
                     return
                 }
-                alChannelService.getChannelInformation(nil, orClientChannelKey: clientChannelKey) { channel in
+                kmCoreChannelService.getChannelInformation(nil, orClientChannelKey: clientChannelKey) { channel in
                     guard let channel = channel , let conversationID = channel.key else {
                         self.sendErrorResultWithCallback(result: result, message: "Conversation Not Found \(channel)")
                         return
@@ -230,8 +230,8 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                                 guard let conversationId = jsonObj[SwiftKommunicateFlutterPlugin.CONVERSATION_ID] as? Int else {
                                     return
                                 }
-                                let alChannelService = ALChannelService()
-                                    alChannelService.getChannelInformation(NSNumber(value: conversationId), orClientChannelKey: nil) { (channel) in
+                                let kmCoreChannelService = KMCoreChannelService()
+                                    kmCoreChannelService.getChannelInformation(NSNumber(value: conversationId), orClientChannelKey: nil) { (channel) in
                                         if channel != nil && channel?.clientChannelKey != nil {
                                             clientConversationId = channel!.clientChannelKey
                                         }
@@ -726,35 +726,35 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         })
     }
     
-    public func messageSent(message: ALMessage) {
+    public func messageSent(message: KMCoreMessage) {
         guard let messageDict = message.dictionary() as? NSDictionary else { return }
         methodChannel.invokeMethod("onMessageSent", arguments: ["data":convertDictToString(dict: messageDict)])
     }
     
-    public func messageReceived(message: ALMessage) {
+    public func messageReceived(message: KMCoreMessage) {
         guard let messageDict = message.dictionary() as? NSDictionary else { return }
         methodChannel.invokeMethod("onMessageReceived", arguments: ["data":convertDictToString(dict: messageDict)])
 
     }
     
     public func conversationRestarted(conversationId: String) {
-        methodChannel.invokeMethod("onConversationRestarted", arguments: ["data":conversationId])
+        methodChannel.invokeMethod("onConversationRestarted", arguments: ["data": conversationId])
     }
 
     public func onBackButtonClick(isConversationOpened: Bool) {
-        methodChannel.invokeMethod("onBackButtonClicked", arguments: ["data":isConversationOpened])
+        methodChannel.invokeMethod("onBackButtonClicked", arguments: ["data": isConversationOpened])
     }
 
     public func faqClicked(url: String) {
-        methodChannel.invokeMethod("onFaqClick", arguments: ["data":url])
+        methodChannel.invokeMethod("onFaqClick", arguments: ["data": url])
     }
 
     public func conversationCreated(conversationId: String) {
-        methodChannel.invokeMethod("onStartNewConversation", arguments: ["data":conversationId])
+        methodChannel.invokeMethod("onStartNewConversation", arguments: ["data": conversationId])
     }
 
     public func ratingSubmitted(conversationId: String, rating: Int, comment: String) {
-        let ratingDict: NSDictionary = ["conversationId": conversationId, "rating":rating, "feedback": comment]
+        let ratingDict: NSDictionary = ["conversationId": conversationId, "rating": rating, "feedback": comment]
         methodChannel.invokeMethod("onSubmitRatingClick", arguments: ["data": convertDictToString(dict: ratingDict)])
     }
 
@@ -770,16 +770,48 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         } else {
             print("Could not parse Rich Message action object")
         }
-        let richMessageDict: [String:Any] = ["conversationId": conversationId,"action": actionString, "actionType": type]
+        let richMessageDict: [String: Any] = [
+            "conversationId": conversationId,
+            "action": actionString,
+            "actionType": type
+        ]
         methodChannel.invokeMethod("onRichMessageButtonClick", arguments: ["data": convertDictToString(dict: richMessageDict as NSDictionary)])
     }
-    
+
     public func conversationInfoClicked() {
         methodChannel.invokeMethod("onConversationInfoClicked", arguments: "clicked")
     }
-    
+
     public func conversationResolved(conversationId: String) {
-        
+        methodChannel.invokeMethod("onConversationResolved", arguments: ["data": conversationId])
+    }
+
+    public func currentOpenedConversation(conversationId: String) {
+        methodChannel.invokeMethod("onCurrentConversationOpened", arguments: ["data": conversationId])
+    }
+
+    public func attachmentOptionClicked(attachemntType: String) {
+        methodChannel.invokeMethod("onAttachmentOptionClicked", arguments: ["data": attachemntType])
+    }
+
+    public func voiceButtonClicked(currentState: KommunicateChatUI_iOS_SDK.KMVoiceRecordingState) {
+        methodChannel.invokeMethod("onVoiceButtonClicked", arguments: ["data": currentState.rawValue])
+    }
+
+    public func locationButtonClicked() {
+        methodChannel.invokeMethod("onLocationButtonClicked", arguments: "clicked")
+    }
+
+    public func rateConversationEmotionsClicked(rating: Int) {
+        methodChannel.invokeMethod("onRateEmotionsClicked", arguments: ["data": rating])
+    }
+
+    public func cameraButtonClicked() {
+        methodChannel.invokeMethod("onCameraButtonClicked", arguments: "clicked")
+    }
+
+    public func videoButtonClicked() {
+        methodChannel.invokeMethod("onVideoButtonClicked", arguments: "clicked")
     }
 
     func convertDictToString(dict: NSDictionary) -> String {
