@@ -118,7 +118,7 @@ public class KmMethodHandler implements MethodCallHandler {
                 HashMap<String, String> conversationInfo = null;
                 HashMap<String, String> messageMetadata = null;
                 String applicationId = null;
-                Boolean shouldMaintaineSession = true;
+                boolean shouldMaintainSession = true;
 
                 if (jsonObject.has("kmUser")) {
                     user = (KMUser) GsonUtils.getObjectFromJson(jsonObject.getString("kmUser"), KMUser.class);
@@ -126,7 +126,7 @@ public class KmMethodHandler implements MethodCallHandler {
                 }
 
                 if (jsonObject.has("shouldMaintainSession")) {
-                    shouldMaintaineSession = jsonObject.getBoolean("shouldMaintainSession");
+                    shouldMaintainSession = jsonObject.getBoolean("shouldMaintainSession");
                     dataMap.remove("shouldMaintainSession");
                 }
 
@@ -183,7 +183,7 @@ public class KmMethodHandler implements MethodCallHandler {
                         applicationId,
                         user,
                         conversationBuilder,
-                        shouldMaintaineSession,
+                        shouldMaintainSession,
                         new KmCallback() {
                             @Override
                             public void onSuccess(Object message) {
