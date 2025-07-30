@@ -41,6 +41,10 @@ class KommunicateFlutterPlugin {
     return await _channel.invokeMethod('login', jsonEncode(kmUser));
   }
 
+  static Future<dynamic> launchConversationWithUser(dynamic userObject) async {
+    return await _channel.invokeMethod('launchConversationWithUser', jsonEncode(userObject));
+  }
+
   static Future<dynamic> updateUserLanguage(String language) async {
     return await _channel.invokeMethod('updateUserLanguage', language);
   }

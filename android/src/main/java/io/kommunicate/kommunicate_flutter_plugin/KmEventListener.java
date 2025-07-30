@@ -128,6 +128,11 @@ public class KmEventListener implements KmPluginEventListener, KmConversationInf
     }
 
     @Override
+    public void onCurrentOpenedConversation(Integer conversationId) {
+        methodChannel.invokeMethod("onCurrentConversationOpened", conversationId);
+    }
+
+    @Override
     public void onConversationInfoClicked() {
         methodChannel.invokeMethod("onConversationInfoClicked", "clicked");
     }
