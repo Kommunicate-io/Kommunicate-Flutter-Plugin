@@ -110,6 +110,96 @@ public class KmMethodHandler implements MethodCallHandler {
             } catch (Exception e) {
                 result.error(ERROR, e.toString(), null);
             }
+        } else if (call.method.equals("launchConversationWithUser")) {
+            try {
+                JSONObject jsonObject = new JSONObject(call.arguments.toString());
+                KMUser user = null;
+                HashMap<String, Object> dataMap = GsonUtils.getObjectFromJson(jsonObject.toString(), HashMap.class);
+                HashMap<String, String> conversationInfo = null;
+                HashMap<String, String> messageMetadata = null;
+                String applicationId = null;
+                boolean shouldMaintainSession = true;
+
+                if (jsonObject.has("kmUser")) {
+                    user = (KMUser) GsonUtils.getObjectFromJson(jsonObject.getString("kmUser"), KMUser.class);
+                    dataMap.remove("kmUser");
+                }
+
+                if (jsonObject.has("shouldMaintainSession")) {
+                    shouldMaintainSession = jsonObject.getBoolean("shouldMaintainSession");
+                    dataMap.remove("shouldMaintainSession");
+                }
+
+                if (user != null && user.getApplicationId() != null) {
+                    applicationId = user.getApplicationId();
+                } else if (jsonObject.has("appId")) {
+                    applicationId = jsonObject.getString("appId");
+                } else {
+                    result.error(ERROR, "The object doesn't contain appId.", null);
+                    return;
+                }
+
+                if (jsonObject.has("conversationInfo")) {
+                    conversationInfo = (HashMap<String, String>) GsonUtils.getObjectFromJson(jsonObject.getString("conversationInfo"), HashMap.class);
+                    dataMap.remove("conversationInfo");
+                }
+
+                if (jsonObject.has("messageMetadata")) {
+                    messageMetadata = (HashMap<String, String>) GsonUtils.getObjectFromJson(jsonObject.getString("messageMetadata"), HashMap.class);
+                    dataMap.remove("messageMetadata");
+                }
+
+                // Remove keys that are not part of KmConversationBuilder
+                dataMap.remove("appId");
+                dataMap.remove("launchAndCreateIfEmpty");
+                dataMap.remove("createOnly");
+
+                JSONObject builderJson = new JSONObject(dataMap);
+                KmConversationBuilder conversationBuilder = (KmConversationBuilder) GsonUtils.getObjectFromJson(builderJson.toString(), KmConversationBuilder.class);
+                conversationBuilder.setContext(context);
+
+                if (!jsonObject.has("isSingleConversation")) {
+                    conversationBuilder.setSingleConversation(true);
+                }
+
+                if (!jsonObject.has("skipConversationList")) {
+                    conversationBuilder.setSkipConversationList(true);
+                }
+
+                if (user != null) {
+                    conversationBuilder.setKmUser(user);
+                }
+
+                if (conversationInfo != null) {
+                    conversationBuilder.setConversationInfo(conversationInfo);
+                }
+
+                if (messageMetadata != null) {
+                    conversationBuilder.setMessageMetadata(messageMetadata);
+                }
+
+                Kommunicate.launchConversationWithUser(
+                        context,
+                        applicationId,
+                        user,
+                        conversationBuilder,
+                        shouldMaintainSession,
+                        new KmCallback() {
+                            @Override
+                            public void onSuccess(Object message) {
+                                Integer conversationId = (Integer) message;
+                                result.success(ChannelService.getInstance(context).getChannel(conversationId).getClientGroupId());
+                            }
+
+                            @Override
+                            public void onFailure(Object error) {
+                                result.error(ERROR, error != null ? error.toString() : "Unknown error occurred", null);
+                            }
+                        }
+                );
+            } catch (Exception e) {
+                result.error(ERROR, e.toString(), null);
+            }
         } else if (call.method.equals("updatePrefilledText")) {
             try {
                 String preFilledText = (String) call.arguments();
