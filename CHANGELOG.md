@@ -3,7 +3,6 @@
 - Toast Message Bug Fix.
 - Minor Bug Fixes.
 - 16KB Page Size Support Added. (Updated required libraries)
-
 ## iOS 
 - Added Form Related Customisation
 - Improved Video Playback Flow.
