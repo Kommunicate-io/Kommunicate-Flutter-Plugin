@@ -1,3 +1,14 @@
+## 2.0.7
+## Android 
+- Toast Message Bug Fix.
+- Minor Bug Fixes.
+- 16KB Page Size Support Added. (Updated required libraries)
+## iOS 
+- Added Form Related Customisation
+- Improved Video Playback Flow.
+- Added Caption Support in Video Message
+- Minor Bug Fixes.
+
 ## 2.0.6
 ### Android
 - Update android dependency with applozic mitration code.
