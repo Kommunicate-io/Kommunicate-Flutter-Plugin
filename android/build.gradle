@@ -25,10 +25,11 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    def sdk = rootProject.hasProperty("compileSdkVersion") ? rootProject.compileSdkVersion.toInteger() : 34
+    def sdkProp = rootProject.findProperty('compileSdkVersion')
+    def sdk = (sdkProp instanceof Number) ? (sdkProp as Integer) : Integer.parseInt((sdkProp ?: 34).toString())
     compileSdkVersion sdk
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 16
         targetSdkVersion sdk
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
