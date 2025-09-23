@@ -66,6 +66,13 @@ public class KmMethodHandler implements MethodCallHandler {
     public void onMethodCall(MethodCall call, final Result result) {
         if (call.method.equals("getPlatformVersion")) {
             result.success("Android " + android.os.Build.VERSION.RELEASE);
+        } else if (call.method.equals("init")) {
+            try {
+                final String initAppID = (String) call.arguments();
+                Kommunicate.init(context, initAppID);
+            } catch (Exception e) {
+                result.error(ERROR, e.getMessage(), null);
+            }
         } else if (call.method.equals("setServerConfiguration")) {
             try {
                 String serverConfigText = (String) call.arguments();

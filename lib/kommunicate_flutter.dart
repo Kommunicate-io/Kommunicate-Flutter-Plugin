@@ -13,6 +13,10 @@ class KommunicateFlutterPlugin {
     return version;
   }
 
+  static Future<dynamic> init(String appId) async {
+    return await _channel.invokeMethod('init', appId);
+  }
+
   static Future<dynamic> buildConversation(dynamic conversationObject) async {
     if (kIsWeb) {
     return await _channel.invokeMethod('buildConversation', jsonEncode(conversationObject));
