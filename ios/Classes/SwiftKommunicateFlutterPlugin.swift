@@ -56,6 +56,14 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
             } else {
                 Kommunicate.setServerConfiguration(.defaultConfiguration)
             }
+        } else if(call.method == "init") {
+            guard let appId = call.arguments as? String, !appId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                self.sendErrorResultWithCallback(result: result, message: "Invalid or missing appId")
+                return
+            }
+            Kommunicate.setup(applicationId: appId)
+            self.appId = appId
+            self.sendSuccessResultWithCallback(result: result, message: "Successfully initialized with appId: \(appId)")
         } else if(call.method == "isLoggedIn") {
             result(Kommunicate.isLoggedIn)
         } else if(call.method == "login") {
