@@ -69,9 +69,14 @@ public class KmMethodHandler implements MethodCallHandler {
         } else if (call.method.equals("init")) {
             try {
                 final String initAppID = (String) call.arguments();
+                if (TextUtils.isEmpty(initAppID)) {
+                    result.error(ERROR, "appId is missing", null);
+                    return;
+                }
                 Kommunicate.init(context, initAppID);
+                result.success(null); // complete Future<void>
             } catch (Exception e) {
-                result.error(ERROR, e.getMessage(), null);
+                result.error(ERROR, e.toString(), null);
             }
         } else if (call.method.equals("setServerConfiguration")) {
             try {
