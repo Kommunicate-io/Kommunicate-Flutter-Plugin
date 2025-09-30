@@ -43,6 +43,11 @@ class _MyAppState extends State<MyApp> {
     });
     }
     super.initState();
+    KommunicateFlutterPlugin.init(AppConfig.APP_ID).then((value) {
+      print("Initialization successful : " + value.toString());
+    }).catchError((error) {
+      print("Initialization error occurred : " + error.toString());
+    });
   }
 
   @override

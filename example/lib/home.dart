@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kommunicate_flutter/kommunicate_flutter.dart';
+import 'package:kommunicate_flutter_plugin_example/AppConfig.dart';
 import 'dart:io' show Platform;
 import 'main.dart';
 
@@ -17,6 +18,11 @@ class HomePageState extends State<HomePage> {
   void initState() {
     try {} catch (e) {}
     super.initState();
+    KommunicateFlutterPlugin.init(AppConfig.APP_ID).then((value) {
+      print("Initialization successful : " + value.toString());
+    }).catchError((error) {
+      print("Initialization error occurred : " + error.toString());
+    });
   }
 
   @override

@@ -25,15 +25,15 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 33
-
+    def sdkProp = rootProject.findProperty('compileSdkVersion')
+    def sdk = (sdkProp instanceof Number) ? (sdkProp as Integer) : Integer.parseInt((sdkProp ?: 34).toString())
+    compileSdkVersion sdk
     defaultConfig {
         minSdkVersion 16
+        targetSdkVersion sdk
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    lintOptions {
-        disable 'InvalidPackage'
-    }
+    lintOptions { disable 'InvalidPackage' }
     namespace "io.kommunicate.kommunicate_flutter_plugin"
 }
 
