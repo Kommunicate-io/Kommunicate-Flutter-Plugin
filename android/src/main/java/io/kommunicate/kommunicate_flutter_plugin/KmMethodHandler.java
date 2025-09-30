@@ -74,7 +74,7 @@ public class KmMethodHandler implements MethodCallHandler {
                     return;
                 }
                 Kommunicate.init(context, initAppID);
-                result.success(null); // complete Future<void>
+                result.success(null);
             } catch (Exception e) {
                 result.error(ERROR, e.toString(), null);
             }

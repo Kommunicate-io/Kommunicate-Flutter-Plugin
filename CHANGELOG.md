@@ -1,3 +1,6 @@
+## 2.0.8
+- Added initialization code for Android and iOS.
+
 ## 2.0.7
 ## Android 
 - Toast Message Bug Fix.
