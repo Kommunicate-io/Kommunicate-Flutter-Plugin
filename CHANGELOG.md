@@ -1,3 +1,10 @@
+## 2.0.9
+## Android 
+- Fixed Runtime Exception Bug. Added proactive checks to avoid NPE.
+## iOS
+- Fixed the glass effect bug with iOS 26 versions.
+- Fixed dark icon issue with iOS 26 versions.
+
 ## 2.0.8
 - Added initialization code for Android and iOS.
 
