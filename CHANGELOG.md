@@ -1,3 +1,13 @@
+## 2.1.0
+## Android 
+- Markdown format support in messages
+- UI improvements
+- Kommunicate Android SDK version update to 2.16.0
+## iOS
+- Markdown format support in messages
+- Xcode 26.4 compilation error fix
+- Kommunicate iOS SDK version update to 7.3.4
+
 ## 2.0.9
 ## Android 
 - Fixed Runtime Exception Bug. Added proactive checks to avoid NPE.
