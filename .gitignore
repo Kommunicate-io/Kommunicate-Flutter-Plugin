@@ -1,0 +1,30 @@
+# Local tool caches
+.dart_tool/
+example/.dart_tool/
+example/.flutter-plugins
+example/.flutter-plugins-dependencies
+
+# IDE files
+.idea/
+*.iml
+example/.idea/
+
+# Local machine configuration
+local.properties
+**/local.properties
+
+# Generated build artifacts
+example/build/
+example/android/.gradle/
+example/android/build/
+example/ios/Pods/
+example/ios/.symlinks/
+example/ios/DerivedData/
+example/ios/Flutter/ephemeral/
+example/ios/Flutter/flutter_export_environment.sh
+
+# Sensitive project config
+example/android/app/google-services.json
+
+# OS files
+**/.DS_Store
