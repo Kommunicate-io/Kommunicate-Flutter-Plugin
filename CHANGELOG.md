@@ -1,3 +1,10 @@
+## 2.1.1
+## Android
+- Android 15 compatibility
+- Duplicate database message fixed
+- Kommunicate Android SDK version update to 2.16.4
+
+
 ## 2.1.0
 ## Android 
 - Markdown format support in messages

@@ -26,10 +26,10 @@ apply plugin: 'com.android.library'
 
 android {
     def sdkProp = rootProject.findProperty('compileSdkVersion')
-    def sdk = (sdkProp instanceof Number) ? (sdkProp as Integer) : Integer.parseInt((sdkProp ?: 34).toString())
+    def sdk = (sdkProp instanceof Number) ? (sdkProp as Integer) : Integer.parseInt((sdkProp ?: 35).toString())
     compileSdkVersion sdk
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion sdk
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -39,5 +39,5 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    api 'io.kommunicate.sdk:kommunicateui:2.16.0'
+    api 'io.kommunicate.sdk:kommunicateui:2.16.4'
 }
