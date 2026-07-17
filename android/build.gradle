@@ -29,7 +29,7 @@ android {
     def sdk = (sdkProp instanceof Number) ? (sdkProp as Integer) : Integer.parseInt((sdkProp ?: 35).toString())
     compileSdkVersion sdk
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion sdk
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
