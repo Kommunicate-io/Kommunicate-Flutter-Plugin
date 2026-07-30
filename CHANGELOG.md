@@ -1,7 +1,7 @@
 ## 2.2.0
 ## Android
 - Android 16 compatibility
-- Fix user authentiction issue in Android
+- Fix user authentication issue in Android
 - Bug fixes and improvements
 - Kommunicate Android SDK version update to 2.16.6
 
