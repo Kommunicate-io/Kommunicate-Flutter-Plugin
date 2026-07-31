@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2' // Update this
+        classpath 'com.android.tools.build:gradle:8.11.1'
     }
 }
 
@@ -26,10 +26,10 @@ apply plugin: 'com.android.library'
 
 android {
     def sdkProp = rootProject.findProperty('compileSdkVersion')
-    def sdk = (sdkProp instanceof Number) ? (sdkProp as Integer) : Integer.parseInt((sdkProp ?: 35).toString())
+    def sdk = (sdkProp instanceof Number) ? (sdkProp as Integer) : Integer.parseInt((sdkProp ?: 36).toString())
     compileSdkVersion sdk
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion sdk
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -39,5 +39,5 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    api 'io.kommunicate.sdk:kommunicateui:2.16.4'
+    api 'io.kommunicate.sdk:kommunicateui:2.16.6'
 }
