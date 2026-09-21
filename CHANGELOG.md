@@ -1,3 +1,9 @@
+## 2.2.1
+## Android
+- Kommunicate Android SDK version update to 2.16.10
+- Updated Android build tooling
+
+
 ## 2.2.0
 ## Android
 - Android 16 compatibility
