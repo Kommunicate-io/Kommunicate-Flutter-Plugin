@@ -1,3 +1,17 @@
+## 2.2.2
+## Android
+- Kommunicate Android SDK version update to 2.17.0
+- Voice mode and speech-to-text require the `RECORD_AUDIO` permission in your app's AndroidManifest.xml
+
+## iOS
+- Kommunicate iOS SDK version update to 7.3.8 (Swift Package Manager)
+- Added Swift Package Manager support. Enable it with `flutter config --enable-swift-package-manager`
+- CocoaPods users stay on Kommunicate iOS SDK 7.3.6, as 7.3.8 is not published to CocoaPods
+- iOS plugin class is now `SwiftKommunicateFlutterPlugin`
+- Fixed compatibility with the newer Kommunicate iOS SDK UIColor APIs
+- Voice mode and speech-to-text require `NSMicrophoneUsageDescription` and `NSSpeechRecognitionUsageDescription` in your app's Info.plist, otherwise the app can crash when the feature is used
+
+
 ## 2.2.1
 ## Android
 - Kommunicate Android SDK version update to 2.16.10

@@ -13,7 +13,7 @@ Refer to the official docs here: https://docs.kommunicate.io/docs/flutter-instal
 ```
 dependencies:
   //other dependencies
-  kommunicate_flutter: ^2.2.1
+  kommunicate_flutter: ^2.2.2
 ```
 
 2. Install the package as below:
@@ -39,6 +39,60 @@ pod install
 ```
  platform :ios, '13.0'
  use_frameworks!
+```
+
+### Swift Package Manager (iOS, optional)
+
+The latest Kommunicate iOS SDK (7.3.8) is available only through Swift Package Manager (SPM). Apps that use CocoaPods get Kommunicate iOS SDK 7.3.6.
+
+To use the latest iOS SDK, use Flutter 3.24 or newer and enable SPM, then rebuild your app:
+
+```
+flutter config --enable-swift-package-manager
+```
+
+Or enable it for a single app by adding this to your app's pubspec.yaml:
+
+```
+flutter:
+  config:
+    enable-swift-package-manager: true
+```
+
+> Note: If your app uses a custom Podfile or plugins that only support CocoaPods, you may need to migrate manually. See the [Flutter SPM guide](https://docs.flutter.dev/packages-and-plugins/swift-package-manager/for-app-developers).
+
+## Permissions
+
+Voice mode, speech-to-text, attachments and location sharing need permissions declared in your app. If they are missing, the feature will not work, and on iOS the app can crash when the feature is used.
+
+### iOS
+
+Add the below keys to your ios/Runner/Info.plist. `NSMicrophoneUsageDescription` and `NSSpeechRecognitionUsageDescription` are both required for voice mode and speech-to-text:
+
+```
+<key>NSMicrophoneUsageDescription</key>
+<string>$(PRODUCT_NAME) uses the microphone to record voice messages and for voice input.</string>
+<key>NSSpeechRecognitionUsageDescription</key>
+<string>$(PRODUCT_NAME) uses speech recognition to convert voice input into message text.</string>
+<key>NSCameraUsageDescription</key>
+<string>$(PRODUCT_NAME) uses the camera to capture and share photos in chat.</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>$(PRODUCT_NAME) accesses your photos to share them in chat.</string>
+<key>NSPhotoLibraryAddUsageDescription</key>
+<string>$(PRODUCT_NAME) saves photos from chat to your library.</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>$(PRODUCT_NAME) uses your location to share it in chat.</string>
+```
+
+### Android
+
+Add the below permissions to your android/app/src/main/AndroidManifest.xml. `RECORD_AUDIO` is required for voice mode and speech-to-text:
+
+```
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 ```
 
 ## Get your Application Id

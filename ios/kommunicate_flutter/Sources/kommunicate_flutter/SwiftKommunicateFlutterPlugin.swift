@@ -580,14 +580,14 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                     Kommunicate.defaultConfiguration.conversationInfoModel = nil
                     return
                 }
-            var bg = UIColor(5, green: 163, blue: 191) ?? UIColor.blue
+            var bg = UIColor(red: 5.0 / 255.0, green: 163.0 / 255.0, blue: 191.0 / 255.0, alpha: 1)
             var trailing = UIImage(named: "next") ?? UIImage()
             var leading = UIImage(named: "file") ?? UIImage()
             var font = UIFont.systemFont(ofSize: 14.0, weight: .bold)
             var infoContent: String = ""
             var contentColor = UIColor.white
                 if(settingDict["backgroundColor"] != nil) {
-                    bg = UIColor(hexString: settingDict["backgroundColor"] as? String, alpha: 1)
+                    bg = SwiftKommunicateFlutterPlugin.color(fromHex: settingDict["backgroundColor"] as? String) ?? bg
             }
                 if(settingDict["trailingIcon"] != nil) {
                  trailing = UIImage(named: settingDict["trailingIcon"] as? String ?? "next") ?? UIImage()
@@ -599,7 +599,7 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
                 infoContent = settingDict["infoContent"] as? String ?? ""
             }
              if(settingDict["contentTextColor"] != nil) {
-                 contentColor = UIColor(hexString: settingDict["contentTextColor"] as? String, alpha: 1) ?? UIColor.white
+                 contentColor = SwiftKommunicateFlutterPlugin.color(fromHex: settingDict["contentTextColor"] as? String) ?? UIColor.white
              }
             
             let model = KMConversationInfoViewModel(infoContent: infoContent, leadingImage: leading, trailingImage:trailing , backgroundColor: bg, contentColor: contentColor, contentFont:font)
@@ -1030,6 +1030,28 @@ public class SwiftKommunicateFlutterPlugin: NSObject, FlutterPlugin, KMPreChatFo
         }
 
         return user
+    }
+}
+
+extension SwiftKommunicateFlutterPlugin {
+    /// Parses `#RRGGBB` / `RRGGBB`. Avoids the SDK's UIColor helpers, whose signatures differ across SDK versions.
+    static func color(fromHex hex: String?) -> UIColor? {
+        guard var value = hex?.trimmingCharacters(in: .whitespacesAndNewlines), !value.isEmpty else {
+            return nil
+        }
+        if value.hasPrefix("#") {
+            value.removeFirst()
+        }
+        var rgb: UInt64 = 0
+        guard Scanner(string: value).scanHexInt64(&rgb) else {
+            return nil
+        }
+        return UIColor(
+            red: CGFloat((rgb >> 16) & 0xFF) / 255.0,
+            green: CGFloat((rgb >> 8) & 0xFF) / 255.0,
+            blue: CGFloat(rgb & 0xFF) / 255.0,
+            alpha: 1
+        )
     }
 }
 
