@@ -13,7 +13,7 @@ Refer to the official docs here: https://docs.kommunicate.io/docs/flutter-instal
 ```
 dependencies:
   //other dependencies
-  kommunicate_flutter: ^2.2.1
+  kommunicate_flutter: ^2.2.2
 ```
 
 2. Install the package as below:
@@ -39,6 +39,27 @@ pod install
 ```
  platform :ios, '13.0'
  use_frameworks!
+```
+
+> Note: Kommunicate iOS SDK 7.3.8 is available only through Swift Package Manager, which is the default from Flutter 3.44. On older Flutter versions or with CocoaPods, the iOS SDK stays on 7.3.6. To use SPM on Flutter 3.41 to 3.43, run `flutter config --enable-swift-package-manager`.
+
+## Voice mode permissions
+
+To use voice mode and speech-to-text, add the below permissions to your app:
+
+- iOS: add both keys to ios/Runner/Info.plist. If either is missing, the app can crash when voice mode is used:
+
+```
+<key>NSMicrophoneUsageDescription</key>
+<string>$(PRODUCT_NAME) uses the microphone for voice input.</string>
+<key>NSSpeechRecognitionUsageDescription</key>
+<string>$(PRODUCT_NAME) uses speech recognition to convert voice input into message text.</string>
+```
+
+- Android: add the below permission to android/app/src/main/AndroidManifest.xml:
+
+```
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
 ```
 
 ## Get your Application Id

@@ -12,12 +12,12 @@ Flutter plugin for Kommunicate live chat.
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Kommunicate' => 'ashish@kommunicate.io' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
-  s.public_header_files = 'Classes/**/*.h'
+  s.source_files = 'kommunicate_flutter/Sources/kommunicate_flutter/**/*.swift'
 
   s.dependency 'Flutter'
   s.swift_version = '5.1'
-  s.dependency 'Kommunicate', '~> 7.3.4'
+  # CocoaPods trunk stops at 7.3.6; 7.3.8+ is available only via Swift Package Manager.
+  s.dependency 'Kommunicate', '~> 7.3.6'
 
 
   s.ios.deployment_target = '13.0'
