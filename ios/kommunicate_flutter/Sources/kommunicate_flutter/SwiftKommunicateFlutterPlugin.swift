@@ -1042,6 +1042,10 @@ extension SwiftKommunicateFlutterPlugin {
         if value.hasPrefix("#") {
             value.removeFirst()
         }
+        // scanHexInt64 accepts a valid prefix of the string, so require exactly six hex digits first.
+        guard value.count == 6, value.allSatisfy({ $0.isASCII && $0.isHexDigit }) else {
+            return nil
+        }
         var rgb: UInt64 = 0
         guard Scanner(string: value).scanHexInt64(&rgb) else {
             return nil

@@ -41,58 +41,25 @@ pod install
  use_frameworks!
 ```
 
-### Swift Package Manager (iOS, optional)
+> Note: Kommunicate iOS SDK 7.3.8 is available only through Swift Package Manager, which is the default from Flutter 3.44. On older Flutter versions or with CocoaPods, the iOS SDK stays on 7.3.6. To use SPM on Flutter 3.41 to 3.43, run `flutter config --enable-swift-package-manager`.
 
-The latest Kommunicate iOS SDK (7.3.8) is available only through Swift Package Manager (SPM). Apps that use CocoaPods get Kommunicate iOS SDK 7.3.6.
+## Voice mode permissions
 
-To use the latest iOS SDK, use Flutter 3.24 or newer and enable SPM, then rebuild your app:
+To use voice mode and speech-to-text, add the below permissions to your app:
 
-```
-flutter config --enable-swift-package-manager
-```
-
-Or enable it for a single app by adding this to your app's pubspec.yaml:
-
-```
-flutter:
-  config:
-    enable-swift-package-manager: true
-```
-
-> Note: If your app uses a custom Podfile or plugins that only support CocoaPods, you may need to migrate manually. See the [Flutter SPM guide](https://docs.flutter.dev/packages-and-plugins/swift-package-manager/for-app-developers).
-
-## Permissions
-
-Voice mode, speech-to-text, attachments and location sharing need permissions declared in your app. If they are missing, the feature will not work, and on iOS the app can crash when the feature is used.
-
-### iOS
-
-Add the below keys to your ios/Runner/Info.plist. `NSMicrophoneUsageDescription` and `NSSpeechRecognitionUsageDescription` are both required for voice mode and speech-to-text:
+- iOS: add both keys to ios/Runner/Info.plist. If either is missing, the app can crash when voice mode is used:
 
 ```
 <key>NSMicrophoneUsageDescription</key>
-<string>$(PRODUCT_NAME) uses the microphone to record voice messages and for voice input.</string>
+<string>$(PRODUCT_NAME) uses the microphone for voice input.</string>
 <key>NSSpeechRecognitionUsageDescription</key>
 <string>$(PRODUCT_NAME) uses speech recognition to convert voice input into message text.</string>
-<key>NSCameraUsageDescription</key>
-<string>$(PRODUCT_NAME) uses the camera to capture and share photos in chat.</string>
-<key>NSPhotoLibraryUsageDescription</key>
-<string>$(PRODUCT_NAME) accesses your photos to share them in chat.</string>
-<key>NSPhotoLibraryAddUsageDescription</key>
-<string>$(PRODUCT_NAME) saves photos from chat to your library.</string>
-<key>NSLocationWhenInUseUsageDescription</key>
-<string>$(PRODUCT_NAME) uses your location to share it in chat.</string>
 ```
 
-### Android
-
-Add the below permissions to your android/app/src/main/AndroidManifest.xml. `RECORD_AUDIO` is required for voice mode and speech-to-text:
+- Android: add the below permission to android/app/src/main/AndroidManifest.xml:
 
 ```
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
-<uses-permission android:name="android.permission.CAMERA" />
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 ```
 
 ## Get your Application Id
